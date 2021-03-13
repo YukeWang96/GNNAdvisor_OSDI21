@@ -8,15 +8,6 @@ import sys
 import pickle
 import rabbit
 
-# torch.utils.cpp_extension.load(
-#     name="rabbit",
-#     sources=["rabbit.cpp"],
-#     extra_compile_args=['-O3', '-fopenmp', '-mcx16'],
-#     extra_ldflags=["-lopencv_core", "-lopencv_imgproc"],
-#     is_python_module=False,
-#     verbose=True
-# )
-
 class graph_input(object):
     def __init__(self, path=None):
         self.load_flag = False
@@ -86,7 +77,11 @@ class graph_input(object):
         if not self.load_flag: 
             raise ValueError("Graph MUST be loaded Before reordering.")
         
-        rabbit.reorder(self.edge_index)
+        print(self.edge_index.size())
+
+        new_edge_index = rabbit.reorder(self.edge_index)
+        
+        print(new_edge_index.size())
 
         self.reorder_flag = True
         

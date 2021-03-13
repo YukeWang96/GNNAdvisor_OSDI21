@@ -10,7 +10,6 @@ setup(
             'reorder.cpp'
             ],
             extra_compile_args=['-O3', '-fopenmp', '-mcx16'],
-            # extra_ldflags=['-lnuma', '-ltcmalloc_minimal'],
             libraries=["numa", "tcmalloc_minimal"]
          ) 
     ],

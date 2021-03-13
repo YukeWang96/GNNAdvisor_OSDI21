@@ -82,6 +82,9 @@ class graph_input(object):
         new_edge_index = rabbit.reorder(self.edge_index)
         
         print(new_edge_index)
+        for i in range(len(new_edge_index[1])):
+            src, dst = new_edge_index[0][i], new_edge_index[1][i]
+            # print('{}--{}'.format(src, dst))
         # print(new_edge_index.size())
 
         self.reorder_flag = True

@@ -113,6 +113,24 @@ adjacency_list read_graph(const std::string& graphpath) {
   return make_adj_list(n, edges);
 }
 
+adjacency_list read_graph_from_edges(const auto edges) {
+
+  // const auto edges = edge_list::read(graphpath);
+
+  // The number of vertices = max vertex ID + 1 (assuming IDs start from zero)
+  const auto n =
+      boost::accumulate(edges, static_cast<vint>(0), [](vint s, auto& e) {
+          return std::max(s, std::max(std::get<0>(e), std::get<1>(e)) + 1);});
+
+  if (const size_t c = count_unused_id(n, edges)) {
+    std::cerr << "WARNING: " << c << "/" << n << " vertex IDs are unused"
+              << " (zero-degree vertices or noncontiguous IDs?)\n";
+  }
+
+  return make_adj_list(n, edges);
+}
+
+
 template<typename InputIt>
 typename std::iterator_traits<InputIt>::difference_type
 count_uniq(const InputIt f, const InputIt l) {
@@ -188,24 +206,32 @@ void detect_community(adjacency_list adj) {
   std::cerr << "Modularity: " << q << std::endl;
 }
 
-void reorder(adjacency_list adj) {
+// generate the mapping from old-idx --> new-idx
+std::map<int, int> reorder(adjacency_list adj) {
   std::cerr << "Generating a permutation...\n";
   const double tstart = rabbit_order::now_sec();
   //--------------------------------------------
   const auto g = rabbit_order::aggregate(std::move(adj));
+  // std::unique_ptr<vint[]> compute_perm(const graph& g) 
   const auto p = rabbit_order::compute_perm(g);
   //--------------------------------------------
   std::cerr << "Runtime for permutation generation [sec]: "
             << rabbit_order::now_sec() - tstart << std::endl;
 
-  // Print the result
-  std::copy(&p[0], &p[g.n()], std::ostream_iterator<vint>(std::cout, "\n"));
+  // Print the result from (0, n)
+  // std::copy(&p[0], &p[g.n()], std::ostream_iterator<vint>(std::cout, "\n"));
+
+  // create the mapping from the old vid --> new vide.
+  std::map<int, int> perm_mapping; 
+  for (int i = 0; i < g.n(); i++)
+    perm_mapping.insert(std::pair<int, int>(i, p[i]));
+  
+  return perm_mapping;
 }
 
 
 #define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
 #define CHECK_INPUT(x) CHECK_CONTIGUOUS(x)
-
 
 torch::Tensor rabbit_reorder(
     torch::Tensor in_edge_index
@@ -218,7 +244,7 @@ torch::Tensor rabbit_reorder(
   CHECK_INPUT(in_edge_index);
 
   const int numedges = in_edge_index.size(1);
-  const int dim0 = in_edge_index.size(1);
+  // const int dim0 = in_edge_index.size(1);
   // vint is size_t 
   std::vector<std::tuple<vint, vint, float>> edges;
   auto in_edge_index_ptr = in_edge_index.accessor<int, 2>();
@@ -233,28 +259,33 @@ torch::Tensor rabbit_reorder(
   // printf("dim0: %d, numedges: %d\n", dim0, numedges);
   torch::Tensor out_edge_index = torch::zeros_like(in_edge_index);
   auto out_edge_index_ptr = out_edge_index.accessor<int, 2>();
-  for(int i = 0; i < numedges; i++){
-    src = std::get<0>(edges[i]);
-    dst = std::get<1>(edges[i]);
-    out_edge_index_ptr[0][i] = src;
-    out_edge_index_ptr[1][i] = dst;
-  }
+  // for(int i = 0; i < numedges; i++){
+  //   src = std::get<0>(edges[i]);
+  //   dst = std::get<1>(edges[i]);
+  //   out_edge_index_ptr[0][i] = src;
+  //   out_edge_index_ptr[1][i] = dst;
+  // }
 
   // // get the mapping from raddit.
   // auto adj = read_graph_from_edges(edges);
-  // const auto m   = boost::accumulate(adj | transformed([](auto& es) {return es.size();}), static_cast<size_t>(0));
-  // std::cerr << "Number of vertices: " << adj.size() << std::endl;
-  // std::cerr << "Number of edges: "    << m          << std::endl;
-  // reorder(std::move(adj));
+  auto adj = read_graph_from_edges(edges);
+  const auto m   = boost::accumulate(adj | transformed([](auto& es) {return es.size();}), static_cast<size_t>(0));
+  std::cerr << "Number of vertices: " << adj.size() << std::endl;
+  std::cerr << "Number of edges: "    << m          << std::endl;
+  auto mapping = reorder(std::move(adj));
 
-  // // generate the edge_list.
-  // for(int i = 0; i < numedges; i++){
-  //   src = in_edge_index.data<long>[i];
-  //   dst = in_edge_index.data<long>[i+numedges];
-
-  //   out_edge_index.data<long>[i] = map[src]
-  //   out_edge_index.data<long>[i + numedges] = map[dst];
+  // for(auto it = mapping.cbegin(); it != mapping.cend(); ++it)
+  // {
+  //     std::cout << it->first << " " << it->second << "\n";
   // }
+
+  // generate the edge_list.
+  for(int i = 0; i < numedges; i++){
+    src = std::get<0>(edges[i]);
+    dst = std::get<1>(edges[i]);
+    out_edge_index_ptr[0][i] = mapping[src];
+    out_edge_index_ptr[1][i] = mapping[dst];
+  }
 
   return out_edge_index;
 }

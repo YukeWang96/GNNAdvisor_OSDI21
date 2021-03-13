@@ -1,5 +1,14 @@
 # GNNAdvisor 
 
+## dependency 
++ **`libboost`** 
+> `sudo apt-get install libboost-all-dev`
++ **`tcmalloc`**
+> `sudo apt-get install libgoogle-perftools-dev`
+
++ conda
+> 
+
 ## Node Reordering.
 * adding the IPDPS reordering tool into our design.
 * make a pytorch operator for this algorithm.

@@ -1,3 +1,0 @@
-[submodule "rabbit_order"]
-	path = rabbit_order
-	url = git@github.com:araij/rabbit_order.git

@@ -210,24 +210,35 @@ void reorder(adjacency_list adj) {
 torch::Tensor rabbit_reorder(
     torch::Tensor in_edge_index
 ) {
+  int src, dst;
 
-  // using boost::adaptors::transformed;
-
-  // std::cerr << "Number of threads: " << omp_get_max_threads() << std::endl;
+  using boost::adaptors::transformed;
+  std::cerr << "Number of threads: " << omp_get_max_threads() << std::endl;
 
   CHECK_INPUT(in_edge_index);
 
-  // const int numedges = in_edge_index.size(1);
+  const int numedges = in_edge_index.size(1);
+  const int dim0 = in_edge_index.size(1);
+  // vint is size_t 
+  std::vector<std::tuple<vint, vint, float>> edges;
+  auto in_edge_index_ptr = in_edge_index.accessor<int, 2>();
+  // prepare the input
+  for(int i = 0; i < numedges; i++){
+    src = in_edge_index_ptr[0][i];
+    dst = in_edge_index_ptr[1][i];
+    edges.push_back(std::make_tuple(src, dst, 1.0f));
+  }
+
+  // output edge index.
+  // printf("dim0: %d, numedges: %d\n", dim0, numedges);
   torch::Tensor out_edge_index = torch::zeros_like(in_edge_index);
-
-  // std::vector<int, int> edges;
-
-  // // prepare the input
-  // for(int i = 0; i < numedges; i++){
-  //   src = in_edge_index.data<long>[i];
-  //   dst = in_edge_index.data<long>[i+numedges];
-  //   edges.push_back({src, dst});
-  // }
+  auto out_edge_index_ptr = out_edge_index.accessor<int, 2>();
+  for(int i = 0; i < numedges; i++){
+    src = std::get<0>(edges[i]);
+    dst = std::get<1>(edges[i]);
+    out_edge_index_ptr[0][i] = src;
+    out_edge_index_ptr[1][i] = dst;
+  }
 
   // // get the mapping from raddit.
   // auto adj = read_graph_from_edges(edges);

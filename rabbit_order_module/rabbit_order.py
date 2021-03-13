@@ -45,8 +45,8 @@ class graph_input(object):
                 src, dst = int(tmp[0]), int(tmp[1])
                 src_li.append(src)
                 dst_li.append(dst)
-            src_idx = torch.LongTensor(src_li)
-            dst_idx = torch.LongTensor(dst_li)
+            src_idx = torch.IntTensor(src_li)
+            dst_idx = torch.IntTensor(dst_li)
             self.edge_index = torch.stack([src_idx, dst_idx], dim=0)
             print(self.edge_index)
             # print(src_idx)
@@ -62,8 +62,8 @@ class graph_input(object):
             '''
             fp = open(self.path, "rb")
             npy_graph = pickle.load(fp)
-            src_idx = torch.LongTensor(npy_graph[0])
-            dst_idx = torch.LongTensor(npy_graph[1])
+            src_idx = torch.IntTensor(npy_graph[0])
+            dst_idx = torch.IntTensor(npy_graph[1])
 
         dur = time.perf_counter() - start
         print("Loading graph from txt source (ms): {:.3f}".format(dur*1e3))
@@ -81,7 +81,8 @@ class graph_input(object):
 
         new_edge_index = rabbit.reorder(self.edge_index)
         
-        print(new_edge_index.size())
+        print(new_edge_index)
+        # print(new_edge_index.size())
 
         self.reorder_flag = True
         

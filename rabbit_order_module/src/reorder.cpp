@@ -294,38 +294,3 @@ torch::Tensor rabbit_reorder(
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("reorder", &rabbit_reorder, "Get the reordered node id mapping: old_id --> new_id");
 }
-
-
-/*
-int main(int argc, char* argv[]) {
-  using boost::adaptors::transformed;
-
-  // Parse command-line arguments
-  if (argc != 2 && (argc != 3 || std::string("-c") != argv[1])) {
-    std::cerr << "Usage: reorder [-c] GRAPH_FILE\n"
-              << "  -c    Print community IDs instead of a new ordering\n";
-    exit(EXIT_FAILURE);
-  }
-
-  const std::string graphpath = argc == 3 ? argv[2] : argv[1];
-  const bool        commode   = argc == 3;
-
-
-  std::cerr << "Number of threads: " << omp_get_max_threads() << std::endl;
-  std::cerr << "Reading an edge-list file: " << graphpath << std::endl;
-
-  // auto       adj = read_graph(graphpath);
-
-  auto adj = read_graph_from _edges();
-  const auto m   = boost::accumulate(adj | transformed([](auto& es) {return es.size();}), static_cast<size_t>(0));
-  std::cerr << "Number of vertices: " << adj.size() << std::endl;
-  std::cerr << "Number of edges: "    << m          << std::endl;
-
-  // if (commode)
-  //   detect_community(std::move(adj));
-  // else
-  reorder(std::move(adj));
-
-  return EXIT_SUCCESS;
-}
-*/

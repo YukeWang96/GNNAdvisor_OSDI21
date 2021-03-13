@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
 
 
-# import rabbit_reorder as rab
 import time
 import torch
+
 import sys
 import pickle
+import rabbit
 
+# torch.utils.cpp_extension.load(
+#     name="rabbit",
+#     sources=["rabbit.cpp"],
+#     extra_compile_args=['-O3', '-fopenmp', '-mcx16'],
+#     extra_ldflags=["-lopencv_core", "-lopencv_imgproc"],
+#     is_python_module=False,
+#     verbose=True
+# )
 
 class graph_input(object):
     def __init__(self, path=None):
         self.load_flag = False
+        self.reorder_flag = False
         self.path = path
+        self.edge_index = None
         
         self.dgl_flag = False
         self.pyg_flag = False
@@ -45,8 +56,10 @@ class graph_input(object):
                 dst_li.append(dst)
             src_idx = torch.LongTensor(src_li)
             dst_idx = torch.LongTensor(dst_li)
-            print(src_idx)
-            print(dst_idx)
+            self.edge_index = torch.stack([src_idx, dst_idx], dim=0)
+            print(self.edge_index)
+            # print(src_idx)
+            # print(dst_idx)
         else:
             '''
             graph must store in a numpy object with the shape of [2, num_edges].
@@ -66,17 +79,19 @@ class graph_input(object):
 
         self.load_flag = True
 
-    def reorder():
+    def reorder(self):
         '''
         reorder the graph if specified.
         '''
         if not self.load_flag: 
             raise ValueError("Graph MUST be loaded Before reordering.")
         
-        pass
+        rabbit.reorder(self.edge_index)
+
+        self.reorder_flag = True
         
 
-    def create_dgl_graph():
+    def create_dgl_graph(self):
         '''
         create a DGL graph from edge index.
         '''
@@ -85,7 +100,7 @@ class graph_input(object):
         
         self.dgl_flag = True
     
-    def create_pyg_graph():
+    def create_pyg_graph(self):
         '''
         create a PyG graph from edge index.
         '''
@@ -95,7 +110,7 @@ class graph_input(object):
         self.pyg_flag = True
 
 
-    def get_dgl_graph():
+    def get_dgl_graph(self):
         '''
         return the dgl graph.
         '''
@@ -106,7 +121,7 @@ class graph_input(object):
 
         return self.dgl_graph
 
-    def get_pyg_graph():
+    def get_pyg_graph(self):
         '''
         return the pyg graph.
         '''
@@ -124,3 +139,4 @@ if __name__ == "__main__":
     path = "/home/ssd2T_1/yuke/.graphs/orig/cora"
     graph = graph_input(path)
     graph.load()
+    graph.reorder()

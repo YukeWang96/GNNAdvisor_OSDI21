@@ -2,3 +2,6 @@
 .*.swp
 .*.swo
 .*.P
+*build
+*dist
+*rabbit.egg-info

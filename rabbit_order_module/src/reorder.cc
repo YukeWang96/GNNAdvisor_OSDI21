@@ -7,12 +7,6 @@
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/algorithm/count.hpp>
 
-#include <torch/extension.h>
-#include <vector>
-#include <string.h>
-#include <cstdlib>
-#include <map>
-
 #include "rabbit_order.hpp"
 #include "edge_list.hpp"
 
@@ -97,7 +91,6 @@ adjacency_list make_adj_list(const vint n, const RandomAccessRange& es) {
 }
 
 adjacency_list read_graph(const std::string& graphpath) {
-
   const auto edges = edge_list::read(graphpath);
 
   // The number of vertices = max vertex ID + 1 (assuming IDs start from zero)
@@ -203,58 +196,9 @@ void reorder(adjacency_list adj) {
 }
 
 
-#define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
-#define CHECK_INPUT(x) CHECK_CONTIGUOUS(x)
 
 
-torch::Tensor rabbit_reorder(
-    torch::Tensor in_edge_index
-) {
 
-  // using boost::adaptors::transformed;
-
-  // std::cerr << "Number of threads: " << omp_get_max_threads() << std::endl;
-
-  CHECK_INPUT(in_edge_index);
-
-  // const int numedges = in_edge_index.size(1);
-  torch::Tensor out_edge_index = torch::zeros_like(in_edge_index);
-
-  // std::vector<int, int> edges;
-
-  // // prepare the input
-  // for(int i = 0; i < numedges; i++){
-  //   src = in_edge_index.data<long>[i];
-  //   dst = in_edge_index.data<long>[i+numedges];
-  //   edges.push_back({src, dst});
-  // }
-
-  // // get the mapping from raddit.
-  // auto adj = read_graph_from_edges(edges);
-  // const auto m   = boost::accumulate(adj | transformed([](auto& es) {return es.size();}), static_cast<size_t>(0));
-  // std::cerr << "Number of vertices: " << adj.size() << std::endl;
-  // std::cerr << "Number of edges: "    << m          << std::endl;
-  // reorder(std::move(adj));
-
-  // // generate the edge_list.
-  // for(int i = 0; i < numedges; i++){
-  //   src = in_edge_index.data<long>[i];
-  //   dst = in_edge_index.data<long>[i+numedges];
-
-  //   out_edge_index.data<long>[i] = map[src]
-  //   out_edge_index.data<long>[i + numedges] = map[dst];
-  // }
-
-  return out_edge_index;
-}
-
-// binding to python
-PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-  m.def("reorder", &rabbit_reorder, "Get the reordered node id mapping: old_id --> new_id");
-}
-
-
-/*
 int main(int argc, char* argv[]) {
   using boost::adaptors::transformed;
 
@@ -264,26 +208,26 @@ int main(int argc, char* argv[]) {
               << "  -c    Print community IDs instead of a new ordering\n";
     exit(EXIT_FAILURE);
   }
-
   const std::string graphpath = argc == 3 ? argv[2] : argv[1];
   const bool        commode   = argc == 3;
 
-
   std::cerr << "Number of threads: " << omp_get_max_threads() << std::endl;
+
   std::cerr << "Reading an edge-list file: " << graphpath << std::endl;
 
-  // auto       adj = read_graph(graphpath);
 
-  auto adj = read_graph_from _edges();
-  const auto m   = boost::accumulate(adj | transformed([](auto& es) {return es.size();}), static_cast<size_t>(0));
+  auto       adj = read_graph(graphpath);
+  const auto m   =
+      boost::accumulate(adj | transformed([](auto& es) {return es.size();}),
+                        static_cast<size_t>(0));
   std::cerr << "Number of vertices: " << adj.size() << std::endl;
   std::cerr << "Number of edges: "    << m          << std::endl;
 
-  // if (commode)
-  //   detect_community(std::move(adj));
-  // else
-  reorder(std::move(adj));
+  if (commode)
+    detect_community(std::move(adj));
+  else
+    reorder(std::move(adj));
 
   return EXIT_SUCCESS;
 }
-*/
+

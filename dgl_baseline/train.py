@@ -10,6 +10,7 @@ from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
 from gcn import GCN
+from gin import GIN
 
 def evaluate(model, features, labels, mask):
     model.eval()
@@ -20,7 +21,6 @@ def evaluate(model, features, labels, mask):
         _, indices = torch.max(logits, dim=1)
         correct = torch.sum(indices == labels)
         return correct.item() * 1.0 / len(labels)
-
 
 def main(args):
     # load and preprocess dataset
@@ -74,16 +74,25 @@ def main(args):
     g.ndata['norm'] = norm.unsqueeze(1)
 
     # create GCN model
+    # model = GCN(g,
+    #             in_feats,
+    #             args.n_hidden,
+    #             n_classes,
+    #             args.n_layers,
+    #             F.relu,
+    #             args.dropout)
+    
+    # create GIN model
     model = GCN(g,
-                in_feats,
-                args.n_hidden,
-                n_classes,
-                args.n_layers,
-                F.relu,
-                args.dropout)
+            in_feats,
+            args.n_hidden,
+            n_classes,
+            args.n_layers)
+
 
     if cuda:
         model.cuda()
+
     loss_fcn = torch.nn.CrossEntropyLoss()
 
     # use optimizer
@@ -108,14 +117,10 @@ def main(args):
         if epoch >= 3:
             dur.append(time.time() - t0)
 
-        acc = evaluate(model, features, labels, val_mask)
-        print("Epoch {:05d} | Time(s) {:.4f} | Loss {:.4f} | Accuracy {:.4f} | "
-              "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur), loss.item(),
-                                             acc, n_edges / np.mean(dur) / 1000))
+        # acc = evaluate(model, features, labels, val_mask)
+        print("Epoch {:05d} | Time(ms) {:.4f}". format(epoch, np.mean(dur)*1e3))
 
     print()
-    acc = evaluate(model, features, labels, test_mask)
-    print("Test accuracy {:.2%}".format(acc))
 
 
 if __name__ == '__main__':

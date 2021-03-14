@@ -6,3 +6,5 @@
 *dist
 *rabbit.egg-info
 data/*
+*.pyc
+*pycache*

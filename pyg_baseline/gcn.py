@@ -1,48 +1,33 @@
 #!/usr/bin/env python3
 import os.path as osp
 import argparse
+import time
+from tqdm import tqdm
 
 import torch
 import torch.nn.functional as F
 from torch_geometric.datasets import Planetoid
 import torch_geometric.transforms as T
-from torch_geometric.nn import GCNConv, ChebConv  # noqa
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--use_gdc', action='store_true',
-                    help='Use GDC preprocessing.')
-args = parser.parse_args()
+from torch_geometric.nn import GCNConv
 
 dataset = 'Cora'
 path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
 dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
 data = dataset[0]
 
-if args.use_gdc:
-    gdc = T.GDC(self_loop_weight=1, normalization_in='sym',
-                normalization_out='col',
-                diffusion_kwargs=dict(method='ppr', alpha=0.05),
-                sparsification_kwargs=dict(method='topk', k=128,
-                                           dim=0), exact=True)
-    data = gdc(data)
-
-
 class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.conv1 = GCNConv(dataset.num_features, 16, cached=True,
-                             normalize=not args.use_gdc)
+                             normalize=False)
         self.conv2 = GCNConv(16, dataset.num_classes, cached=True,
-                             normalize=not args.use_gdc)
-        # self.conv1 = ChebConv(data.num_features, 16, K=2)
-        # self.conv2 = ChebConv(16, data.num_features, K=2)
+                             normalize=False)
 
     def forward(self):
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_attr
-        x = F.relu(self.conv1(x, edge_index, edge_weight))
-        x = F.dropout(x, training=self.training)
+        x = self.conv1(x, edge_index, edge_weight)
         x = self.conv2(x, edge_index, edge_weight)
-        return F.log_softmax(x, dim=1)
+        return x
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -71,12 +56,22 @@ def test():
     return accs
 
 
-best_val_acc = test_acc = 0
-for epoch in range(1, 201):
+# best_val_acc = test_acc = 0
+num_epoch = 100
+
+print("=> Profile {} Epoch on {}".format(num_epoch, dataset))
+
+torch.cuda.synchronize()
+start = time.perf_counter()
+for epoch in tqdm(range(1, num_epoch + 1)):
     train()
-    train_acc, val_acc, tmp_test_acc = test()
-    if val_acc > best_val_acc:
-        best_val_acc = val_acc
-        test_acc = tmp_test_acc
-    log = 'Epoch: {:03d}, Train: {:.4f}, Val: {:.4f}, Test: {:.4f}'
-    print(log.format(epoch, train_acc, best_val_acc, test_acc))
+    # train_acc, val_acc, tmp_test_acc = test()
+    # if val_acc > best_val_acc:
+    #     best_val_acc = val_acc
+    #     test_acc = tmp_test_acc
+    # log = 'Epoch: {:03d}, Train: {:.4f}, Val: {:.4f}, Test: {:.4f}'
+    # print(log.format(epoch, train_acc, best_val_acc, test_acc))
+torch.cuda.synchronize()
+
+dur = time.perf_counter() - start
+print("GCN (L2-H16) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/num_epoch))

@@ -16,23 +16,23 @@ path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
 dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
 data = dataset[0]
 
-
 class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
 
         num_features = dataset.num_features
         dim = 64
-        hidden_fc = Linear(dim, dim)
 
-        self.input_fc = Linear(num_features, dim)
-        self.conv1 = GINConv(hidden_fc)
+        input_fc =  Linear(num_features, dim)
+        hidden_fc = Linear(dim, dim)
+        output_fc = Linear(dim, dataset.num_classes)
+
+        self.conv1 = GINConv(input_fc)
         self.conv2 = GINConv(hidden_fc)
         self.conv3 = GINConv(hidden_fc)
         self.conv4 = GINConv(hidden_fc)
         self.conv4 = GINConv(hidden_fc)
-        self.conv5 = GINConv(hidden_fc)
-        self.output_fc = Linear(dim, dataset.num_classes)
+        self.conv5 = GINConv(output_fc)
 
     def forward(self):
         x, edge_index = data.x, data.edge_index
@@ -67,6 +67,9 @@ def test():
 
 # best_val_acc = test_acc = 0
 num_epoch = 100
+print("=> Profile {} Epoch on {}".format(num_epoch, dataset))
+
+torch.cuda.synchronize()
 start = time.perf_counter()
 for epoch in tqdm(range(1, num_epoch + 1)):
     train()
@@ -79,4 +82,4 @@ for epoch in tqdm(range(1, num_epoch + 1)):
 torch.cuda.synchronize()
 
 dur = time.perf_counter() - start
-print("GIN (L5-H64): Avg Epoch (ms): {:.3f}".format(dur*1e3/num_epoch))
+print("GIN (L5-H64) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/num_epoch))

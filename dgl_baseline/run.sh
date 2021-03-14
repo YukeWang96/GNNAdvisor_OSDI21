@@ -1,1 +1,1 @@
-python3 train.py --dataset citeseer --gpu 0
+python train.py --dataset cora

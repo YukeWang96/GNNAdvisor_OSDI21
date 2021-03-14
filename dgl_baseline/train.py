@@ -9,8 +9,12 @@ import dgl
 from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
-from gcn import GCN
-from gin import GIN
+
+run_GCN = True
+if run_GCN:
+    from gcn import GCN
+else:
+    from gin import GIN
 
 def evaluate(model, features, labels, mask):
     model.eval()
@@ -73,22 +77,18 @@ def main(args):
         norm = norm.cuda()
     g.ndata['norm'] = norm.unsqueeze(1)
 
-    # create GCN model
-    # model = GCN(g,
-    #             in_feats,
-    #             args.n_hidden,
-    #             n_classes,
-    #             args.n_layers,
-    #             F.relu,
-    #             args.dropout)
-    
-    # create GIN model
-    model = GCN(g,
-            in_feats,
-            args.n_hidden,
-            n_classes,
-            args.n_layers)
-
+    if run_GCN:    
+        model = GCN(g,
+                    in_feats=in_feats,
+                    n_hidden=16,
+                    n_classes=n_classes,
+                    n_layers=2)
+    else:
+        model = GIN(g,
+                    input_dim=in_feats,
+                    hidden_dim=64,
+                    output_dim=n_classes,
+                    num_layers=5)
 
     if cuda:
         model.cuda()
@@ -106,9 +106,10 @@ def main(args):
         model.train()
         if epoch >= 3:
             t0 = time.time()
+
         # forward
         logits = model(features)
-        loss = loss_fcn(logits[train_mask], labels[train_mask])
+        loss = loss_fcn(logits[:], labels[:])
 
         optimizer.zero_grad()
         loss.backward()
@@ -118,7 +119,7 @@ def main(args):
             dur.append(time.time() - t0)
 
         # acc = evaluate(model, features, labels, val_mask)
-        print("Epoch {:05d} | Time(ms) {:.4f}". format(epoch, np.mean(dur)*1e3))
+        print("Epoch {:05d} | Time(ms) {:.3f}". format(epoch, np.mean(dur)*1e3))
 
     print()
 
@@ -128,7 +129,7 @@ if __name__ == '__main__':
     register_data_args(parser)
     parser.add_argument("--dropout", type=float, default=0.5,
                         help="dropout probability")
-    parser.add_argument("--gpu", type=int, default=-1,
+    parser.add_argument("--gpu", type=int, default=0,
                         help="gpu")
     parser.add_argument("--lr", type=float, default=1e-2,
                         help="learning rate")

@@ -1,3 +1,4 @@
+
 import argparse
 import time
 import numpy as np
@@ -162,10 +163,14 @@ if __name__ == '__main__':
                         help="learning rate")
     parser.add_argument("--n-epochs", type=int, default=200,
                         help="number of training epochs")
+
     parser.add_argument("--n-hidden", type=int, default=16,
                         help="number of hidden gcn units")
+    parser.add_argument("--num-classes", type=int, default=10,
+                        help="number of output classes")
     parser.add_argument("--n-layers", type=int, default=1,
                         help="number of hidden gcn layers")
+
     parser.add_argument("--weight-decay", type=float, default=5e-4,
                         help="Weight for L2 loss")
     parser.add_argument("--self-loop", action='store_true',

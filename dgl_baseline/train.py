@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 import argparse
 import time
@@ -14,7 +16,7 @@ from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
 from dataset import *
 
-run_GCN = True
+run_GCN = False
 if run_GCN:
     from gcn import GCN
 else:

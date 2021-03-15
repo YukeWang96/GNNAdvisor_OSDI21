@@ -1,7 +1,9 @@
 import argparse
 import time
 import numpy as np
+import os
 import networkx as nx
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -9,6 +11,7 @@ import dgl
 from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
+from dataset import *
 
 run_GCN = True
 if run_GCN:
@@ -35,23 +38,47 @@ def main(args):
     elif args.dataset == 'pubmed':
         data = PubmedGraphDataset()
     else:
-        raise ValueError('Unknown dataset: {}'.format(args.dataset))
+        path = os.path.join("/home/yuke/.graphs/orig", args.dataset)
+        data = custom_dataset(path, args.n_hidden, args.num_classes)
+        # raise ValueError('Unknown dataset: {}'.format(args.dataset))
 
-    g = data[0]
-    if args.gpu < 0:
-        cuda = False
+
+    if args.dataset in ['cora', 'citeseer', 'pubmed', 'reddit']:
+        g = data[0]
+        if args.gpu < 0:
+            cuda = False
+        else:
+            cuda = True
+            g = g.int().to(args.gpu)
+
+        features = g.ndata['feat']
+        labels = g.ndata['label']
+        train_mask = g.ndata['train_mask']
+        val_mask = g.ndata['val_mask']
+        test_mask = g.ndata['test_mask']
+        in_feats = features.shape[1]
+        n_classes = data.num_labels
+        n_edges = data.graph.number_of_edges()
     else:
-        cuda = True
+        g = data.g
+
+        if args.gpu < 0:
+            cuda = False
+        else:
+            cuda = True
+
         g = g.int().to(args.gpu)
 
-    features = g.ndata['feat']
-    labels = g.ndata['label']
-    train_mask = g.ndata['train_mask']
-    val_mask = g.ndata['val_mask']
-    test_mask = g.ndata['test_mask']
-    in_feats = features.shape[1]
-    n_classes = data.num_labels
-    n_edges = data.graph.number_of_edges()
+        features = data.x
+        labels = data.y
+        train_mask = data.train_mask
+        val_mask = data.val_mask
+        test_mask = data.test_mask
+
+        in_feats = features.size(1)
+        n_classes = data.num_classes
+        n_edges = data.num_edges
+
     print("""----Data statistics------'
       #Edges %d
       #Classes %d

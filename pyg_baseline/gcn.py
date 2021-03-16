@@ -9,11 +9,16 @@ import torch.nn.functional as F
 from torch_geometric.datasets import Planetoid
 import torch_geometric.transforms as T
 from torch_geometric.nn import GCNConv
+from dataset import *
 
-dataset = 'Cora'
-path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
-dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
-data = dataset[0]
+# dataset = 'Cora'
+# path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
+# dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
+# data = dataset[0]
+
+path = osp.join("/home/yuke/.graphs/osdi-ae-graphs", 'YeastH'+".npz")
+dataset = custom_dataset(path, 16, 100, load_from_txt=False)
+data = dataset
 
 class Net(torch.nn.Module):
     def __init__(self):
@@ -45,15 +50,15 @@ def train():
     optimizer.step()
 
 
-@torch.no_grad()
-def test():
-    model.eval()
-    logits, accs = model(), []
-    for _, mask in data('train_mask', 'val_mask', 'test_mask'):
-        pred = logits[mask].max(1)[1]
-        acc = pred.eq(data.y[mask]).sum().item() / mask.sum().item()
-        accs.append(acc)
-    return accs
+# @torch.no_grad()
+# def test():
+#     model.eval()
+#     logits, accs = model(), []
+#     for _, mask in data('train_mask', 'val_mask', 'test_mask'):
+#         pred = logits[mask].max(1)[1]
+#         acc = pred.eq(data.y[mask]).sum().item() / mask.sum().item()
+#         accs.append(acc)
+#     return accs
 
 
 # best_val_acc = test_acc = 0

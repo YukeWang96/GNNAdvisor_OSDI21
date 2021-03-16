@@ -41,8 +41,9 @@ def main(args):
     elif args.dataset == 'pubmed':
         data = PubmedGraphDataset()
     else:
-        path = os.path.join("/home/yuke/.graphs/orig", args.dataset)
-        data = custom_dataset(path, args.n_hidden, args.num_classes)
+        # path = os.path.join("/home/yuke/.graphs/orig", args.dataset)
+        path = os.path.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset+".npz")
+        data = custom_dataset(path, args.n_hidden, args.num_classes, load_from_txt=False)
         # raise ValueError('Unknown dataset: {}'.format(args.dataset))
 
 

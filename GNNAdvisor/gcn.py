@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import os.path as osp
 import argparse
 
@@ -36,7 +39,6 @@ args = parser.parse_args()
 
 partsize = args.partsize # 512
 
-
 dataset = args.dataset
 if dataset == "reddit":
     path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'Reddit')
@@ -53,12 +55,9 @@ else:
     data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
     dataset = data
     
-# sys.exit(0)
 num_nodes = len(data.x)
 num_edges = len(data.edge_index[1])
 val = [1] * num_edges
-# edge_coo = torch.sparse.FloatTensor(data.edge_index, torch.FloatTensor([1]*num_edges), torch.Size([num_nodes,num_nodes])).cuda()
-
 start = time.perf_counter()
 scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))
 scipy_csr = scipy_coo.tocsr()
@@ -67,9 +66,7 @@ print("Build CSR: {:.3f}s ".format(build_csr))
 
 column_index = torch.IntTensor(scipy_csr.indices)
 row_pointers = torch.IntTensor(scipy_csr.indptr)
-# print(row_pointers)
-# print(row_pointers_zero)
-# print(type(scipy_csr.indptr[:-1]))
+
 def func(x):
     if x > 0:
         return x
@@ -138,7 +135,6 @@ optimizer = torch.optim.Adam([
     dict(params=model.conv2.parameters(), weight_decay=0)
 ], lr=0.01)
 
-
 def train():
     model.train()
     optimizer.zero_grad()
@@ -174,14 +170,15 @@ for epoch in range(1, num_epoches + 1):
     #     train_acc, val_acc, tmp_test_acc = test(profile=True)
     #     # break
     # else:
-    start_test = time.perf_counter()
-    train_acc, val_acc, tmp_test_acc = test()
-    test_time = time.perf_counter() - start_test
-    test_time_avg.append(test_time)
+    # start_test = time.perf_counter()
+    # train_acc, val_acc, tmp_test_acc = test()
+    # test_time = time.perf_counter() - start_test
+    # test_time_avg.append(test_time)
     
-    if val_acc > best_val_acc:
-        best_val_acc = val_acc
-        test_acc = tmp_test_acc
-    log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
-    print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
-    # break
+    # if val_acc > best_val_acc:
+    #     best_val_acc = val_acc
+    #     test_acc = tmp_test_acc
+    # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
+    # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
+
+    print('Epoch: {:03d}, Train-Time: {:.3f} ms'.format(epoch, np.mean(time_avg)*1e3))

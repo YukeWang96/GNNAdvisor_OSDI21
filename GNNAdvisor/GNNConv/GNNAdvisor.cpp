@@ -78,7 +78,7 @@ std::vector<torch::Tensor> build_part(
     int partSize, 
     torch::Tensor indptr
   ) {
-    
+
   auto indptr_acc = indptr.accessor<int, 1>();
   int num_nodes = indptr.size(0) - 1;
   int degree, thisNumParts, numParts = 0;

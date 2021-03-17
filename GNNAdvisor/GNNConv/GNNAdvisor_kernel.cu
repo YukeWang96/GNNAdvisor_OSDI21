@@ -5,10 +5,10 @@
 #include <stdio.h>
 
 #include <vector>
-#define MAX_DIM 100
-#define MAX_NB 100       // must <= partsize 
+#define MAX_DIM 30
+#define MAX_NB 32       // must <= partsize 
 #define threadPerWarp 32 //must < 32
-#define wrapPerBlock 4  // must also set with respect to the 
+#define wrapPerBlock 8  // must also set with respect to the 
                         // [thread-per-block = wrapPerBlock*threadPerWarp]
 
 __device__ inline float atomicAdd_F(float* address, float value)
@@ -19,9 +19,9 @@ __device__ inline float atomicAdd_F(float* address, float value)
 
 template <typename scalar_t>
 __global__ void spmm_forward_cuda_kernel(
-    int num_nodes, 
-    int dim,
-    int num_parts,
+    const int num_nodes, 
+    const int dim,
+    const int num_parts,
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> input,
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> output,
     torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers, 
@@ -33,9 +33,9 @@ __global__ void spmm_forward_cuda_kernel(
 
 template <typename scalar_t>
 __global__ void spmm_backward_cuda_kernel(
-    int num_nodes, 
-    int dim,
-    int num_parts,
+    const int num_nodes, 
+    const int dim,
+    const int num_parts,
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> d_output,
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> d_input,
     torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers,
@@ -68,7 +68,9 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     const int dim = tmp.size(1);
     const int num_nodes = tmp.size(0);
     const int num_parts = part2Node.size(0);
-    const int blocks = (num_parts*32  + threadPerBlock - 1) / threadPerBlock; 
+
+    const int block_size = wrapPerBlock * threadPerWarp;
+    const int blocks = (num_parts * 32 + block_size  - 1) / block_size; 
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {
                                 spmm_forward_cuda_kernel<scalar_t><<<blocks, threadPerBlock>>>(
@@ -99,9 +101,9 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 
 template <typename scalar_t>
 __global__ void spmm_forward_cuda_kernel(
-    int num_nodes, 
-    int dim,
-    int num_parts, 
+    const int num_nodes, 
+    const int dim,
+    const int num_parts, 
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> input,
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> output,
     torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers, 
@@ -112,9 +114,9 @@ __global__ void spmm_forward_cuda_kernel(
 ) {
 
     int tid =  blockIdx.x * blockDim.x + threadIdx.x;
-    int warpId =  tid / 32;
-    int block_warpID = threadIdx.x/32;
-    int intraWarp_tid = tid % 32;
+    int warpId =  tid / 32;                             // global warp-id
+    int block_warpID = threadIdx.x/32;                  // block warp-id
+    int intraWarp_tid = tid % 32;                       // warp thread-id
 
     if (warpId < num_parts && intraWarp_tid < threadPerWarp){
 
@@ -136,23 +138,21 @@ __global__ void spmm_forward_cuda_kernel(
         for (int nid = 0; nid < partEnd - partBeg; nid++)
         {
             int nIndex = partial_index[pindex_base + nid];
-            // float degree_norm_inv_td = degree_norm_inv[pindex_base + nid];
-            // float degree_norm_inv = src_norm * dst_norm[pindex_base + nid];
-
-            // float degree_norm_inv =  __fmaf_rn(src_norm, degrees[nIndex], 0);
             float degree_norm_inv = __fmaf_rn(src_norm, degrees[nIndex], 0);
 
-            // float degree_norm_inv = 1.0/sqrt(degrees[srcId]) * (1.0/sqrt(degrees[nIndex]));
-            // float degree_norm_inv = 1;
             if (nid == 0)
+                #pragma unroll
                 for (int d = intraWarp_tid; d < dim; d += threadPerWarp){
                     partial_results[presult_base + d] = 0;
                 }
+            
+            #pragma unroll
             for (int d = intraWarp_tid; d < dim; d += threadPerWarp){
                 partial_results[presult_base + d] += __fmaf_rn(degree_norm_inv, input[nIndex][d], 0);
             }
         }
 
+        #pragma unroll
         for (int d = intraWarp_tid; d < dim; d += threadPerWarp){
             atomicAdd_F((float*)&output[srcId][d], partial_results[presult_base + d]);
         }
@@ -191,10 +191,12 @@ std::vector<torch::Tensor> spmm_backward_cuda(
     const int dim = d_input_prime.size(1);
     const int num_nodes = d_input_prime.size(0);
     const int num_parts = part2Node.size(0);
-    const int blocks = (num_parts * 32 + threadPerBlock - 1) / threadPerBlock; 
+
+    const int block_size = wrapPerBlock * threadPerWarp;
+    const int blocks = (num_parts * 32 + block_size - 1) / block_size; 
 
     AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward", ([&] {
-                                spmm_backward_cuda_kernel<scalar_t><<<blocks, threadPerBlock>>>(
+                                spmm_backward_cuda_kernel<scalar_t><<<blocks, block_size>>>(
                                     num_nodes, 
                                     dim,
                                     num_parts,
@@ -223,9 +225,9 @@ std::vector<torch::Tensor> spmm_backward_cuda(
 
 template <typename scalar_t>
 __global__ void spmm_backward_cuda_kernel(
-    int num_nodes, 
-    int dim,
-    int num_parts, 
+    const int num_nodes, 
+    const int dim,
+    const int num_parts, 
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> d_output,
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> d_input,
     torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers,
@@ -264,16 +266,14 @@ __global__ void spmm_backward_cuda_kernel(
             int nIndex = partial_index[pindex_base + nid];
             float degree_norm =  __fmaf_rn(src_norm, degrees[nIndex], 0);
 
-            // float degree_norm_td = dst_norm[pindex_base + nid];
-            // float degree_norm = src_norm * dst_norm[pindex_base + nid];
-            // float degree_norm = sqrt(degrees[srcId]) * sqrt(degrees[nIndex]);
-            // float degree_norm = 1;
-
             if (nid == 0)
+                #pragma unroll
                 for (int d = intraWarp_tid; d < dim; d += threadPerWarp){
                     partial_results[presult_base + d] = 0;
                     // atomicAdd_F((float*)&d_input[srcId][d], degree_norm * d_output[nIndex][d]);
                 }
+            
+                #pragma unroll
             for (int d = intraWarp_tid; d < dim; d += threadPerWarp){
                 partial_results[presult_base + d] += __fmaf_rn(degree_norm, d_output[nIndex][d], 0);
             }

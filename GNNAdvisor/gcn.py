@@ -17,7 +17,7 @@ from gcn_conv import *
 from dataset import *
 
 GCN = True
-threadPerBlock = 32 # must match the warp-per-block
+threadPerBlock = 256  # must match the warp-per-block
 
 best_val_acc = test_acc = 0
 time_avg = []
@@ -32,7 +32,7 @@ parser.add_argument("--partsize", type=int, default=64, help="neighbor-group siz
 args = parser.parse_args()
 print(args)
 
-partsize = args.partsize # 512
+partsize = args.partsize
 dataset = args.dataset
 
 path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")

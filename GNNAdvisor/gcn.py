@@ -20,6 +20,7 @@ from torch_geometric.datasets import Reddit
 
 from gcn_conv import *
 from dataset import *
+from gcn import *
 
 threadPerBlock = 32 # must match the warp-per-block
 GCN = True

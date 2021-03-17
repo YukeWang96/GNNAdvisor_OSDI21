@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import GNNAdvisor as GNNA
 import math
+from param import *
 
 class GAccFunction(torch.autograd.Function):
     @staticmethod

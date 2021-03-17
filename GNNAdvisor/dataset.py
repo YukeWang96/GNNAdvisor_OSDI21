@@ -55,7 +55,7 @@ class custom_dataset(torch.nn.Module):
             self.edge_index = np.stack([src_li, dst_li])
 
             dur = time.perf_counter() - start
-            print("=> Loading (txt) {:.3f}s ".format(dur))
+            print("# Loading (txt) {:.3f}s ".format(dur))
 
         # loading from a .npz graph file
         else: 
@@ -75,7 +75,7 @@ class custom_dataset(torch.nn.Module):
             self.edge_index = np.stack([src_li, dst_li])
 
             dur = time.perf_counter() - start
-            print("=> Loading (npz): {:.3f}s ".format(dur))
+            print("# Loading (npz): {:.3f}s ".format(dur))
 
     def init_embedding(self, dim):
         '''

@@ -57,19 +57,3 @@ DGL Time: (ms) 22.049
 Namespace(classes=22, dataset='amazon0601', dim=96, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
 # Loading (npz): 0.231s 
 DGL Time: (ms) 38.562
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

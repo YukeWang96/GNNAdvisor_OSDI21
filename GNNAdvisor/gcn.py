@@ -10,14 +10,10 @@ import torch
 import math
 import numpy as np 
 import torch.nn.functional as F
-from torch_geometric.datasets import Planetoid
-import torch_geometric.transforms as T
 import torch.autograd.profiler as profiler
 
 import GNNAdvisor as GNNA
 from scipy.sparse import *
-from torch_geometric.datasets import Reddit
-
 from gcn_conv import *
 from dataset import *
 
@@ -35,6 +31,7 @@ parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--partsize", type=int, default=64, help="neighbor-group size")
 args = parser.parse_args()
+print(args)
 
 partsize = args.partsize # 512
 dataset = args.dataset
@@ -54,7 +51,7 @@ scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))
 scipy_csr = scipy_coo.tocsr()
 build_csr = time.perf_counter() - start
 
-print("Build CSR (s): {:.3f}".format(build_csr))
+print("# Build CSR (s): {:.3f}".format(build_csr))
 column_index = torch.IntTensor(scipy_csr.indices)
 row_pointers = torch.IntTensor(scipy_csr.indptr)
 
@@ -70,7 +67,7 @@ degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
 start = time.perf_counter()
 partPtr, part2Node = GNNA.build_part(partsize, row_pointers)
 build_neighbor_parts = time.perf_counter() - start
-print("Build nb_part (s): {:.3f}".format(build_neighbor_parts))
+print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
 
 # partPtr, part2Node = part_based_partitioing(scipy_csr.indptr, scipy_csr.indices)
 # partPtr = torch.IntTensor(partPtr).cuda()
@@ -94,7 +91,7 @@ if GCN:
         def forward(self):
             x = data.x
             x = F.relu(self.conv1(x, inputInfo))
-            x = F.dropout(x, training=self.training)
+            # x = F.dropout(x, training=self.training)
             x = self.conv2(x, inputInfo)
             return F.log_softmax(x, dim=1)
 else:
@@ -171,3 +168,4 @@ for epoch in tqdm(range(1, num_epoches + 1)):
     # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
 print('GNNAdvisor Time (ms): {:.3f}'.format(np.mean(time_avg)*1e3))
+print()

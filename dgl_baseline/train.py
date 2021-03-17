@@ -46,55 +46,52 @@ def main(args):
     # path = os.path.join("/home/yuke/.graphs/orig", args.dataset)
     path = os.path.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset+".npz")
     data = custom_dataset(path, args.n_hidden, args.num_classes, load_from_txt=False)
-    # raise ValueError('Unknown dataset: {}'.format(args.dataset))
 
+    # if args.dataset in ['cora', 'citeseer', 'pubmed', 'reddit']:
+    #     g = data[0]
+    #     if args.gpu < 0:
+    #         cuda = False
+    #     else:
+    #         cuda = True
+    #         g = g.int().to(args.gpu)
 
-    if args.dataset in ['cora', 'citeseer', 'pubmed', 'reddit']:
-        g = data[0]
-        if args.gpu < 0:
-            cuda = False
-        else:
-            cuda = True
-            g = g.int().to(args.gpu)
+    #     features = g.ndata['feat']
+    #     labels = g.ndata['label']
+    #     train_mask = g.ndata['train_mask']
+    #     val_mask = g.ndata['val_mask']
+    #     test_mask = g.ndata['test_mask']
+    #     in_feats = features.shape[1]
+    #     n_classes = data.num_labels
+    #     n_edges = data.graph.number_of_edges()
+    # else:
+    g = data.g
 
-        features = g.ndata['feat']
-        labels = g.ndata['label']
-        train_mask = g.ndata['train_mask']
-        val_mask = g.ndata['val_mask']
-        test_mask = g.ndata['test_mask']
-        in_feats = features.shape[1]
-        n_classes = data.num_labels
-        n_edges = data.graph.number_of_edges()
+    if args.gpu < 0:
+        cuda = False
     else:
-        g = data.g
+        cuda = True
 
-        if args.gpu < 0:
-            cuda = False
-        else:
-            cuda = True
+    g = g.int().to(args.gpu)
 
-        g = g.int().to(args.gpu)
+    features = data.x
+    labels = data.y
+    train_mask = data.train_mask
+    val_mask = data.val_mask
+    test_mask = data.test_mask
 
-        features = data.x
-        labels = data.y
-        train_mask = data.train_mask
-        val_mask = data.val_mask
-        test_mask = data.test_mask
-
-        in_feats = features.size(1)
-        n_classes = data.num_classes
-        n_edges = data.num_edges
-
-    print("""----Data statistics------'
-      #Edges %d
-      #Classes %d
-      #Train samples %d
-      #Val samples %d
-      #Test samples %d""" %
-          (n_edges, n_classes,
-              train_mask.int().sum().item(),
-              val_mask.int().sum().item(),
-              test_mask.int().sum().item()))
+    in_feats = features.size(1)
+    n_classes = data.num_classes
+    n_edges = data.num_edges
+    # print("""----Data statistics------'
+    #     #Edges %d
+    #     #Classes %d
+    #     #Train samples %d
+    #     #Val samples %d
+    #     #Test samples %d""" %
+    #         (n_edges, n_classes,
+    #             train_mask.int().sum().item(),
+    #             val_mask.int().sum().item(),
+    #             test_mask.int().sum().item()))
 
     # add self loop
     if args.self_loop:
@@ -127,7 +124,6 @@ def main(args):
         model.cuda()
 
     loss_fcn = torch.nn.CrossEntropyLoss()
-
     # use optimizer
     optimizer = torch.optim.Adam(model.parameters(),
                                  lr=args.lr,
@@ -180,6 +176,5 @@ if __name__ == '__main__':
                         help="graph self-loop (default=False)")
     parser.set_defaults(self_loop=False)
     args = parser.parse_args()
-    print(args)
-
+    # print(args)
     main(args)

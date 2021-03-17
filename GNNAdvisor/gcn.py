@@ -40,19 +40,10 @@ args = parser.parse_args()
 partsize = args.partsize # 512
 dataset = args.dataset
 
-if dataset == "reddit":
-    path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'Reddit')
-    dataset = Reddit(path)
-    data = dataset[0]
-elif dataset in ['cora', 'pubmed', 'citeseer']:
-    path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
-    dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
-    data = dataset[0]
-else:
-    path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
-    print(path)
-    data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
-    dataset = data
+path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
+print(path)
+data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
+dataset = data
 
 num_nodes = len(data.x)
 num_edges = len(data.edge_index[1])

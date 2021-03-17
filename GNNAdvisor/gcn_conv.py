@@ -7,19 +7,23 @@ from param import *
 
 class GAccFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, X, weights, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock):
+    def forward(ctx, X, weights, inputInfo):
         # X = torch.sparse.mm(edge_coo, X)
-        ctx.save_for_backward(X, row_pointers, column_index, weights, degrees, partPtr, part2Node)
-        ctx.threadPerBlock = threadPerBlock
+        ctx.save_for_backward(X, inputInfo.row_pointers, inputInfo.column_index, weights, 
+                                inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node)
+                                
+        ctx.threadPerBlock = inputInfo.threadPerBlock
         X_prime = torch.mm(X, weights)
-        X_prime = GNNA.forward(X_prime, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)[0]
+        X_prime = GNNA.forward(X_prime, inputInfo.row_pointers, inputInfo.column_index, 
+                                inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)[0]
         return X_prime
 
     @staticmethod
     def backward(ctx, d_output):
         X, row_pointers, column_index, weights, degrees, partPtr, part2Node = ctx.saved_tensors
         
-        d_input_prime = GNNA.backward(d_output, row_pointers, column_index, degrees, partPtr, part2Node, ctx.threadPerBlock)[0]
+        d_input_prime = GNNA.backward(d_output, row_pointers, column_index, 
+                                        degrees, partPtr, part2Node, ctx.threadPerBlock)[0]
         d_input = torch.mm(d_input_prime, weights.transpose(0,1))
         d_weights = torch.mm(X.transpose(0,1), d_input_prime)
         
@@ -29,13 +33,13 @@ class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
         super(GCNConv, self).__init__()
         self.weights = torch.nn.Parameter(torch.randn(input_dim, output_dim))
-        # self.reset_parameters()
+        self.reset_parameters()
 
     def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weights.size(1))
         self.weights.data.uniform_(-stdv, stdv)
 
-    def forward(self, X, row_pointers=None, column_index=None, degrees=None, partPtr=None, part2Node=None, threadPerBlock=None):
+    def forward(self, X, inputInfo):
         '''
         @param:
         X:  the input tensor of the graph node embedding, shape: [n_nodes, n_dim].
@@ -43,16 +47,16 @@ class GCNConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return GAccFunction.apply(X, self.weights, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
+        return GAccFunction.apply(X, self.weights, inputInfo)
 
 
 class GAccFunction_GIN(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, X, weights, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock):
-        ctx.threadPerBlock = threadPerBlock
+    def forward(ctx, X, weights, inputInfo):
+        ctx.threadPerBlock = inputInfo.threadPerBlock
 
-        X = GNNA.forward(X, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)[0]
-        ctx.save_for_backward(X, row_pointers, column_index, weights, degrees, partPtr, part2Node)
+        X = GNNA.forward(X, inputInfo)[0]
+        ctx.save_for_backward(X, inputInfo)
         X_prime = torch.mm(X, weights)
 
         return X_prime
@@ -71,13 +75,13 @@ class GINConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
         super(GINConv, self).__init__()
         self.weights = torch.nn.Parameter(torch.randn(input_dim, output_dim))
-        # self.reset_parameters()
+        self.reset_parameters()
 
     def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weights.size(1))
         self.weights.data.uniform_(-stdv, stdv)
 
-    def forward(self, X, row_pointers=None, column_index=None, degrees=None, partPtr=None, part2Node=None, threadPerBlock=None):
+    def forward(self, X, inputInfo):
         '''
         @param:
         X:  the input tensor of the graph node embedding, shape: [n_nodes, n_dim].
@@ -85,4 +89,4 @@ class GINConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return GAccFunction_GIN.apply(X, self.weights, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
+        return GAccFunction_GIN.apply(X, self.weights, inputInfo)

@@ -68,6 +68,7 @@ print("Build CSR: {:.3f}s ".format(build_csr))
 column_index = torch.IntTensor(scipy_csr.indices)
 row_pointers = torch.IntTensor(scipy_csr.indptr)
 
+
 def func(x):
     if x > 0:
         return x
@@ -96,6 +97,13 @@ column_index =  column_index.cuda()
 row_pointers = row_pointers.cuda()
 # sys.exit(0)
 
+inputInfo = inputProperty(row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
+# inputInfo.row_pointers = row_pointers
+# inputInfo.column_index = column_index
+# inputInfo.degrees =  degrees
+# inputInfo.partPtr = partPtr
+# inputInfo.part2Node =  part2Node
+# inputInfo.threadPerBlock = threadPerBlock
 
 if GCN:
     class Net(torch.nn.Module):
@@ -106,9 +114,12 @@ if GCN:
 
         def forward(self):
             x = data.x
-            x = F.relu(self.conv1(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
+            x = F.relu(self.conv1(x, inputInfo))
             x = F.dropout(x, training=self.training)
-            x = self.conv2(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
+            x = self.conv2(x, inputInfo)
+            # x = F.relu(self.conv1(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
+            # x = F.dropout(x, training=self.training)
+            # x = self.conv2(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
             return F.log_softmax(x, dim=1)
 else:
     class Net(torch.nn.Module):
@@ -122,11 +133,16 @@ else:
 
         def forward(self):
             x = data.x
-            x = F.relu(self.conv1(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            x = F.relu(self.conv2(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            x = F.relu(self.conv3(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            x = F.relu(self.conv4(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            x = self.conv5(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
+            x = F.relu(self.conv1(x, inputInfo))
+            x = F.relu(self.conv2(x, inputInfo))
+            x = F.relu(self.conv3(x, inputInfo))
+            x = F.relu(self.conv4(x, inputInfo))
+            x = self.conv5(x, inputInfo)
+            # x = F.relu(self.conv1(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
+            # x = F.relu(self.conv2(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
+            # x = F.relu(self.conv3(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
+            # x = F.relu(self.conv4(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
+            # x = self.conv5(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
             return F.log_softmax(x, dim=1)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

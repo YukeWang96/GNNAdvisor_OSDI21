@@ -11,28 +11,33 @@ import torch_geometric.transforms as T
 from torch_geometric.nn import GCNConv
 from dataset import *
 
-# dataset = 'Cora'
-# path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
-# dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
-# data = dataset[0]
+parser = argparse.ArgumentParser()
+parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
+parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
+parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
+parser.add_argument("--classes", type=int, default=22, help="number of output classes")
+parser.add_argument("--epochs", type=int, default=200, help="number of epoches")
+args = parser.parse_args()
+print(args)
 
-path = osp.join("/home/yuke/.graphs/osdi-ae-graphs", 'YeastH'+".npz")
-dataset = custom_dataset(path, 16, 100, load_from_txt=False)
+path = osp.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset+".npz")
+dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 data = dataset
 
 class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = GCNConv(dataset.num_features, 16, cached=True,
+        self.conv1 = GCNConv(dataset.num_features, args.hidden, cached=True,
                              normalize=False)
-        self.conv2 = GCNConv(16, dataset.num_classes, cached=True,
+        self.conv2 = GCNConv(args.hidden, dataset.num_classes, cached=True,
                              normalize=False)
 
     def forward(self):
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_attr
-        x = self.conv1(x, edge_index, edge_weight)
+        x = F.relu(self.conv1(x, edge_index, edge_weight))
+        x = F.dropout(x, training=self.training)
         x = self.conv2(x, edge_index, edge_weight)
-        return x
+        return F.log_softmax(x, dim=1)
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -50,25 +55,20 @@ def train():
     optimizer.step()
 
 
-# @torch.no_grad()
-# def test():
-#     model.eval()
-#     logits, accs = model(), []
-#     for _, mask in data('train_mask', 'val_mask', 'test_mask'):
-#         pred = logits[mask].max(1)[1]
-#         acc = pred.eq(data.y[mask]).sum().item() / mask.sum().item()
-#         accs.append(acc)
-#     return accs
-
+@torch.no_grad()
+def test():
+    model.eval()
+    logits, accs = model(), []
+    for _, mask in data('train_mask', 'val_mask', 'test_mask'):
+        pred = logits[mask].max(1)[1]
+        acc = pred.eq(data.y[mask]).sum().item() / mask.sum().item()
+        accs.append(acc)
+    return accs
 
 # best_val_acc = test_acc = 0
-num_epoch = 100
-
-print("=> Profile {} Epoch on {}".format(num_epoch, dataset))
-
 torch.cuda.synchronize()
 start = time.perf_counter()
-for epoch in tqdm(range(1, num_epoch + 1)):
+for epoch in tqdm(range(1, args.epochs + 1)):
     train()
     # train_acc, val_acc, tmp_test_acc = test()
     # if val_acc > best_val_acc:
@@ -79,4 +79,5 @@ for epoch in tqdm(range(1, num_epoch + 1)):
 torch.cuda.synchronize()
 
 dur = time.perf_counter() - start
-print("GCN (L2-H16) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/num_epoch))
+print("GCN (L2-H16) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/args.epochs))
+print()

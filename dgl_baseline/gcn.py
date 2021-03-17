@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
 from dgl.nn.pytorch import GraphConv
-        
+import torch.nn.functional as F
+
 class GCN(nn.Module):
     def __init__(self,
                  g,
@@ -25,4 +26,4 @@ class GCN(nn.Module):
         h = features
         for i, layer in enumerate(self.layers):
             h = layer(self.g, h)
-        return h
+        return F.log_softmax(h, dim=1)

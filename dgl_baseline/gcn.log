@@ -1,0 +1,75 @@
+Namespace(classes=6, dataset='citeseer', dim=3703, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+=> Loading (npz): 0.015s 
+DGL Time: (ms) 22.103
+
+Namespace(classes=7, dataset='cora', dim=1433, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+=> Loading (npz): 0.029s 
+DGL Time: (ms) 20.087
+
+Namespace(classes=3, dataset='pubmed', dim=500, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+=> Loading (npz): 0.013s 
+DGL Time: (ms) 18.634
+
+Namespace(classes=121, dataset='ppi', dim=50, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+=> Loading (npz): 0.110s 
+DGL Time: (ms) 23.373
+
+Namespace(classes=2, dataset='PROTEINS_full', dim=29, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+=> Loading (npz): 0.069s 
+DGL Time: (ms) 20.861
+
+Namespace(classes=2, dataset='OVCAR-8H', dim=66, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+=> Loading (npz): 0.513s 
+DGL Time: (ms) 96.609
+
+Namespace(classes=2, dataset='Yeast', dim=74, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.283s 
+DGL Time: (ms) 91.683
+
+Namespace(classes=2, dataset='DD', dim=89, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.154s 
+DGL Time: (ms) 34.069
+
+Namespace(classes=2, dataset='TWITTER-Real-Graph-Partial', dim=1323, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.160s 
+DGL Time: (ms) 58.684
+
+Namespace(classes=2, dataset='SW-620H', dim=66, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.323s 
+DGL Time: (ms) 96.147
+
+Namespace(classes=22, dataset='amazon0505', dim=96, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.354s 
+DGL Time: (ms) 39.724
+
+Namespace(classes=12, dataset='artist', dim=100, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.051s 
+DGL Time: (ms) 22.639
+
+Namespace(classes=22, dataset='com-amazon', dim=96, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.170s 
+DGL Time: (ms) 38.465
+
+Namespace(classes=39, dataset='soc-BlogCatalog', dim=128, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.110s 
+DGL Time: (ms) 22.049
+
+Namespace(classes=22, dataset='amazon0601', dim=96, dropout=0.5, gpu=0, hidden=16, lr=0.01, n_epochs=200, n_layers=1, self_loop=False, weight_decay=0.0005)
+# Loading (npz): 0.231s 
+DGL Time: (ms) 38.562
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

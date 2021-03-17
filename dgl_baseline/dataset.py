@@ -52,7 +52,7 @@ class custom_dataset(torch.nn.Module):
             self.num_edges = len(src_li)
             self.num_nodes = max(self.nodes) + 1
             dur = time.perf_counter() - start
-            print("=> Loading (txt) {:.3f}s ".format(dur))
+            print("# Loading (txt) {:.3f}s ".format(dur))
 
         # loading from a .npz graph file
         else: 
@@ -69,7 +69,7 @@ class custom_dataset(torch.nn.Module):
             self.num_edges = len(src_li)
 
             dur = time.perf_counter() - start
-            print("=> Loading (npz): {:.3f}s ".format(dur))
+            print("# Loading (npz): {:.3f}s ".format(dur))
 
     def init_embedding(self, dim):
         '''

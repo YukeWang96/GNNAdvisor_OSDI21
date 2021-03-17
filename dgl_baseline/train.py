@@ -4,7 +4,6 @@ import time
 import os
 import numpy as np
 from tqdm import *
-os.environ["PYTHONWARNINGS"] = "ignore"
 
 import torch
 import torch.nn as nn
@@ -14,7 +13,7 @@ from dgl.data import register_data_args
 
 from dataset import *
 
-run_GCN = False
+run_GCN = True
 
 if run_GCN:
     from gcn import GCN
@@ -33,7 +32,7 @@ def evaluate(model, features, labels, mask):
 
 def main(args):
     path = os.path.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset+".npz")
-    data = custom_dataset(path, args.n_hidden, args.num_classes, load_from_txt=False)
+    data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
     g = data.g
 
     if args.gpu < 0:
@@ -70,7 +69,7 @@ def main(args):
     if run_GCN:    
         model = GCN(g,
                     in_feats=in_feats,
-                    n_hidden=16,
+                    n_hidden=args.hidden,
                     n_classes=n_classes,
                     n_layers=2)
     else:
@@ -80,8 +79,7 @@ def main(args):
                     output_dim=n_classes,
                     num_layers=5)
 
-    if cuda:
-        model.cuda()
+    if cuda: model.cuda()
 
     loss_fcn = torch.nn.CrossEntropyLoss()
     # use optimizer
@@ -93,8 +91,8 @@ def main(args):
     dur = []
     for epoch in tqdm(range(args.n_epochs)):
         model.train()
-        if epoch >= 3:
-            t0 = time.time()
+        # if epoch >= 3:
+        t0 = time.time()
 
         # forward
         logits = model(features)
@@ -104,11 +102,12 @@ def main(args):
         loss.backward()
         optimizer.step()
 
-        if epoch >= 3:
-            dur.append(time.time() - t0)
+        # if epoch >= 3:
+        dur.append(time.time() - t0)
         # acc = evaluate(model, features, labels, val_mask)
     
     print("DGL Time: (ms) {:.3f}". format(np.mean(dur)*1e3))
+    print()
 
 
 if __name__ == '__main__':
@@ -123,9 +122,11 @@ if __name__ == '__main__':
     parser.add_argument("--n-epochs", type=int, default=200,
                         help="number of training epochs")
 
-    parser.add_argument("--n-hidden", type=int, default=16,
+    parser.add_argument("--dim", type=int, default=96, 
+                        help="input embedding dimension")
+    parser.add_argument("--hidden", type=int, default=16,
                         help="number of hidden gcn units")
-    parser.add_argument("--num-classes", type=int, default=10,
+    parser.add_argument("--classes", type=int, default=10,
                         help="number of output classes")
     parser.add_argument("--n-layers", type=int, default=1,
                         help="number of hidden gcn layers")
@@ -137,4 +138,5 @@ if __name__ == '__main__':
     parser.set_defaults(self_loop=False)
     args = parser.parse_args()
     print(args)
+
     main(args)

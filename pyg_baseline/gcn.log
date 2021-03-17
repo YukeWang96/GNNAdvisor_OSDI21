@@ -1,0 +1,68 @@
+Namespace(classes=6, dataset='citeseer', dim=3703, epochs=200, hidden=16)
+=> Loading (npz): 9.463s 
+GCN (L2-H16) -- Avg Epoch (ms): 13.426
+Namespace(classes=7, dataset='cora', dim=1433, epochs=200, hidden=16)
+=> Loading (npz): 9.822s 
+GCN (L2-H16) -- Avg Epoch (ms): 15.032
+Namespace(classes=3, dataset='pubmed', dim=500, epochs=200, hidden=16)
+=> Loading (npz): 9.586s 
+GCN (L2-H16) -- Avg Epoch (ms): 13.416
+Namespace(classes=121, dataset='ppi', dim=50, epochs=200, hidden=16)
+=> Loading (npz): 9.317s 
+GCN (L2-H16) -- Avg Epoch (ms): 19.689
+Namespace(classes=2, dataset='PROTEINS_full', dim=29, epochs=200, hidden=16)
+=> Loading (npz): 9.901s 
+GCN (L2-H16) -- Avg Epoch (ms): 15.231
+Namespace(classes=2, dataset='OVCAR-8H', dim=66, epochs=200, hidden=16)
+=> Loading (npz): 9.774s 
+GCN (L2-H16) -- Avg Epoch (ms): 90.648
+Namespace(classes=2, dataset='Yeast', dim=74, epochs=200, hidden=16)
+=> Loading (npz): 10.176s 
+GCN (L2-H16) -- Avg Epoch (ms): 84.465
+Namespace(classes=2, dataset='DD', dim=89, epochs=200, hidden=16)
+=> Loading (npz): 9.650s 
+GCN (L2-H16) -- Avg Epoch (ms): 25.931
+
+Namespace(classes=2, dataset='TWITTER-Real-Graph-Partial', dim=1323, epochs=200, hidden=16)
+=> Loading (npz): 9.666s 
+GCN (L2-H16) -- Avg Epoch (ms): 43.625
+
+Namespace(classes=2, dataset='SW-620H', dim=66, epochs=200, hidden=16)
+=> Loading (npz): 10.188s 
+GCN (L2-H16) -- Avg Epoch (ms): 89.309
+
+Namespace(classes=22, dataset='amazon0505', dim=96, epochs=200, hidden=16)
+=> Loading (npz): 9.764s 
+GCN (L2-H16) -- Avg Epoch (ms): 41.752
+
+Namespace(classes=12, dataset='artist', dim=100, epochs=200, hidden=16)
+=> Loading (npz): 9.710s 
+GCN (L2-H16) -- Avg Epoch (ms): 16.579
+
+Namespace(classes=22, dataset='com-amazon', dim=96, epochs=200, hidden=16)
+=> Loading (npz): 9.754s 
+GCN (L2-H16) -- Avg Epoch (ms): 29.670
+
+Namespace(classes=39, dataset='soc-BlogCatalog', dim=128, epochs=200, hidden=16)
+=> Loading (npz): 9.268s 
+GCN (L2-H16) -- Avg Epoch (ms): 20.480
+
+Namespace(classes=22, dataset='amazon0601', dim=96, epochs=200, hidden=16)
+=> Loading (npz): 9.368s 
+GCN (L2-H16) -- Avg Epoch (ms): 37.492
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -33,16 +33,16 @@ parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
-parser.add_argument("--partsize", type=int, default=22, help="neighbor-group size")
+parser.add_argument("--partsize", type=int, default=64, help="neighbor-group size")
 args = parser.parse_args()
 
 partsize = args.partsize # 512
 dataset = args.dataset
 
-# path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
-path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
-print(path)
-data = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
+path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
+data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
+# path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
+# data = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
 dataset = data
 
 num_nodes = len(data.x)

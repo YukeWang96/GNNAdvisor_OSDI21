@@ -1,10 +1,9 @@
-import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
-
 import os.path as osp
 import argparse
 from tqdm import *
 import os
+os.environ["PYTHONWARNINGS"] = "ignore"
+
 import sys
 import time
 import torch
@@ -40,9 +39,10 @@ args = parser.parse_args()
 partsize = args.partsize # 512
 dataset = args.dataset
 
-path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
+# path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
+path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
 print(path)
-data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
+data = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
 dataset = data
 
 num_nodes = len(data.x)
@@ -170,4 +170,4 @@ for epoch in tqdm(range(1, num_epoches + 1)):
     # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
     # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
-print('Avg. Train-Time (ms): {:.3f}'.format(np.mean(time_avg)*1e3))
+print('GNNAdvisor Time (ms): {:.3f}'.format(np.mean(time_avg)*1e3))

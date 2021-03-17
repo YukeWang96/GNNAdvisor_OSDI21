@@ -52,6 +52,8 @@ class custom_dataset(torch.nn.Module):
             self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
             self.num_nodes = max(self.nodes) + 1
+            self.edge_index = np.stack([src_li, dst_li])
+
             dur = time.perf_counter() - start
             print("=> Loading (txt) {:.3f}s ".format(dur))
 

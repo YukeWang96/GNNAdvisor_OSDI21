@@ -1,19 +1,16 @@
-import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
 
 import argparse
 import time
-import numpy as np
 import os
-import networkx as nx
+import numpy as np
 from tqdm import *
+os.environ["PYTHONWARNINGS"] = "ignore"
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import dgl
 from dgl.data import register_data_args
-# from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
 from dataset import *
 
@@ -35,35 +32,8 @@ def evaluate(model, features, labels, mask):
         return correct.item() * 1.0 / len(labels)
 
 def main(args):
-    # load and preprocess dataset
-    # if args.dataset == 'cora':
-    #     data = CoraGraphDataset()
-    # elif args.dataset == 'citeseer':
-    #     data = CiteseerGraphDataset()
-    # elif args.dataset == 'pubmed':
-    #     data = PubmedGraphDataset()
-    # else:
-    # path = os.path.join("/home/yuke/.graphs/orig", args.dataset)
     path = os.path.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset+".npz")
     data = custom_dataset(path, args.n_hidden, args.num_classes, load_from_txt=False)
-
-    # if args.dataset in ['cora', 'citeseer', 'pubmed', 'reddit']:
-    #     g = data[0]
-    #     if args.gpu < 0:
-    #         cuda = False
-    #     else:
-    #         cuda = True
-    #         g = g.int().to(args.gpu)
-
-    #     features = g.ndata['feat']
-    #     labels = g.ndata['label']
-    #     train_mask = g.ndata['train_mask']
-    #     val_mask = g.ndata['val_mask']
-    #     test_mask = g.ndata['test_mask']
-    #     in_feats = features.shape[1]
-    #     n_classes = data.num_labels
-    #     n_edges = data.graph.number_of_edges()
-    # else:
     g = data.g
 
     if args.gpu < 0:
@@ -82,16 +52,6 @@ def main(args):
     in_feats = features.size(1)
     n_classes = data.num_classes
     n_edges = data.num_edges
-    # print("""----Data statistics------'
-    #     #Edges %d
-    #     #Classes %d
-    #     #Train samples %d
-    #     #Val samples %d
-    #     #Test samples %d""" %
-    #         (n_edges, n_classes,
-    #             train_mask.int().sum().item(),
-    #             val_mask.int().sum().item(),
-    #             test_mask.int().sum().item()))
 
     # add self loop
     if args.self_loop:
@@ -176,5 +136,5 @@ if __name__ == '__main__':
                         help="graph self-loop (default=False)")
     parser.set_defaults(self_loop=False)
     args = parser.parse_args()
-    # print(args)
+    print(args)
     main(args)

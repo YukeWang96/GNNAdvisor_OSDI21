@@ -3,7 +3,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 import os.path as osp
 import argparse
-
+from tqdm import *
 import os
 import sys
 import time
@@ -13,17 +13,17 @@ import numpy as np
 import torch.nn.functional as F
 from torch_geometric.datasets import Planetoid
 import torch_geometric.transforms as T
-import GNNAdvisor as GNNA
 import torch.autograd.profiler as profiler
+
+import GNNAdvisor as GNNA
 from scipy.sparse import *
 from torch_geometric.datasets import Reddit
 
 from gcn_conv import *
 from dataset import *
-from gcn import *
 
-threadPerBlock = 32 # must match the warp-per-block
 GCN = True
+threadPerBlock = 32 # must match the warp-per-block
 
 best_val_acc = test_acc = 0
 time_avg = []
@@ -35,12 +35,11 @@ parser.add_argument("--dim", type=int, default=96, help="input embedding dimensi
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--partsize", type=int, default=22, help="neighbor-group size")
-
 args = parser.parse_args()
 
 partsize = args.partsize # 512
-
 dataset = args.dataset
+
 if dataset == "reddit":
     path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'Reddit')
     dataset = Reddit(path)
@@ -50,24 +49,23 @@ elif dataset in ['cora', 'pubmed', 'citeseer']:
     dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
     data = dataset[0]
 else:
-    # path = osp.join("/home/yuke/.graphs/orig", dataset+".npy")
     path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
     print(path)
     data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
     dataset = data
-    
+
 num_nodes = len(data.x)
 num_edges = len(data.edge_index[1])
-val = [1] * num_edges
+val = [1]*num_edges
+
 start = time.perf_counter()
 scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))
 scipy_csr = scipy_coo.tocsr()
 build_csr = time.perf_counter() - start
-print("Build CSR: {:.3f}s ".format(build_csr))
 
+print("Build CSR (s): {:.3f}".format(build_csr))
 column_index = torch.IntTensor(scipy_csr.indices)
 row_pointers = torch.IntTensor(scipy_csr.indptr)
-
 
 def func(x):
     if x > 0:
@@ -81,29 +79,19 @@ degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
 start = time.perf_counter()
 partPtr, part2Node = GNNA.build_part(partsize, row_pointers)
 build_neighbor_parts = time.perf_counter() - start
-print("Build neighbor_partition: {:.3f}s ".format(build_neighbor_parts))
+print("Build nb_part (s): {:.3f}".format(build_neighbor_parts))
+
 # partPtr, part2Node = part_based_partitioing(scipy_csr.indptr, scipy_csr.indices)
 # partPtr = torch.IntTensor(partPtr).cuda()
 # part2Node = torch.IntTensor(part2Node).cuda()
-
-# print(row_pointers)
 partPtr = partPtr.int().cuda()
 part2Node = part2Node.int().cuda()
 # print(partPtr)
 # print(part2Node)
-# sys.exit(0)
-
-column_index =  column_index.cuda()
+column_index = column_index.cuda()
 row_pointers = row_pointers.cuda()
-# sys.exit(0)
-
-inputInfo = inputProperty(row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
-# inputInfo.row_pointers = row_pointers
-# inputInfo.column_index = column_index
-# inputInfo.degrees =  degrees
-# inputInfo.partPtr = partPtr
-# inputInfo.part2Node =  part2Node
-# inputInfo.threadPerBlock = threadPerBlock
+inputInfo = inputProperty(row_pointers, column_index, degrees, 
+                            partPtr, part2Node, threadPerBlock)
 
 if GCN:
     class Net(torch.nn.Module):
@@ -117,9 +105,6 @@ if GCN:
             x = F.relu(self.conv1(x, inputInfo))
             x = F.dropout(x, training=self.training)
             x = self.conv2(x, inputInfo)
-            # x = F.relu(self.conv1(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            # x = F.dropout(x, training=self.training)
-            # x = self.conv2(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
             return F.log_softmax(x, dim=1)
 else:
     class Net(torch.nn.Module):
@@ -138,11 +123,6 @@ else:
             x = F.relu(self.conv3(x, inputInfo))
             x = F.relu(self.conv4(x, inputInfo))
             x = self.conv5(x, inputInfo)
-            # x = F.relu(self.conv1(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            # x = F.relu(self.conv2(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            # x = F.relu(self.conv3(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            # x = F.relu(self.conv4(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
-            # x = self.conv5(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
             return F.log_softmax(x, dim=1)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -176,8 +156,9 @@ def test(profile=False):
         accs.append(acc)
     return accs
 
+
 num_epoches = 200
-for epoch in range(1, num_epoches + 1):
+for epoch in tqdm(range(1, num_epoches + 1)):
     start_train = time.perf_counter()
     train()
     train_time = time.perf_counter() - start_train
@@ -198,4 +179,4 @@ for epoch in range(1, num_epoches + 1):
     # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
     # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
-    print('Epoch: {:03d}, Train-Time: {:.3f} ms'.format(epoch, np.mean(time_avg)*1e3))
+print('Avg. Train-Time (ms): {:.3f}'.format(np.mean(time_avg)*1e3))

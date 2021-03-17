@@ -6,6 +6,7 @@ import time
 import numpy as np
 import os
 import networkx as nx
+from tqdm import *
 
 import torch
 import torch.nn as nn
@@ -134,7 +135,7 @@ def main(args):
 
     # initialize graph
     dur = []
-    for epoch in range(args.n_epochs):
+    for epoch in tqdm(range(args.n_epochs)):
         model.train()
         if epoch >= 3:
             t0 = time.time()
@@ -149,11 +150,9 @@ def main(args):
 
         if epoch >= 3:
             dur.append(time.time() - t0)
-
         # acc = evaluate(model, features, labels, val_mask)
-        print("Epoch {:05d} | Time(ms) {:.3f}". format(epoch, np.mean(dur)*1e3))
-
-    print()
+    
+    print("DGL Time: (ms) {:.3f}". format(np.mean(dur)*1e3))
 
 
 if __name__ == '__main__':

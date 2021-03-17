@@ -1,19 +1,18 @@
-import os.path as osp
-import argparse
-from tqdm import *
 import os
-os.environ["PYTHONWARNINGS"] = "ignore"
-
 import sys
 import time
-import torch
 import math
-import numpy as np 
+import argparse
+import numpy as np
+import os.path as osp
+from tqdm import *
+from scipy.sparse import *
+
+import torch
 import torch.nn.functional as F
 import torch.autograd.profiler as profiler
 
 import GNNAdvisor as GNNA
-from scipy.sparse import *
 from gcn_conv import *
 from dataset import *
 
@@ -91,7 +90,6 @@ if GCN:
         def forward(self):
             x = data.x
             x = F.relu(self.conv1(x, inputInfo))
-            # x = F.dropout(x, training=self.training)
             x = self.conv2(x, inputInfo)
             return F.log_softmax(x, dim=1)
 else:

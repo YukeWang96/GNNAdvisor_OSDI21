@@ -2,23 +2,26 @@
 #include <vector>
 
 std::vector<torch::Tensor> spmm_forward_cuda(
-    int threadPerBlock,
     torch::Tensor input,
+    torch::Tensor weight,
     torch::Tensor row_pointers,
     torch::Tensor column_index,
     torch::Tensor degrees,
     torch::Tensor part_pointers,
-    torch::Tensor part2Node
+    torch::Tensor part2Node,
+    int threadPerBlock
 );
 
 std::vector<torch::Tensor> spmm_backward_cuda(
-    int threadPerBlock,
     torch::Tensor d_output,
+    torch::Tensor X,
+    torch::Tensor W,
     torch::Tensor row_pointers,
     torch::Tensor column_index,
     torch::Tensor degrees,
     torch::Tensor part_pointers,
-    torch::Tensor part2Node
+    torch::Tensor part2Node,
+    int threadPerBlock
 );
 
 #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
@@ -27,6 +30,7 @@ std::vector<torch::Tensor> spmm_backward_cuda(
 
 std::vector<torch::Tensor> spmm_forward(
     torch::Tensor input,
+    torch::Tensor weight,
     torch::Tensor row_pointers,
     torch::Tensor column_index, 
     torch::Tensor degrees,
@@ -35,41 +39,46 @@ std::vector<torch::Tensor> spmm_forward(
     int threadPerBlock
 ) {
   CHECK_INPUT(input);
+  CHECK_INPUT(weight);
   CHECK_INPUT(row_pointers);
   CHECK_INPUT(column_index);
   CHECK_INPUT(degrees);
   CHECK_INPUT(part_pointers);
   CHECK_INPUT(part2Node);
 
-  return spmm_forward_cuda(threadPerBlock, input, row_pointers, column_index, degrees, part_pointers, part2Node);
+  return spmm_forward_cuda(input, weight, row_pointers, column_index, 
+                            degrees, part_pointers, part2Node, threadPerBlock);
 }
 
 std::vector<torch::Tensor> spmm_backward(
     torch::Tensor d_output,
+    torch::Tensor X,
+    torch::Tensor W,
     torch::Tensor row_pointers,
     torch::Tensor column_index,
     torch::Tensor degrees,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
     int threadPerBlock
-) 
-  {
+) {
   CHECK_INPUT(d_output);
+  CHECK_INPUT(X);
+  CHECK_INPUT(W);
   CHECK_INPUT(row_pointers);
   CHECK_INPUT(column_index);
   CHECK_INPUT(degrees);
   CHECK_INPUT(part_pointers);
   CHECK_INPUT(part2Node);
 
-  return spmm_backward_cuda(threadPerBlock, d_output, row_pointers, column_index, degrees, part_pointers, part2Node);
+  return spmm_backward_cuda(d_output, X, W, row_pointers, column_index, 
+                            degrees, part_pointers, part2Node, threadPerBlock);
 }
 
 std::vector<torch::Tensor> build_part(
     int partSize, 
     torch::Tensor indptr
-  ) 
-  {
-  // CHECK_INPUT(indptr);
+  ) {
+    
   auto indptr_acc = indptr.accessor<int, 1>();
   int num_nodes = indptr.size(0) - 1;
   int degree, thisNumParts, numParts = 0;

@@ -2,7 +2,7 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-hidden = [16] 		# [16, 32, 64, 128, 256, 512, 1024, 2048]
+hidden = [16] 		# [64] 		# [16, 32, 64, 128, 256, 512, 1024, 2048]
 partsize_li = [32]  # [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
 
 dataset = [
@@ -19,10 +19,10 @@ dataset = [
 		# ('SW-620H'                   , 66       , 2) ,
 
 		( 'amazon0505'               , 96	, 22),
-		# ( 'artist'                   , 100  , 12),
-		# ( 'com-amazon'               , 96	, 22),
-		# ( 'soc-BlogCatalog'	       	 , 128  , 39), 
-		# ( 'amazon0601'  	         , 96	, 22), 
+		( 'artist'                   , 100  , 12),
+		( 'com-amazon'               , 96	, 22),
+		( 'soc-BlogCatalog'	       	 , 128  , 39), 
+		( 'amazon0601'  	         , 96	, 22), 
 ]
 
 

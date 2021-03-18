@@ -3,15 +3,16 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <stdio.h>
-
 #include <vector>
+
 #define MAX_DIM 128
 #define MAX_NB 32           // <= partsize 
 
 #define threadPerWarp 32    //must < 32
 #define wrapPerBlock 8      
 
-__device__ inline float atomicAdd_F(float* address, float value)
+__device__ inline 
+void atomicAdd_F(float* address, float value)
 {
   float old = value;  
   while ((old = atomicExch(address, atomicExch(address, 0.0f)+old))!=0.0f);
@@ -87,11 +88,9 @@ std::vector<torch::Tensor> spmm_forward_cuda(
                                 );
                             }));
                                  
-    // check for error
     cudaError_t error = cudaGetLastError();
     if(error != cudaSuccess)
     {
-        // print the CUDA error message and exit
         printf("CUDA error: %s\n", cudaGetErrorString(error));
         exit(-1);
     }
@@ -171,7 +170,7 @@ __global__ void spmm_forward_cuda_kernel(
 
 ////////////////////////////////////////////
 // 
-// backward pass
+// backward pass (GCN)
 //
 ////////////////////////////////////////////
 std::vector<torch::Tensor> spmm_backward_cuda(
@@ -218,8 +217,7 @@ std::vector<torch::Tensor> spmm_backward_cuda(
 
     auto d_input = torch::mm(d_input_prime, W.transpose(0,1));
     auto d_weight = torch::mm(X.transpose(0,1), d_input_prime);
-    // d_input = torch::mm(d_input_prime, W.transpose(0,1))
-    // d_weights = torch::mm(X.transpose(0,1), d_input_prime)
+
     return {d_input, d_weight};
 }
 
@@ -246,7 +244,6 @@ __global__ void spmm_backward_cuda_kernel(
 
         __shared__  int partial_index[MAX_NB * wrapPerBlock];
         __shared__ float partial_results[MAX_DIM * wrapPerBlock];
-        // __shared__ float dst_norm[MAX_NB * wrapPerBlock];
 
         int srcId = part2Node[warpId];
         int partBeg = part_pointers[warpId];
@@ -256,7 +253,6 @@ __global__ void spmm_backward_cuda_kernel(
         int pindex_base = block_warpID * MAX_NB;
         for (int nid = partBeg + intraWarp_tid; nid < partEnd; nid += threadPerWarp){
             partial_index[pindex_base + nid - partBeg] = column_index[nid];
-            // dst_norm[pindex_base + nid - partBeg] = src_norm * degrees[column_index[nid]];
         }
          __syncthreads();
 
@@ -270,10 +266,9 @@ __global__ void spmm_backward_cuda_kernel(
                 #pragma unroll
                 for (int d = intraWarp_tid; d < dim; d += threadPerWarp){
                     partial_results[presult_base + d] = 0;
-                    // atomicAdd_F((float*)&d_input[srcId][d], degree_norm * d_output[nIndex][d]);
                 }
             
-                #pragma unroll
+            #pragma unroll
             for (int d = intraWarp_tid; d < dim; d += threadPerWarp){
                 partial_results[presult_base + d] += __fmaf_rn(degree_norm, d_output[nIndex][d], 0);
             }
@@ -282,19 +277,7 @@ __global__ void spmm_backward_cuda_kernel(
             atomicAdd_F((float*)&d_input[srcId][d], partial_results[presult_base + d]);
         }
     }
-    // int tid =  blockIdx.x * blockDim.x + threadIdx.x;
-    // if (tid < num_nodes){
-    //     for(int nid = row_pointers[tid]; nid < row_pointers[tid + 1]; nid++){
-    //         int nIndex = column_index[nid];
-    //         float degree_norm = sqrt(degrees[tid]) * sqrt(degrees[nIndex]);
-    //         for (int d = 0; d < dim; d++){
-    //             d_input[tid][d] += degree_norm * d_output[nIndex][d];
-    //         }
-    //     }
-    // }
 }
-
-
 
 ////////////////////////////////////////////
 //
@@ -391,7 +374,7 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
                                     part2Node.packed_accessor32<int,1,torch::RestrictPtrTraits>()
                                 );
                             }));
-    // check for error
+
     cudaError_t error = cudaGetLastError();
     if(error != cudaSuccess){
         printf("CUDA error: %s\n", cudaGetErrorString(error));

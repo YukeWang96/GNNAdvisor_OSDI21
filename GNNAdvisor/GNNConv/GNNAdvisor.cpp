@@ -24,7 +24,6 @@ std::vector<torch::Tensor> spmm_backward_cuda(
     int threadPerBlock
 );
 
-
 std::vector<torch::Tensor> spmm_forward_cuda_gin(
     torch::Tensor input,
     torch::Tensor weight,
@@ -100,7 +99,7 @@ std::vector<torch::Tensor> spmm_backward(
 
 
 ////////////////////////////////
-// for GIN
+// spmm forward GIN
 ///////////////////////////////
 std::vector<torch::Tensor> spmm_forward_gin(
     torch::Tensor input,
@@ -124,6 +123,9 @@ std::vector<torch::Tensor> spmm_forward_gin(
                               degrees, part_pointers, part2Node, threadPerBlock);
 }
 
+////////////////////////////////
+// spmm backward GIN
+///////////////////////////////
 std::vector<torch::Tensor> spmm_backward_gin(
     torch::Tensor d_output,
     torch::Tensor X,

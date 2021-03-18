@@ -13,8 +13,7 @@ from dgl.data import register_data_args
 
 from dataset import *
 
-run_GCN = True
-
+run_GCN = False
 if run_GCN:
     from gcn import GCN
 else:

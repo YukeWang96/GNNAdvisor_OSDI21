@@ -51,17 +51,18 @@ class GNNAFunction_GIN(torch.autograd.Function):
 
         X_prime, X_agg = GNNA.forward_gin(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
                                         inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)
+
         ctx.save_for_backward(X_agg, weight)
         ctx.inputInfo = inputInfo
-        # X_prime = torch.mm(X_agg, weights)
+
         return X_prime
 
     @staticmethod
     def backward(ctx, d_output):
+        
         X, weights,  = ctx.saved_tensors
         inputInfo = ctx.inputInfo
-        # d_weights = torch.mm(X.transpose(0,1), d_output)
-        # d_input_prime = torch.mm(d_output, weights.transpose(0,1))
+
         d_input, d_weights = GNNA.backward_gin(d_output, X, weights, inputInfo.row_pointers, inputInfo.column_index,
                                  inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)
         

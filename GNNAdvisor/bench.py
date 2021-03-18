@@ -18,17 +18,17 @@ dataset = [
 		# ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
 		# ('SW-620H'                   , 66       , 2) ,
 
-		# ( 'amazon0505'               , 96	  , 22),
+		( 'amazon0505'               , 96	, 22),
 		# ( 'artist'                   , 100  , 12),
 		# ( 'com-amazon'               , 96	, 22),
-		# ( 'soc-BlogCatalog'	          , 128  , 39), 
-		( 'amazon0601'  	           , 96	  , 22), 
+		# ( 'soc-BlogCatalog'	       	 , 128  , 39), 
+		# ( 'amazon0601'  	         , 96	, 22), 
 ]
 
 
 for partsize in partsize_li:
 	for hid in hidden:
 		for data, d, c in dataset:
-			command = "python gcn.py --dataset {} --dim {} --hidden {} --classes {} --partsize {}".format(data, d, hid, c, partsize)		
+			command = "python gnn.py --dataset {} --dim {} --hidden {} --classes {} --partsize {}".format(data, d, hid, c, partsize)		
 			os.system(command)
 			print()

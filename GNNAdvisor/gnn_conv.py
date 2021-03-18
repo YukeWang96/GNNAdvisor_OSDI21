@@ -45,26 +45,27 @@ class GCNConv(torch.nn.Module):
         return GNNAFunction.apply(X, self.weights, inputInfo)
 
 
-class GAccFunction_GIN(torch.autograd.Function):
+class GNNAFunction_GIN(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, X, weights, inputInfo):
-        ctx.threadPerBlock = inputInfo.threadPerBlock
+    def forward(ctx, X, weight, inputInfo):
 
-        X = GNNA.forward(X, inputInfo)[0]
-        ctx.save_for_backward(X, inputInfo)
-        X_prime = torch.mm(X, weights)
-
+        X_prime, X_agg = GNNA.forward_gin(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
+                                        inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)
+        ctx.save_for_backward(X_agg, weight)
+        ctx.inputInfo = inputInfo
+        # X_prime = torch.mm(X_agg, weights)
         return X_prime
 
     @staticmethod
     def backward(ctx, d_output):
-        X, row_pointers, column_index, weights, degrees, partPtr, part2Node = ctx.saved_tensors
-
-        d_weights = torch.mm(X.transpose(0,1), d_output)
-        d_input_prime = torch.mm(d_output, weights.transpose(0,1))
-        d_input = GNNA.backward(d_input_prime, row_pointers, column_index, degrees, partPtr, part2Node, ctx.threadPerBlock)[0]
+        X, weights,  = ctx.saved_tensors
+        inputInfo = ctx.inputInfo
+        # d_weights = torch.mm(X.transpose(0,1), d_output)
+        # d_input_prime = torch.mm(d_output, weights.transpose(0,1))
+        d_input, d_weights = GNNA.backward_gin(d_output, X, weights, inputInfo.row_pointers, inputInfo.column_index,
+                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)
         
-        return d_input, d_weights, None, None, None, None, None, None
+        return d_input, d_weights, None
 
 class GINConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
@@ -84,4 +85,4 @@ class GINConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return GAccFunction_GIN.apply(X, self.weights, inputInfo)
+        return GNNAFunction_GIN.apply(X, self.weights, inputInfo)

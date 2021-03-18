@@ -13,10 +13,10 @@ import torch.nn.functional as F
 import torch.autograd.profiler as profiler
 
 import GNNAdvisor as GNNA
-from gcn_conv import *
+from gnn_conv import *
 from dataset import *
 
-GCN = True
+GCN = False
 threadPerBlock = 256  # must match the warp-per-block
 
 best_val_acc = test_acc = 0
@@ -111,8 +111,11 @@ else:
             x = self.conv5(x, inputInfo)
             return F.log_softmax(x, dim=1)
 
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model, data = Net().to(device), data.to(device)
+# print(model)
+
 optimizer = torch.optim.Adam([
     dict(params=model.conv1.parameters(), weight_decay=5e-4),
     dict(params=model.conv2.parameters(), weight_decay=0)

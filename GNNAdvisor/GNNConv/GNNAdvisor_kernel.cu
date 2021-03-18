@@ -5,11 +5,11 @@
 #include <stdio.h>
 
 #include <vector>
-#define MAX_DIM 30
-#define MAX_NB 32       // must <= partsize 
-#define threadPerWarp 32 //must < 32
-#define wrapPerBlock 8  // must also set with respect to the 
-                        // [thread-per-block = wrapPerBlock*threadPerWarp]
+#define MAX_DIM 128
+#define MAX_NB 32           // <= partsize 
+
+#define threadPerWarp 32    //must < 32
+#define wrapPerBlock 8      
 
 __device__ inline float atomicAdd_F(float* address, float value)
 {
@@ -292,4 +292,111 @@ __global__ void spmm_backward_cuda_kernel(
     //         }
     //     }
     // }
+}
+
+
+
+////////////////////////////////////////////
+//
+// Foward Pass (GIN)
+//
+////////////////////////////////////////////
+std::vector<torch::Tensor> spmm_forward_cuda_gin(
+    torch::Tensor input,
+    torch::Tensor weight,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index,
+    torch::Tensor degrees,
+    torch::Tensor part_pointers,
+    torch::Tensor part2Node,
+    int threadPerBlock
+) 
+{
+    auto tmp = torch::zeros_like(input);
+    const int dim = tmp.size(1);
+    const int num_nodes = tmp.size(0);
+    const int num_parts = part2Node.size(0);
+
+    const int block_size = wrapPerBlock * threadPerWarp;
+    const int blocks = (num_parts * 32 + block_size  - 1) / block_size; 
+
+    AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward_gin", ([&] {
+                                spmm_forward_cuda_kernel<scalar_t><<<blocks, threadPerBlock>>>(
+                                    num_nodes, 
+                                    dim,
+                                    num_parts,
+                                    input.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
+                                    tmp.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
+                                    row_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
+                                    column_index.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
+                                    degrees.packed_accessor32<float,1,torch::RestrictPtrTraits>(),
+                                    part_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
+                                    part2Node.packed_accessor32<int,1,torch::RestrictPtrTraits>()
+                                );
+                            }));
+    
+    auto output = torch::mm(tmp, weight);
+
+    // check for error
+    cudaError_t error = cudaGetLastError();
+    if(error != cudaSuccess)
+    {
+        // print the CUDA error message and exit
+        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        exit(-1);
+    }
+    
+    return {output, tmp};
+}
+
+////////////////////////////////////////////
+// 
+// backward pass (GIN)
+//
+////////////////////////////////////////////
+std::vector<torch::Tensor> spmm_backward_cuda_gin(
+    torch::Tensor d_output,
+    torch::Tensor X,
+    torch::Tensor W,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index,
+    torch::Tensor degrees,
+    torch::Tensor part_pointers,
+    torch::Tensor part2Node,
+    int threadPerBlock
+) {
+
+    auto d_weight = torch::mm(X.transpose(0,1), d_output);
+    auto d_input_prime = torch::mm(d_output, W.transpose(0,1));
+    auto d_input = torch::zeros_like(d_input_prime);
+
+    const int dim = d_input.size(1);
+    const int num_nodes = d_input.size(0);
+    const int num_parts = part2Node.size(0);
+
+    const int block_size = wrapPerBlock * threadPerWarp;
+    const int blocks = (num_parts * 32 + block_size - 1) / block_size; 
+
+    AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward_gin", ([&] {
+                                spmm_backward_cuda_kernel<scalar_t><<<blocks, block_size>>>(
+                                    num_nodes, 
+                                    dim,
+                                    num_parts,
+                                    d_input_prime.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
+                                    d_input.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
+                                    row_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
+                                    column_index.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
+                                    degrees.packed_accessor32<float,1,torch::RestrictPtrTraits>(),
+                                    part_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
+                                    part2Node.packed_accessor32<int,1,torch::RestrictPtrTraits>()
+                                );
+                            }));
+    // check for error
+    cudaError_t error = cudaGetLastError();
+    if(error != cudaSuccess){
+        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        exit(-1);
+    }
+
+    return {d_input, d_weight};
 }

@@ -37,18 +37,33 @@ pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+$
 pip install torch-geometric
 ```
 
-## Node Reordering.
-* [Done] adding the IPDPS reordering tool into our design.
-* [Done] make a pytorch operator for this algorithm.
-* [Done] merge into our Pytorch Flow.
+## Reproduce the experiment in paper.
++ **GNN Model Setting**.
+> + GCN (2-layer with 16 hidden dimension)
+> + GIN (5-layer with 64 hidden dimension)
++ **Datasets**.
+> Type I:
+>> `citeseer, cora, pubmed, ppi`
 
-## Parameters.  -->  Parmeter object.
-* averaged edge degree.
-* average edge span.
-* node dimension.
+> Type II:
+>> `PROTEINS_full, OVCAR-8H, Yeast, DD, TWITTER-Real-Graph-Partial, SW-620H`
 
-## GNNAdvisor execution flow by taking all these parameter elements.
-* DGL baseline [GCN and GIN]
-* PyG baseline [GCN and GIN]
-* Our GCN (2-layer 16 hidden)
-* Our GIN (5-layer 64 hidden)
+> Type III:
+>> `amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
+
++ Running **DGL** baseline on GNN training.
+> +  Go to `dgl_baseline/` directory
+> + `run_GCN` in `train.py` set to `True` to profiling the GCN model.
+> + `run_GCN` in `train.py` set to `False` to profiling the GIN model. 
+> + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
+
++ Running **PyG** baseline on GNN training.
+> +  Go to `pyg_baseline/` directory
+> + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model.
+> + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model. 
+> + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
+> + 
+
++ Running GNNAdvisor 
+
+**Note** that 1) accuracy evaluation are omitted; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 

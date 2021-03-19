@@ -2,9 +2,10 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-hidden = [64] 		# [16, 32, 64, 128, 256, 512, 1024, 2048]
+hidden = [64] 
 
 dataset = [
+
 		# ('citeseer'	        , 3703	    , 6   ),  
 		# ('cora' 	        	, 1433	    , 7   ),  
 		# ('pubmed'	        	, 500	    , 3   ),      

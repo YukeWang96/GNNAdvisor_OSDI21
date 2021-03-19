@@ -115,7 +115,7 @@ else:
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model, data = Net().to(device), data.to(device)
-# print(model)
+print(model)
 
 optimizer = torch.optim.Adam([
     dict(params=model.conv1.parameters(), weight_decay=5e-4),

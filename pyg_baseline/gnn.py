@@ -6,10 +6,13 @@ from tqdm import tqdm
 
 import torch
 import torch.nn.functional as F
-from torch_geometric.datasets import Planetoid
-import torch_geometric.transforms as T
 from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GINConv
+from torch.nn import Linear
+
 from dataset import *
+
+run_GCN = False
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
@@ -24,28 +27,56 @@ path = osp.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset+".npz")
 dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 data = dataset
 
-class Net(torch.nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.conv1 = GCNConv(dataset.num_features, args.hidden, cached=True,
-                             normalize=False)
-        self.conv2 = GCNConv(args.hidden, dataset.num_classes, cached=True,
-                             normalize=False)
 
-    def forward(self):
-        x, edge_index, edge_weight = data.x, data.edge_index, data.edge_attr
-        x = F.relu(self.conv1(x, edge_index, edge_weight))
-        x = F.dropout(x, training=self.training)
-        x = self.conv2(x, edge_index, edge_weight)
-        return F.log_softmax(x, dim=1)
+if run_GCN:
+    class Net(torch.nn.Module):
+        def __init__(self):
+            super(Net, self).__init__()
+            self.conv1 = GCNConv(dataset.num_features, args.hidden, cached=True,
+                                normalize=False)
+            self.conv2 = GCNConv(args.hidden, dataset.num_classes, cached=True,
+                                normalize=False)
 
+        def forward(self):
+            x, edge_index, edge_weight = data.x, data.edge_index, data.edge_attr
+            x = F.relu(self.conv1(x, edge_index, edge_weight))
+            x = F.dropout(x, training=self.training)
+            x = self.conv2(x, edge_index, edge_weight)
+            return F.log_softmax(x, dim=1)
+else:
+    class Net(torch.nn.Module):
+        def __init__(self):
+            super(Net, self).__init__()
+
+            num_features = dataset.num_features
+            dim = 64
+
+            input_fc =  Linear(num_features, dim)
+            hidden_fc = Linear(dim, dim)
+            output_fc = Linear(dim, dataset.num_classes)
+
+            self.conv1 = GINConv(input_fc)
+            self.conv2 = GINConv(hidden_fc)
+            self.conv3 = GINConv(hidden_fc)
+            self.conv4 = GINConv(hidden_fc)
+            self.conv4 = GINConv(hidden_fc)
+            self.conv5 = GINConv(output_fc)
+
+        def forward(self):
+            x, edge_index = data.x, data.edge_index
+            x = self.conv1(x, edge_index)
+            x = self.conv2(x, edge_index)
+            x = self.conv3(x, edge_index)
+            x = self.conv4(x, edge_index)
+            x = self.conv5(x, edge_index)
+            return x
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model, data = Net().to(device), data.to(device)
 optimizer = torch.optim.Adam([
     dict(params=model.conv1.parameters(), weight_decay=5e-4),
     dict(params=model.conv2.parameters(), weight_decay=0)
-], lr=0.01)  # Only perform weight-decay on first convolution.
+], lr=0.01) 
 
 
 def train():

@@ -33,6 +33,10 @@ class custom_dataset(torch.nn.Module):
         self.val_mask = torch.BoolTensor(self.val_mask).cuda()
         self.test_mask = torch.BoolTensor(self.test_mask).cuda()
 
+        # more metrics
+        self.avg_degree = -1
+        self.avg_edgeSpan = -1
+
     def init_edges(self, path):
         self.g = dgl.DGLGraph()
 
@@ -70,12 +74,16 @@ class custom_dataset(torch.nn.Module):
             self.num_nodes = graph_obj['num_nodes']
             self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
-
-            # self.edge_index = torch.stack([torch.Tensor(src_li).long(), torch.Tensor(dst_li).long()], dim=0)
             self.edge_index = np.stack([src_li, dst_li])
 
             dur = time.perf_counter() - start
             print("# Loading (npz): {:.3f}s ".format(dur))
+        
+        self.avg_degree = self.num_edges / self.num_nodes
+        self.avg_edgeSpan = np.mean(np.abs(np.subtract(src_li, dst_li)))
+
+        print("avg_degree: {:.3f}".format(self.avg_degree))
+        print("avg_edgeSpan: {}, # nodes: {}".format(int(self.avg_edgeSpan), self.num_nodes))
 
     def init_embedding(self, dim):
         '''

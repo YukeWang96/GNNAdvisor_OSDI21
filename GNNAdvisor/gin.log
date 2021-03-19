@@ -27,9 +27,3 @@ Namespace(classes=22, dataset='amazon0601', dim=96, hidden=16, partsize=32)
 # Build CSR (s): 1.563
 # Build nb_part (s): 2.760
 GNNAdvisor Time (ms): 41.420
-
-
-
-
-
-

@@ -27,7 +27,6 @@ dataset = [
 
 for hid in hidden:
 	for data, d, c in dataset:
-		# print("=> {}, hidden: {}".format(data, hid))
 		command = "python gcn.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
 		os.system(command)
 		print()

@@ -16,7 +16,7 @@ import GNNAdvisor as GNNA
 from gnn_conv import *
 from dataset import *
 
-GCN = False
+GCN = True
 threadPerBlock = 256  # must match the warp-per-block
 
 best_val_acc = test_acc = 0
@@ -40,10 +40,11 @@ data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 # path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
 # data = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
 dataset = data
+# sys.exit(0)
 
-num_nodes = len(data.x)
-num_edges = len(data.edge_index[1])
-val = [1]*num_edges
+num_nodes = data.num_nodes
+num_edges = data.num_edges
+val = [1] * num_edges
 
 start = time.perf_counter()
 scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))

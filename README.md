@@ -1,6 +1,6 @@
 # GNNAdvisor 
 
-## dependency 
+## Dependency 
 + **`libboost`** 
 > `sudo apt-get install libboost-all-dev`
 + **`tcmalloc`**
@@ -27,7 +27,7 @@ conda install -c dglteam dgl-cuda11.0
 pip install torch requests
 ```
 
-+ Install [`pytorch-geometric (PyG)`](https://github.com/rusty1s/pytorch_geometric).
++ Install [`Pytorch-Geometric (PyG)`](https://github.com/rusty1s/pytorch_geometric).
 ```
 CUDA=cu111
 pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html
@@ -52,18 +52,21 @@ pip install torch-geometric
 >> `amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
 
 + Running **DGL** baseline on GNN training.
-> +  Go to `dgl_baseline/` directory
-> + `run_GCN` in `train.py` set to `True` to profiling the GCN model.
-> + `run_GCN` in `train.py` set to `False` to profiling the GIN model. 
+> +  Go to **`dgl_baseline/`** directory
+> + `run_GCN` in `train.py` set to `True` to profiling the GCN model;
+> + `run_GCN` in `train.py` set to `False` to profiling the GIN model; 
 > + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
 
 + Running **PyG** baseline on GNN training.
-> +  Go to `pyg_baseline/` directory
-> + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model.
-> + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model. 
+> +  Go to **`pyg_baseline/`** directory;
+> + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model;
+> + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model; 
 > + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
-> + 
 
 + Running GNNAdvisor 
+> +  Go to **`GNNAdvisor/`** directory
+> + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model;
+> + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model; 
+> + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
 
 **Note** that 1) accuracy evaluation are omitted; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 

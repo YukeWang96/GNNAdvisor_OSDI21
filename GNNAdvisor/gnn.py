@@ -16,7 +16,7 @@ import GNNAdvisor as GNNA
 from gnn_conv import *
 from dataset import *
 
-GCN = True
+run_GCN = True
 threadPerBlock = 256  # must match the warp-per-block
 
 best_val_acc = test_acc = 0
@@ -81,7 +81,7 @@ row_pointers = row_pointers.cuda()
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node, threadPerBlock)
 
-if GCN:
+if run_GCN:
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()

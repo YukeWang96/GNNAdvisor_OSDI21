@@ -39,8 +39,8 @@ pip install torch-geometric
 
 ## Reproduce the experiment in paper.
 + **GNN Model Setting**.
-> + GCN (2-layer with 16 hidden dimension)
-> + GIN (5-layer with 64 hidden dimension)
+> + **GCN (2-layer with 16 hidden dimension)**
+> + **GIN (5-layer with 64 hidden dimension)**
 + **Datasets**.
 > Type I:
 >> `citeseer, cora, pubmed, ppi`
@@ -55,18 +55,18 @@ pip install torch-geometric
 > +  Go to **`dgl_baseline/`** directory
 > + `run_GCN` in `train.py` set to `True` to profiling the GCN model;
 > + `run_GCN` in `train.py` set to `False` to profiling the GIN model; 
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
+> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 
 + Running **PyG** baseline on GNN training.
 > +  Go to **`pyg_baseline/`** directory;
 > + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model;
 > + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model; 
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
+> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 
 + Running GNNAdvisor 
 > +  Go to **`GNNAdvisor/`** directory
 > + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model;
 > + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model; 
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated dataset. 
+> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 
 **Note** that 1) accuracy evaluation are omitted; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 

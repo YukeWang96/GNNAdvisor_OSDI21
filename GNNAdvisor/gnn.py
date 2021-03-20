@@ -16,6 +16,10 @@ import GNNAdvisor as GNNA
 from gnn_conv import *
 from dataset import *
 
+TEST = True     # verify correctness for single aggregation kernel.
+if TEST == True:
+    from unitest import *
+
 run_GCN = True
 threadPerBlock = 256  # must match the warp-per-block
 
@@ -35,10 +39,11 @@ print(args)
 partsize = args.partsize
 dataset = args.dataset
 
-path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
-data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
+# path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
+# data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 # path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
-# data = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
+path = osp.join("/home/yuke/.graphs/orig", dataset)
+data = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
 dataset = data
 # sys.exit(0)
 
@@ -69,6 +74,8 @@ partPtr, part2Node = GNNA.build_part(partsize, row_pointers)
 build_neighbor_parts = time.perf_counter() - start
 print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
 
+
+
 # partPtr, part2Node = part_based_partitioing(scipy_csr.indptr, scipy_csr.indices)
 # partPtr = torch.IntTensor(partPtr).cuda()
 # part2Node = torch.IntTensor(part2Node).cuda()
@@ -80,6 +87,12 @@ column_index = column_index.cuda()
 row_pointers = row_pointers.cuda()
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node, threadPerBlock)
+
+if TEST:
+    valid = Verification(row_pointers, column_index, degrees, partPtr, part2Node)
+    valid.compute()
+    # valid.reference()
+    sys.exit(0)
 
 if run_GCN:
     class Net(torch.nn.Module):

@@ -1,0 +1,672 @@
+grid: 2, block: 256
+dim: 3, num_nodes: 16, num_parts: 16
+input: (16, 3)1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+1--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+2--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+2--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+2--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+2--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+2--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+2--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+2--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+2--block_warpId: 5, MAX_DIM: 128, presult_base: 640
+2--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+2--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+2--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+2--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+2--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+2--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+2--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+2--block_warpId: 2, MAX_DIM: 128, presult_base: 256
+2--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+2--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+2--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+2--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+2--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+2--block_warpId: 6, MAX_DIM: 128, presult_base: 768
+2--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+2--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+2--block_warpId: 4, MAX_DIM: 128, presult_base: 512
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+2--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+2--block_warpId: 3, MAX_DIM: 128, presult_base: 384
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+3--presult_base: 128
+3--presult_base: 128
+3--presult_base: 128
+3--presult_base: 256
+3--presult_base: 256
+3--presult_base: 256
+3--presult_base: 512
+3--presult_base: 512
+3--presult_base: 512
+3--presult_base: 640
+3--presult_base: 640
+3--presult_base: 640
+3--presult_base: 768
+3--presult_base: 768
+3--presult_base: 768
+3--presult_base: 512
+3--presult_base: 512
+3--presult_base: 512
+3--presult_base: 640
+3--presult_base: 640
+3--presult_base: 640
+3--presult_base: 896
+3--presult_base: 896
+3--presult_base: 896
+3--presult_base: 384
+3--presult_base: 384
+3--presult_base: 384
+3--presult_base: 0
+3--presult_base: 0
+3--presult_base: 0
+3--presult_base: 768
+3--presult_base: 768
+3--presult_base: 768
+3--presult_base: 896
+3--presult_base: 896
+3--presult_base: 896
+3--presult_base: 256
+3--presult_base: 256
+3--presult_base: 256
+3--presult_base: 128
+3--presult_base: 128
+3--presult_base: 128
+3--presult_base: 0
+3--presult_base: 0
+3--presult_base: 0
+3--presult_base: 384
+3--presult_base: 384
+3--presult_base: 384
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 1, MAX_DIM: 128, presult_base: 128
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+2--block_warpId: 7, MAX_DIM: 128, presult_base: 896
+3--presult_base: 896
+3--presult_base: 896
+3--presult_base: 896
+3--presult_base: 128
+3--presult_base: 128
+3--presult_base: 128
+3--presult_base: 0
+3--presult_base: 0
+3--presult_base: 0
+3--presult_base: 896
+3--presult_base: 896
+3--presult_base: 896
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+2--block_warpId: 0, MAX_DIM: 128, presult_base: 0
+3--presult_base: 0
+3--presult_base: 0
+3--presult_base: 0
+Namespace(classes=6, dataset='tc_gnn_verify', dim=3703, hidden=16, partsize=32)
+# Loading (txt) 0.001s 
+avg_degree: 1.312
+avg_edgeSpan: 1, # nodes: 16
+# Build CSR (s): 0.000
+# Build nb_part (s): 0.000
+# Compute on GPU
+tensor([ 0,  3,  5,  6,  7,  8,  9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21],
+       device='cuda:0', dtype=torch.int32)
+tensor([ 1,  2,  3,  1,  2,  1,  2,  3,  4,  5,  6,  8,  7,  8,  1, 10, 11, 12,
+        13, 14, 15], device='cuda:0', dtype=torch.int32)
+tensor([ 0,  3,  5,  6,  7,  8,  9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21],
+       device='cuda:0', dtype=torch.int32)
+tensor([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15],
+       device='cuda:0', dtype=torch.int32)
+tensor([[9., 9., 9.],
+        [6., 6., 6.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [6., 6., 6.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [3., 3., 3.],
+        [6., 6., 6.]], device='cuda:0')
+

@@ -70,12 +70,12 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     const int num_nodes = tmp.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block_size = wrapPerBlock * threadPerWarp;
+    const int block_size = wrapPerBlock*threadPerWarp;
     const int blocks = (num_parts * 32 + block_size  - 1) / block_size; 
 
-    printf("grid: %d, block: %d\n", blocks, block_size);
-    printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
-    printf("input: (%d, %d)", tmp.size(0), tmp.size(1));
+    // printf("grid: %d, block: %d\n", blocks, block_size);
+    // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
+    // printf("input: (%d, %d)", tmp.size(0), tmp.size(1));
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {
                                 spmm_forward_cuda_kernel<scalar_t><<<blocks, block_size>>>(
@@ -155,7 +155,7 @@ __global__ void spmm_forward_cuda_kernel(
             if (nIdx == 0)
                 #pragma unroll
                 for (int d = laneid; d < dim; d += threadPerWarp){
-                    partial_results[block_warpId * MAX_DIM + d] = 0;
+                    partial_results[presult_base + d] = 0;
                 }
             
             #pragma unroll

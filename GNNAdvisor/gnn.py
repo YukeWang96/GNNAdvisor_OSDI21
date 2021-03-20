@@ -92,6 +92,7 @@ if TEST:
     valid = Verification(row_pointers, column_index, degrees, partPtr, part2Node)
     valid.compute()
     # valid.reference()
+    # valid.compare()
     sys.exit(0)
 
 if run_GCN:

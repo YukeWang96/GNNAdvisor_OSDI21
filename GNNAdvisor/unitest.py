@@ -33,19 +33,17 @@ class Verification(object):
                 for d in range(len(tmp[0])):
                     eid = self.column_index[eidx]
                     self.result_ref[i][d] += tmp[eid][d]
-        print(self.result_ref)
+        # print(self.result_ref)
 
     def compute(self):
         print("# Compute on GPU")
         X = self.X.cuda()
         W = self.W.cuda()
         # print(X.size())
-
-        print(self.row_pointers)
-        print(self.column_index)
-        print(self.partPtr)
-        print(self.part2Node)
-
+        # print(self.row_pointers)
+        # print(self.column_index)
+        # print(self.partPtr)
+        # print(self.part2Node)
         self.result = GNNA.forward(X, W, self.row_pointers, self.column_index, self.degrees,\
                                     self.partPtr, self.part2Node, self.threadPerBlock)[0]
         print(self.result)
@@ -53,5 +51,5 @@ class Verification(object):
     def compare(self):
         if self.result_ref is None or self.result is None:
             raise ValueError("MUST compute result and result reference first!!")
-        assert torch.eq(self.result_ref, self.result)
+        assert torch.all(torch.eq(self.result_ref, self.result.cpu()))
         print("PASS")

@@ -70,15 +70,15 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     const int num_nodes = tmp.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block_size = wrapPerBlock*threadPerWarp;
-    const int blocks = (num_parts * 32 + block_size  - 1) / block_size; 
-
+    const int block = wrapPerBlock * threadPerWarp;
+    const int grid = (num_parts * 32 + block  - 1) / block; 
     // printf("grid: %d, block: %d\n", blocks, block_size);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
     // printf("input: (%d, %d)", tmp.size(0), tmp.size(1));
+    int shared_memory = wrapPerBlock * MAX_NB * sizeof(int) + wrapPerBlock * dim * sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {
-                                spmm_forward_cuda_kernel<scalar_t><<<blocks, block_size>>>(
+                                spmm_forward_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
                                     output.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
                                     tmp.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
                                     row_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
@@ -120,14 +120,15 @@ __global__ void spmm_forward_cuda_kernel(
     int block_warpId = threadIdx.x / 32;               // block warp-id
     int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
 
+    extern __shared__ float part_info[];                    // part information.
+    const int part_shift_base = MAX_NB * wrapPerBlock;      // shared memory shift for partial result.
+    int *partial_ids = (int*) part_info;                    // caching ids
+    float *partial_results = part_info + part_shift_base;   // caching partial results.
+
     if (warpId < num_parts && laneid < threadPerWarp){
 
         // if (laneid == 0)
         //     printf("%d\n", warpId);
-
-        __shared__  int partial_ids[MAX_NB * wrapPerBlock];
-        __shared__ float partial_results[MAX_DIM * wrapPerBlock];
-
         int srcId = part2Node[warpId];              // aggregated source node
         int partBeg = part_pointers[warpId];        // partitioning pointer start
         int partEnd = part_pointers[warpId + 1];    // part pointer end
@@ -143,7 +144,7 @@ __global__ void spmm_forward_cuda_kernel(
          __syncwarp();
 
         // intra-part aggregation of all neighbors
-        const int presult_base = block_warpId * MAX_DIM;
+        const int presult_base = block_warpId * dim;
         // printf("1--block_warpId: %d, MAX_DIM: %d, presult_base: %d\n", block_warpId, MAX_DIM, presult_base);
 
         for (int nIdx = 0; nIdx < partEnd - partBeg; nIdx++)

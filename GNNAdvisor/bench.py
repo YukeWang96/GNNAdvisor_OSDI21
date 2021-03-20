@@ -30,6 +30,6 @@ dataset = [
 for partsize in partsize_li:
 	for hid in hidden:
 		for data, d, c in dataset:
-			command = "python gnn.py --dataset {} --dim {} --hidden {} --classes {} --partsize {}".format(data, d, hid, c, partsize)		
+			command = "python gnn.py --dataset {} --dim {} --hidden {} --classes {} --partSize {}".format(data, d, hid, c, partsize)		
 			os.system(command)
 			print()

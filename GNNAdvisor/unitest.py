@@ -5,13 +5,18 @@ import GNNAdvisor as GNNA
 import sys
 
 class Verification(object):
-    def __init__(self, row_pointers, column_index, degrees, partPtr, part2Node):
+    def __init__(self, row_pointers, column_index, degrees, partPtr, part2Node, \
+                partSize, dimWorker, warpPerBlock):
+
         self.row_pointers = row_pointers
         self.column_index = column_index
         self.degrees = degrees
         self.partPtr = partPtr
         self.part2Node = part2Node
-        self.threadPerBlock = 1024
+
+        self.warpPerBlock = warpPerBlock      
+        self.partSize = partSize
+        self.dimWorker = dimWorker
 
         self.num_nodes = len(row_pointers) - 1
         self.test_embedding = 3
@@ -45,7 +50,7 @@ class Verification(object):
         # print(self.partPtr)
         # print(self.part2Node)
         self.result = GNNA.forward(X, W, self.row_pointers, self.column_index, self.degrees,\
-                                    self.partPtr, self.part2Node, self.threadPerBlock)[0]
+                                    self.partPtr, self.part2Node, self.partSize, self.dimWorker, self.warpPerBlock)[0]
         print(self.result)
 
     def compare(self):

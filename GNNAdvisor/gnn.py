@@ -21,7 +21,6 @@ if TEST == True:
     from unitest import *
 
 run_GCN = True
-threadPerBlock = 256  # must match the warp-per-block
 
 best_val_acc = test_acc = 0
 time_avg = []
@@ -32,12 +31,15 @@ parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
-parser.add_argument("--partsize", type=int, default=64, help="neighbor-group size")
+parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
+parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
+parser.add_argument("--warpPerBlock", type=int, default=8, help="neighbor-group size (MUST < 32)")
 args = parser.parse_args()
 print(args)
 
-partsize = args.partsize
+
 dataset = args.dataset
+partSize, dimWorker, warpPerBlock = args.partSize, args.dimWorker, args.warpPerBlock
 
 # path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
 # data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
@@ -70,7 +72,7 @@ degrees = (row_pointers[1:] - row_pointers[:-1]).tolist()
 degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
 
 start = time.perf_counter()
-partPtr, part2Node = GNNA.build_part(partsize, row_pointers)
+partPtr, part2Node = GNNA.build_part(partSize, row_pointers)
 build_neighbor_parts = time.perf_counter() - start
 print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
 
@@ -86,14 +88,20 @@ part2Node = part2Node.int().cuda()
 column_index = column_index.cuda()
 row_pointers = row_pointers.cuda()
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
-                            partPtr, part2Node, threadPerBlock)
+                            partPtr, part2Node,\
+                            partSize, dimWorker, warpPerBlock)
 
 if TEST:
-    valid = Verification(row_pointers, column_index, degrees, partPtr, part2Node)
+    valid = Verification(row_pointers, column_index, degrees, partPtr, part2Node, \
+                        partSize, dimWorker, warpPerBlock)
     valid.compute()
     # valid.reference()
     # valid.compare()
     sys.exit(0)
+
+
+
+
 
 if run_GCN:
     class Net(torch.nn.Module):

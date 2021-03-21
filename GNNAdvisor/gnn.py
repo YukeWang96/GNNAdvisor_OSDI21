@@ -33,7 +33,7 @@ parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
 parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
-parser.add_argument("--warpPerBlock", type=int, default=8, help="neighbor-group size (MUST < 32)")
+parser.add_argument("--warpPerBlock", type=int, default=2, help="number of warp per block, recommended: GCN: 8, GIN: 2")
 args = parser.parse_args()
 print(args)
 
@@ -141,8 +141,8 @@ def train():
     model.train()
     optimizer.zero_grad()
     loss = F.nll_loss(model()[data.train_mask], data.y[data.train_mask])
-    loss.backward()
-    optimizer.step()
+    # loss.backward()
+    # optimizer.step()
 
 @torch.no_grad()
 def test(profile=False):

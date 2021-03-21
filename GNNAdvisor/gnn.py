@@ -16,7 +16,7 @@ import GNNAdvisor as GNNA
 from gnn_conv import *
 from dataset import *
 
-TEST = True     # verify correctness for single aggregation kernel.
+TEST = False     # verify correctness for single aggregation kernel.
 if TEST == True:
     from unitest import *
 
@@ -36,7 +36,6 @@ parser.add_argument("--dimWorker", type=int, default=32, help="number of worker 
 parser.add_argument("--warpPerBlock", type=int, default=8, help="neighbor-group size (MUST < 32)")
 args = parser.parse_args()
 print(args)
-
 
 dataset = args.dataset
 partSize, dimWorker, warpPerBlock = args.partSize, args.dimWorker, args.warpPerBlock
@@ -76,8 +75,6 @@ partPtr, part2Node = GNNA.build_part(partSize, row_pointers)
 build_neighbor_parts = time.perf_counter() - start
 print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
 
-
-
 # partPtr, part2Node = part_based_partitioing(scipy_csr.indptr, scipy_csr.indices)
 # partPtr = torch.IntTensor(partPtr).cuda()
 # part2Node = torch.IntTensor(part2Node).cuda()
@@ -98,10 +95,6 @@ if TEST:
     # valid.reference()
     # valid.compare()
     sys.exit(0)
-
-
-
-
 
 if run_GCN:
     class Net(torch.nn.Module):

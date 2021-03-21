@@ -15,52 +15,52 @@ Compiling objects...
 Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
 [1/1] /usr/local/cuda-11.1/bin/nvcc --generate-dependencies-with-compile --dependency-output /home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/build/temp.linux-x86_64-3.6/GNNAdvisor_kernel.o.d -I/home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include -I/home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/torch/csrc/api/include -I/home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/TH -I/home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/THC -I/usr/local/cuda-11.1/include -I/home/yuke/anaconda3/envs/osdi-ae/include/python3.6m -c -c /home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu -o /home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/build/temp.linux-x86_64-3.6/GNNAdvisor_kernel.o -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options ''"'"'-fPIC'"'"'' -DTORCH_API_INCLUDE_EXTENSION_H '-DPYBIND11_COMPILER_TYPE="_gcc"' '-DPYBIND11_STDLIB="_libstdcpp"' '-DPYBIND11_BUILD_ABI="_cxxabi1011"' -DTORCH_EXTENSION_NAME=GNNAdvisor -D_GLIBCXX_USE_CXX11_ABI=0 -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 -std=c++14
 /home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu: In lambda function:
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:83:43: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:84:43: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {
                                            ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:1: note: declared here
    DeprecatedTypeProperties & type() const {
  ^ ~~
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:83:98: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:84:98: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {
                                                                                                   ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/Dispatch.h:109:1: note: declared here
  inline at::ScalarType scalar_type(const at::DeprecatedTypeProperties& t) {
  ^~~~~~~~~~~
 /home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu: In lambda function:
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:213:46: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:211:46: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward", ([&] {
                                               ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:1: note: declared here
    DeprecatedTypeProperties & type() const {
  ^ ~~
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:213:101: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:211:101: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward", ([&] {
                                                                                                      ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/Dispatch.h:109:1: note: declared here
  inline at::ScalarType scalar_type(const at::DeprecatedTypeProperties& t) {
  ^~~~~~~~~~~
 /home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu: In lambda function:
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:322:43: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:335:43: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward_gin", ([&] {
                                            ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:1: note: declared here
    DeprecatedTypeProperties & type() const {
  ^ ~~
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:322:98: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:335:98: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward_gin", ([&] {
                                                                                                   ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/Dispatch.h:109:1: note: declared here
  inline at::ScalarType scalar_type(const at::DeprecatedTypeProperties& t) {
  ^~~~~~~~~~~
 /home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu: In lambda function:
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:381:46: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:398:46: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward_gin", ([&] {
                                               ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:1: note: declared here
    DeprecatedTypeProperties & type() const {
  ^ ~~
-/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:381:101: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
+/home/yuke/OSDI21_AE/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu:398:101: warning: ‘c10::ScalarType detail::scalar_type(const at::DeprecatedTypeProperties&)’ is deprecated: passing at::DeprecatedTypeProperties to an AT_DISPATCH macro is deprecated, pass an at::ScalarType instead [-Wdeprecated-declarations]
      AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward_gin", ([&] {
                                                                                                      ^
 /home/yuke/anaconda3/envs/osdi-ae/lib/python3.6/site-packages/torch/include/ATen/Dispatch.h:109:1: note: declared here

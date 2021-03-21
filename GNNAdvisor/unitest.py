@@ -19,8 +19,8 @@ class Verification(object):
         self.dimWorker = dimWorker
 
         self.num_nodes = len(row_pointers) - 1
-        self.test_embedding = 3
-        self.output_embedding = 3
+        self.test_embedding = 128
+        self.output_embedding = 128
 
         self.X = torch.ones(self.num_nodes, self.test_embedding)
         self.W = torch.ones(self.test_embedding, self.output_embedding)

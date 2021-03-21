@@ -23,8 +23,10 @@ std::vector<torch::Tensor> spmm_backward_cuda(
     torch::Tensor degrees,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
-    int threadPerBlock
-);
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+  );
 
 std::vector<torch::Tensor> spmm_forward_cuda_gin(
     torch::Tensor input,
@@ -34,8 +36,10 @@ std::vector<torch::Tensor> spmm_forward_cuda_gin(
     torch::Tensor degrees,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
-    int threadPerBlock
-);
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+  );
 
 std::vector<torch::Tensor> spmm_backward_cuda_gin(
     torch::Tensor d_output,
@@ -46,8 +50,10 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
     torch::Tensor degrees,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
-    int threadPerBlock
-);
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+  );
 
 #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
 #define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
@@ -87,8 +93,11 @@ std::vector<torch::Tensor> spmm_backward(
     torch::Tensor degrees,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
-    int threadPerBlock
-) {
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+  ) {
+
   CHECK_INPUT(d_output);
   CHECK_INPUT(X);
   CHECK_INPUT(W);
@@ -99,7 +108,8 @@ std::vector<torch::Tensor> spmm_backward(
   CHECK_INPUT(part2Node);
 
   return spmm_backward_cuda(d_output, X, W, row_pointers, column_index, 
-                            degrees, part_pointers, part2Node, threadPerBlock);
+                            degrees, part_pointers, part2Node,
+                            partSize, dimWorker, warpPerBlock);
 }
 
 
@@ -114,8 +124,10 @@ std::vector<torch::Tensor> spmm_forward_gin(
     torch::Tensor degrees,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
-    int threadPerBlock
-) {
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+  ) {
   CHECK_INPUT(input);
   CHECK_INPUT(weight);
   CHECK_INPUT(row_pointers);
@@ -125,7 +137,8 @@ std::vector<torch::Tensor> spmm_forward_gin(
   CHECK_INPUT(part2Node);
 
   return spmm_forward_cuda_gin(input, weight, row_pointers, column_index, 
-                              degrees, part_pointers, part2Node, threadPerBlock);
+                              degrees, part_pointers, part2Node, 
+                              partSize, dimWorker, warpPerBlock);
 }
 
 ////////////////////////////////
@@ -140,8 +153,10 @@ std::vector<torch::Tensor> spmm_backward_gin(
     torch::Tensor degrees,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
-    int threadPerBlock
-) {
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+  ) {
   CHECK_INPUT(d_output);
   CHECK_INPUT(X);
   CHECK_INPUT(W);
@@ -152,7 +167,8 @@ std::vector<torch::Tensor> spmm_backward_gin(
   CHECK_INPUT(part2Node);
 
   return spmm_backward_cuda_gin(d_output, X, W, row_pointers, column_index, 
-                            degrees, part_pointers, part2Node, threadPerBlock);
+                            degrees, part_pointers, part2Node,
+                            partSize, dimWorker, warpPerBlock);
 }
 
 

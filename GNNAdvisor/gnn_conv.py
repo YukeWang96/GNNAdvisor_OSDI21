@@ -11,7 +11,8 @@ class GNNAFunction(torch.autograd.Function):
         ctx.inputInfo = inputInfo
 
         X_prime = GNNA.forward(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
-                                inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)[0]
+                                inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
+                                inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)[0]
         return X_prime
 
     @staticmethod
@@ -20,7 +21,8 @@ class GNNAFunction(torch.autograd.Function):
         inputInfo = ctx.inputInfo
 
         d_input, d_weight = GNNA.backward(d_output, X, weight, inputInfo.row_pointers, inputInfo.column_index, 
-                                        inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)
+                                        inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
+                                        inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
 
         return d_input, d_weight, None
 
@@ -50,7 +52,8 @@ class GNNAFunction_GIN(torch.autograd.Function):
     def forward(ctx, X, weight, inputInfo):
 
         X_prime, X_agg = GNNA.forward_gin(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
-                                        inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)
+                                        inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
+                                        inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
 
         ctx.save_for_backward(X_agg, weight)
         ctx.inputInfo = inputInfo
@@ -64,7 +67,8 @@ class GNNAFunction_GIN(torch.autograd.Function):
         inputInfo = ctx.inputInfo
 
         d_input, d_weights = GNNA.backward_gin(d_output, X, weights, inputInfo.row_pointers, inputInfo.column_index,
-                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, inputInfo.threadPerBlock)
+                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
+                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
         
         return d_input, d_weights, None
 

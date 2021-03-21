@@ -20,7 +20,7 @@ TEST = False     # verify correctness for single aggregation kernel.
 if TEST == True:
     from unitest import *
 
-run_GCN = True
+run_GCN = False
 
 best_val_acc = test_acc = 0
 time_avg = []
@@ -100,8 +100,8 @@ if run_GCN:
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
-            self.conv1 = GCNConv(dataset.num_features, 16)
-            self.conv2 = GCNConv(16, dataset.num_classes)
+            self.conv1 = GCNConv(dataset.num_features, args.hidden)
+            self.conv2 = GCNConv(args.hidden, dataset.num_classes)
 
         def forward(self):
             x = data.x

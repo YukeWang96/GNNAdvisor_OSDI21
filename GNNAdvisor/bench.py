@@ -2,7 +2,7 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-hidden = [16] 		# [64] 		# [16, 32, 64, 128, 256, 512, 1024, 2048]
+hidden = [64] 		# [64] 		# [16, 32, 64, 128, 256, 512, 1024, 2048]
 partsize_li = [32]  # [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
 
 dataset = [

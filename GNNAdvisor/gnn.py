@@ -1,89 +1,75 @@
 import os
 import sys
 import time
-import math
 import argparse
 import numpy as np
 import os.path as osp
+import torch
+import torch.nn.functional as F
 from tqdm import *
 from scipy.sparse import *
 
-import torch
-import torch.nn.functional as F
-import torch.autograd.profiler as profiler
+import GNNAdvisor as GNNA           # import GNNAdvisor
 
-import GNNAdvisor as GNNA
 from gnn_conv import *
 from dataset import *
 
-TEST = False     # verify correctness for single aggregation kernel.
+# Verify single sparse kernel
+TEST = False    
 if TEST == True:
     from unitest import *
 
-run_GCN = False
-
-best_val_acc = test_acc = 0
-time_avg = []
-test_time_avg = []
-
 parser = argparse.ArgumentParser()
+# Dataset related parameters.
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
-parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
-parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
-parser.add_argument("--classes", type=int, default=22, help="number of output classes")
+parser.add_argument("--dim", type=int, default=96, help="input embedding dimension size")
+parser.add_argument("--hidden", type=int, default=16, help="hidden dimension size")
+parser.add_argument("--classes", type=int, default=22, help="output classes size")
+
+# Manually set the performance related parameters
 parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
 parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
 parser.add_argument("--warpPerBlock", type=int, default=2, help="number of warp per block, recommended: GCN: 8, GIN: 2")
+
+parser.add_argument('--loadFromTxt', action='store_true', help="whether to load the graph TXT edge list, default: False (load from npz fast)")
+parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")
+parser.add_argument("--num_epoches", type=int, default=200, help="number of epoches for training, default=200")
+
 args = parser.parse_args()
 print(args)
-
-dataset = args.dataset
 partSize, dimWorker, warpPerBlock = args.partSize, args.dimWorker, args.warpPerBlock
 
-# path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", dataset+".npz")
-# data = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
-# path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
-path = osp.join("/home/yuke/.graphs/orig", dataset)
-data = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
-dataset = data
-# sys.exit(0)
+# requires GPU for evaluation.
+assert torch.cuda.is_available()
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-num_nodes = data.num_nodes
-num_edges = data.num_edges
-val = [1] * num_edges
+# loading data from files
+if args.loadFromTxt:
+    path = osp.join("/home/yuke/.graphs/orig", args.dataset)
+    dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
+    # path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
+else:
+    path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", args.dataset+".npz")
+    dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 
-start = time.perf_counter()
-scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))
-scipy_csr = scipy_coo.tocsr()
-build_csr = time.perf_counter() - start
+num_nodes = dataset.num_nodes
+num_edges = dataset.num_edges
+column_index = dataset.column_index
+row_pointers = dataset.row_pointers
+degrees = dataset.degrees
 
-print("# Build CSR (s): {:.3f}".format(build_csr))
-column_index = torch.IntTensor(scipy_csr.indices)
-row_pointers = torch.IntTensor(scipy_csr.indptr)
-
-def func(x):
-    if x > 0:
-        return x
-    else:
-        return 1
-
-degrees = (row_pointers[1:] - row_pointers[:-1]).tolist()
-degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
-
+# Building neighbor partitioning.
 start = time.perf_counter()
 partPtr, part2Node = GNNA.build_part(partSize, row_pointers)
 build_neighbor_parts = time.perf_counter() - start
 print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
 
-# partPtr, part2Node = part_based_partitioing(scipy_csr.indptr, scipy_csr.indices)
-# partPtr = torch.IntTensor(partPtr).cuda()
-# part2Node = torch.IntTensor(part2Node).cuda()
-partPtr = partPtr.int().cuda()
-part2Node = part2Node.int().cuda()
-# print(partPtr)
-# print(part2Node)
-column_index = column_index.cuda()
-row_pointers = row_pointers.cuda()
+partPtr = partPtr.int().to(device)
+part2Node = part2Node.int().to(device)
+column_index = column_index.to(device)
+row_pointers = row_pointers.to(device)
+
+# Building input property profile.
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node,\
                             partSize, dimWorker, warpPerBlock)
@@ -96,7 +82,8 @@ if TEST:
     # valid.compare()
     sys.exit(0)
 
-if run_GCN:
+# Building GNN model
+if args.model == 'gcn':
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
@@ -104,7 +91,7 @@ if run_GCN:
             self.conv2 = GCNConv(args.hidden, dataset.num_classes)
 
         def forward(self):
-            x = data.x
+            x = dataset.x
             x = F.relu(self.conv1(x, inputInfo))
             x = self.conv2(x, inputInfo)
             return F.log_softmax(x, dim=1)
@@ -119,7 +106,7 @@ else:
             self.conv5 = GINConv(args.hidden, dataset.num_classes)
 
         def forward(self):
-            x = data.x
+            x = dataset.x
             x = F.relu(self.conv1(x, inputInfo))
             x = F.relu(self.conv2(x, inputInfo))
             x = F.relu(self.conv3(x, inputInfo))
@@ -127,9 +114,7 @@ else:
             x = self.conv5(x, inputInfo)
             return F.log_softmax(x, dim=1)
 
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model, data = Net().to(device), data.to(device)
+model, dataset = Net().to(device), dataset.to(device)
 print(model)
 
 optimizer = torch.optim.Adam([
@@ -137,52 +122,21 @@ optimizer = torch.optim.Adam([
     dict(params=model.conv2.parameters(), weight_decay=0)
 ], lr=0.01)
 
+# Define training function.
 def train():
     model.train()
     optimizer.zero_grad()
-    loss = F.nll_loss(model()[data.train_mask], data.y[data.train_mask])
-    # loss.backward()
-    # optimizer.step()
+    loss = F.nll_loss(model()[dataset.train_mask], dataset.y[dataset.train_mask])
+    loss.backward()
+    optimizer.step()
 
-@torch.no_grad()
-def test(profile=False):
-    model.eval()
-    if profile:
-        with profiler.profile(record_shapes=True, use_cuda=True) as prof:
-            with profiler.record_function("model_inference"):
-                logits, accs = model(), []
-        print(prof.key_averages().table())
-    else:
-        logits, accs = model(), []
-    
-    for mask in [data.train_mask, data.val_mask, data.test_mask]:
-        pred = logits[mask].max(1)[1]
-        acc = pred.eq(data.y[mask]).sum().item() / mask.sum().item()
-        accs.append(acc)
-    return accs
-
-
-num_epoches = 200
-for epoch in tqdm(range(1, num_epoches + 1)):
+# Training iteration begin.
+time_avg = []
+for epoch in tqdm(range(1, args.num_epoches + 1)):
     start_train = time.perf_counter()
     train()
     train_time = time.perf_counter() - start_train
     time_avg.append(train_time)
-    # if epoch == 10:
-    #     # break
-    #     train_acc, val_acc, tmp_test_acc = test(profile=True)
-    #     # break
-    # else:
-    # start_test = time.perf_counter()
-    # train_acc, val_acc, tmp_test_acc = test()
-    # test_time = time.perf_counter() - start_test
-    # test_time_avg.append(test_time)
-    
-    # if val_acc > best_val_acc:
-    #     best_val_acc = val_acc
-    #     test_acc = tmp_test_acc
-    # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
-    # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
 print('GNNAdvisor Time (ms): {:.3f}'.format(np.mean(time_avg)*1e3))
 print()

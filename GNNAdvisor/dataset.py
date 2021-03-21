@@ -4,6 +4,17 @@ import numpy as np
 import time
 import dgl 
 import sys
+from scipy.sparse import *
+
+
+def func(x):
+    '''
+    mapping degrees
+    '''
+    if x > 0:
+        return x
+    else:
+        return 1
 
 class custom_dataset(torch.nn.Module):
     """
@@ -67,7 +78,6 @@ class custom_dataset(torch.nn.Module):
                 raise ValueError("graph file must be a .npz file")
 
             start = time.perf_counter()
-            
             graph_obj = np.load(path)
             src_li = graph_obj['src_li']
             dst_li = graph_obj['dst_li']
@@ -75,15 +85,30 @@ class custom_dataset(torch.nn.Module):
             self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
             self.edge_index = np.stack([src_li, dst_li])
-
             dur = time.perf_counter() - start
-            print("# Loading (npz): {:.3f}s ".format(dur))
+            print("# Loading (npz)(s): {:.3f}".format(dur))
         
         self.avg_degree = self.num_edges / self.num_nodes
         self.avg_edgeSpan = np.mean(np.abs(np.subtract(src_li, dst_li)))
 
-        print("avg_degree: {:.3f}".format(self.avg_degree))
-        print("avg_edgeSpan: {}, # nodes: {}".format(int(self.avg_edgeSpan), self.num_nodes))
+        print('# nodes: {}'.format(self.num_nodes))
+        print("# avg_degree: {:.2f}".format(self.avg_degree))
+        print("# avg_edgeSpan: {}".format(int(self.avg_edgeSpan)))
+
+        # Build graph CSR.
+        val = [1] * self.num_edges
+        start = time.perf_counter()
+        scipy_coo = coo_matrix((val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
+        scipy_csr = scipy_coo.tocsr()
+        build_csr = time.perf_counter() - start
+        print("# Build CSR (s): {:.3f}".format(build_csr))
+
+        self.column_index = torch.IntTensor(scipy_csr.indices)
+        self.row_pointers = torch.IntTensor(scipy_csr.indptr)
+
+        # Get degrees array.
+        degrees = (self.row_pointers[1:] - self.row_pointers[:-1]).tolist()
+        self.degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
 
     def init_embedding(self, dim):
         '''

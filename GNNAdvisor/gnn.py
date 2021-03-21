@@ -29,9 +29,11 @@ parser.add_argument("--classes", type=int, default=22, help="output classes size
 # Manually set the performance related parameters
 parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
 parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
-parser.add_argument("--warpPerBlock", type=int, default=2, help="number of warp per block, recommended: GCN: 8, GIN: 2")
+parser.add_argument("--warpPerBlock", type=int, default=16, help="number of warp per block, recommended: GCN: 8, GIN: 2")
 
 parser.add_argument('--loadFromTxt', action='store_true', help="whether to load the graph TXT edge list, default: False (load from npz fast)")
+parser.add_argument('--manual_mode', action='store_true', help="whether to auto config")
+
 parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")
 parser.add_argument("--num_epoches", type=int, default=200, help="number of epoches for training, default=200")
 
@@ -71,8 +73,21 @@ row_pointers = row_pointers.to(device)
 
 # Building input property profile.
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
-                            partPtr, part2Node,\
-                            partSize, dimWorker, warpPerBlock)
+                            partPtr, part2Node,
+                            partSize, dimWorker, warpPerBlock,
+                            avgNodeDegree=dataset.avg_degree, inputDim=dataset.num_features, hiddenDim=args.hidden, 
+                            manual_mode=args.manual_mode)
+
+inputInfo.decider()
+
+inputInfo = inputInfo.set_input()
+inputInfo.print_param()
+print()
+
+inputInfo = inputInfo.set_hidden()
+inputInfo.print_param()
+print()
+sys.exit(0)
 
 if TEST:
     valid = Verification(row_pointers, column_index, degrees, partPtr, part2Node, \

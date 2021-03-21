@@ -49,14 +49,15 @@ class GCNConv(torch.nn.Module):
 
 class GNNAFunction_GIN(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, X, weight, inputInfo):
+    def forward(ctx, X, weight, inputInfo, eplison):
 
         X_prime, X_agg = GNNA.forward_gin(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
-                                        inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
+                                        eplison, inputInfo.partPtr, inputInfo.part2Node,
                                         inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
 
         ctx.save_for_backward(X_agg, weight)
         ctx.inputInfo = inputInfo
+        ctx.eplison = eplison
 
         return X_prime
 
@@ -67,15 +68,16 @@ class GNNAFunction_GIN(torch.autograd.Function):
         inputInfo = ctx.inputInfo
 
         d_input, d_weights = GNNA.backward_gin(d_output, X, weights, inputInfo.row_pointers, inputInfo.column_index,
-                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
-                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
+                                               ctx.eplison, inputInfo.partPtr, inputInfo.part2Node,
+                                                inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
         
-        return d_input, d_weights, None
+        return d_input, d_weights, None, None
 
 class GINConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
         super(GINConv, self).__init__()
         self.weights = torch.nn.Parameter(torch.randn(input_dim, output_dim))
+        self.eplison = 0.5
         self.reset_parameters()
 
     def reset_parameters(self):
@@ -90,4 +92,4 @@ class GINConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return GNNAFunction_GIN.apply(X, self.weights, inputInfo)
+        return GNNAFunction_GIN.apply(X, self.weights, inputInfo, self.eplison)

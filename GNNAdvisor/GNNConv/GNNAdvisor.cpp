@@ -33,7 +33,7 @@ std::vector<torch::Tensor> spmm_forward_cuda_gin(
     torch::Tensor weight,
     torch::Tensor row_pointers,
     torch::Tensor column_index,
-    torch::Tensor degrees,
+    float epsilon,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
     int partSize, 
@@ -47,7 +47,7 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
     torch::Tensor W,
     torch::Tensor row_pointers,
     torch::Tensor column_index,
-    torch::Tensor degrees,
+    float epsilon,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
     int partSize, 
@@ -121,7 +121,7 @@ std::vector<torch::Tensor> spmm_forward_gin(
     torch::Tensor weight,
     torch::Tensor row_pointers,
     torch::Tensor column_index, 
-    torch::Tensor degrees,
+    float epsilon,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
     int partSize, 
@@ -132,12 +132,11 @@ std::vector<torch::Tensor> spmm_forward_gin(
   CHECK_INPUT(weight);
   CHECK_INPUT(row_pointers);
   CHECK_INPUT(column_index);
-  CHECK_INPUT(degrees);
   CHECK_INPUT(part_pointers);
   CHECK_INPUT(part2Node);
 
   return spmm_forward_cuda_gin(input, weight, row_pointers, column_index, 
-                              degrees, part_pointers, part2Node, 
+                              epsilon, part_pointers, part2Node, 
                               partSize, dimWorker, warpPerBlock);
 }
 
@@ -150,7 +149,7 @@ std::vector<torch::Tensor> spmm_backward_gin(
     torch::Tensor W,
     torch::Tensor row_pointers,
     torch::Tensor column_index,
-    torch::Tensor degrees,
+    float epsilon,
     torch::Tensor part_pointers,
     torch::Tensor part2Node,
     int partSize, 
@@ -162,12 +161,11 @@ std::vector<torch::Tensor> spmm_backward_gin(
   CHECK_INPUT(W);
   CHECK_INPUT(row_pointers);
   CHECK_INPUT(column_index);
-  CHECK_INPUT(degrees);
   CHECK_INPUT(part_pointers);
   CHECK_INPUT(part2Node);
 
   return spmm_backward_cuda_gin(d_output, X, W, row_pointers, column_index, 
-                            degrees, part_pointers, part2Node,
+                            epsilon, part_pointers, part2Node,
                             partSize, dimWorker, warpPerBlock);
 }
 

@@ -6,7 +6,6 @@ import dgl
 import sys
 from scipy.sparse import *
 
-
 def func(x):
     '''
     mapping degrees
@@ -16,12 +15,12 @@ def func(x):
     else:
         return 1
 
-class custom_dataset(torch.nn.Module):
+class custom_dataset(object):
     """
     data loading for more graphs
     """
     def __init__(self, path, dim, num_class, load_from_txt=True):
-        super(custom_dataset, self).__init__()
+
         self.nodes = set()
 
         self.load_from_txt = load_from_txt
@@ -29,6 +28,9 @@ class custom_dataset(torch.nn.Module):
         self.num_features = dim 
         self.num_classes = num_class
         self.edge_index = None
+
+        self.avg_degree = -1
+        self.avg_edgeSpan = -1
 
         self.init_edges(path)
         self.init_embedding(dim)
@@ -44,9 +46,7 @@ class custom_dataset(torch.nn.Module):
         self.val_mask = torch.BoolTensor(self.val_mask).cuda()
         self.test_mask = torch.BoolTensor(self.test_mask).cuda()
 
-        # more metrics
-        self.avg_degree = -1
-        self.avg_edgeSpan = -1
+
 
     def init_edges(self, path):
         self.g = dgl.DGLGraph()
@@ -121,6 +121,3 @@ class custom_dataset(torch.nn.Module):
         Generate the node label.
         '''
         self.y = torch.ones(self.num_nodes).long().cuda()
-
-    def forward(*input, **kwargs):
-        pass

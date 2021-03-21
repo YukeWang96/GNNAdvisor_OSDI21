@@ -3,8 +3,8 @@ import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
 # hidden = [64] 		# for GIN
-hidden = [16] 		# for GCN
-partsize_li = [32]  # [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
+hidden = [16] 			# for GCN
+partsize_li = [32]  	# [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
 
 dataset = [
 		# ('tc_gnn_verify'	        , 3703	    , 6   ),  

@@ -75,9 +75,11 @@ row_pointers = row_pointers.to(device)
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node,
                             partSize, dimWorker, warpPerBlock,
-                            avgNodeDegree=dataset.avg_degree, inputDim=dataset.num_features, hiddenDim=args.hidden, 
-                            manual_mode=args.manual_mode)
+                            hiddenDim=args.hidden, dataset_obj=dataset,
+                            manual_mode=True) # args.manual_mode
 
+
+print('----------------------------')
 inputInfo.decider()
 
 inputInfo = inputInfo.set_input()
@@ -87,7 +89,10 @@ print()
 inputInfo = inputInfo.set_hidden()
 inputInfo.print_param()
 print()
-sys.exit(0)
+
+print('----------------------------')
+
+# sys.exit(0)
 
 if TEST:
     valid = Verification(row_pointers, column_index, degrees, partPtr, part2Node, \
@@ -107,8 +112,8 @@ if args.model == 'gcn':
 
         def forward(self):
             x = dataset.x
-            x = F.relu(self.conv1(x, inputInfo))
-            x = self.conv2(x, inputInfo)
+            x = F.relu(self.conv1(x, inputInfo.set_input()))
+            x = self.conv2(x, inputInfo.set_hidden())
             return F.log_softmax(x, dim=1)
 else:
     class Net(torch.nn.Module):

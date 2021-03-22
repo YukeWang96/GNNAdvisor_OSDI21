@@ -8,7 +8,7 @@ partsize_li = [32]  	# [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
 
 dataset = [
 		# ('tc_gnn_verify'	        , 3703	    , 6   ),  
-		('citeseer'	        , 3703	    , 6   ),  
+		# ('citeseer'	        , 3703	    , 6   ),  
 		# ('cora' 	        , 1433	    , 7   ),  
 		# ('pubmed'	        , 500	    , 3   ),      
 		# ('ppi'	            , 50	    , 121 ),   
@@ -20,7 +20,7 @@ dataset = [
 		# ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
 		# ('SW-620H'                   , 66       , 2) ,
 		
-		# ( 'amazon0505'               , 96	, 22),
+		( 'amazon0505'               , 96	, 22),
 		# ( 'artist'                   , 100  , 12),
 		# ( 'com-amazon'               , 96	, 22),
 		# ( 'soc-BlogCatalog'	       	 , 128  , 39), 

@@ -18,11 +18,12 @@ def func(x):
     else:
         return 1
 
-class custom_dataset(object):
+class custom_dataset(torch.nn.Module):
     """
     data loading for more graphs
     """
     def __init__(self, path, dim, num_class, load_from_txt=True):
+        super(custom_dataset, self).__init__()
 
         self.nodes = set()
 
@@ -69,7 +70,7 @@ class custom_dataset(object):
                 self.nodes.add(src)
                 self.nodes.add(dst)
             
-            self.g.add_edges(src_li, dst_li)
+            # self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
             self.num_nodes = max(self.nodes) + 1
             self.edge_index = np.stack([src_li, dst_li])
@@ -88,7 +89,7 @@ class custom_dataset(object):
             dst_li = graph_obj['dst_li']
 
             self.num_nodes = graph_obj['num_nodes']
-            self.g.add_edges(src_li, dst_li)
+            # self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
             self.edge_index = np.stack([src_li, dst_li])
             dur = time.perf_counter() - start
@@ -167,8 +168,8 @@ class custom_dataset(object):
 
 
 if __name__ == '__main__':
-    path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", "cora.npz")
+    # path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", "cora.npz")
+    path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", "amazon0505.npz")
     dataset = custom_dataset(path, 16, 10, load_from_txt=False)
     dataset.reorder_flag = True
     dataset.rabbit_reorder()
-

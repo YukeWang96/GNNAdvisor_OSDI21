@@ -1,13 +1,17 @@
+import math 
+
 # package of input parameters
 class inputProperty(object):
     def __init__(self, row_pointers=None, column_index=None, 
                 degrees=None, partPtr=None, 
                 part2Node=None, partSize=None, dimWorker=None, warpPerBlock=None,
-                avgNodeDegree=None, 
-                inputDim=None,
                 hiddenDim=None,
+                dataset_obj=None,
                 manual_mode=True):
-                
+        
+        if dataset_obj is None:
+            raise ValueError("Dataset object MUST SET.")
+
         self.row_pointers = row_pointers
         self.column_index = column_index
         self.degrees = degrees
@@ -18,34 +22,45 @@ class inputProperty(object):
         self.dimWorker = dimWorker
         self.warpPerBlock = warpPerBlock
 
-        self.avgNodeDegree = avgNodeDegree
-        self.inputDim = inputDim
+        self.dimWorker_input = dimWorker
+        self.dimWorker_hidden = dimWorker
+        self.warpPerBlock_input = warpPerBlock
+        self.warpPerBlock_hidden = warpPerBlock
+
+        self.num_nodes = dataset_obj.num_nodes
+        self.avgNodeDegree = dataset_obj.avg_degree
+        self.avgEdgeSpan = dataset_obj.avg_edgeSpan
+        self.inputDim = dataset_obj.num_features
         self.hiddenDim = hiddenDim
 
         self.manual_mode = manual_mode
+        self.reorder_flag = False
 
-        self.MAX_warpPerBlock = 8
-        self.share_memory = 96 # 96 KB for RTX3090
+        self.state_set_input = False
+
+        self.dataset_obj = dataset_obj
+        self.MAX_warpPerBlock = 8               # for better scheduling.
+        self.share_memory = 96                  # 96 KB for RTX3090.
 
     def decider(self):
         '''
         Determine the performance-related parameter here.
-        (True): manual_mode 
-        (False): auto_mode
+        manual_mode: using user-specified parameters
+        auto_mode:   determining the parameters according to the GPU resources and scheduling performance consideration.
         '''
         if self.manual_mode:
-            print("MANUAL Complete !!!")
+            print("=> MANUAL Config Complete !!!")
             return
         else:
             # Determine the neighbor partitioning.
             self.partSize = int(self.avgNodeDegree)
 
             est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.inputDim * 4)/1e3
-            print("input shared: {} KB".format(est_shared))
+            print("input-layer shared memory (KB): {} ".format(est_shared))
             share_memory_input = min(est_shared, self.share_memory)
             
             est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.hiddenDim * 4)/1e3
-            print("hidden shared: {} KB".format(est_shared))
+            print("hidden-layer shared memory (KB): {}".format(est_shared))
             share_memory_hidden = min(est_shared, self.share_memory)
 
             # Determine the warpPerBlock for input and hidden layer.
@@ -67,34 +82,56 @@ class inputProperty(object):
             else:
                 self.dimWorker_hidden = self.hiddenDim
 
+            # Determine whether to reorder a graph.
+            if math.sqrt(self.avgEdgeSpan) > math.sqrt(self.num_nodes)/100:
+                self.dataset_obj.reorder_flag = True
+                self.reorder_flag = True
+            
+            self.dataset_obj.rabbit_reorder()
+
             print()
             print("** AUTO Decider Complete !!!")
+            print()
 
-    
     def set_input(self):
         '''
         Determine the performance-related parameter for input layer.
+        Switch the parameter for input layer.
         '''
         self.dimWorker = self.dimWorker_input        
         self.warpPerBlock = self.warpPerBlock_input
+        self.state_set_input = True
 
         return self        
     
     def set_hidden(self):
         '''
         Determine the performance-related parameter for hidden layer.
+        Switch the parameter for hidden layer.
         '''
         self.dimWorker = self.dimWorker_hidden        
         self.warpPerBlock = self.warpPerBlock_hidden
-
+        self.state_set_input = False
         return self   
 
     def print_param(self):
-        if not self.manual_mode:
-            print("# auto partSize: {}".format(self.partSize))
-            print("# auto dimWorker: {}".format(self.dimWorker))
-            print("# auto warpPerBlock: {}".format(self.warpPerBlock))
+        if self.state_set_input:
+            if self.manual_mode:
+                print("# manual INPUT partSize: {}".format(self.partSize))
+                print("# manual INPUT dimWorker: {}".format(self.dimWorker))
+                print("# manual INPUT warpPerBlock: {}".format(self.warpPerBlock))
+            else:
+                print("# auto INPUT partSize: {}".format(self.partSize))
+                print("# auto INPUT dimWorker: {}".format(self.dimWorker))
+                print("# auto INPUT warpPerBlock: {}".format(self.warpPerBlock))
+                print("# auto INPUT reorder_flag: {}".format(self.reorder_flag))
         else:
-           print("# manual partSize: {}".format(self.partSize))
-           print("# manual dimWorker: {}".format(self.dimWorker))
-           print("# manual warpPerBlock: {}".format(self.warpPerBlock))
+            if self.manual_mode:
+                print("# manual HIDDEN partSize: {}".format(self.partSize))
+                print("# manual HIDDEN dimWorker: {}".format(self.dimWorker))
+                print("# manual HIDDEN warpPerBlock: {}".format(self.warpPerBlock))
+            else:
+                print("# auto HIDDEN partSize: {}".format(self.partSize))
+                print("# auto HIDDEN dimWorker: {}".format(self.dimWorker))
+                print("# auto HIDDEN warpPerBlock: {}".format(self.warpPerBlock))
+                print("# auto HIDDEN reorder_flag: {}".format(self.reorder_flag))

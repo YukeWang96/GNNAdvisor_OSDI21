@@ -113,7 +113,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     // printf("grid: %d, block: %d\n", blocks, block_size);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
     // printf("input: (%d, %d)", tmp.size(0), tmp.size(1));
-    printf("dimWorker: %d\n", dimWorker);
+    // printf("dimWorker: %d\n", dimWorker);
     int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {
@@ -170,17 +170,17 @@ __global__ void spmm_forward_cuda_kernel(
     int *partial_ids = (int*) part_info;                    // caching ids
     float *partial_results = part_info + part_shift_base;   // caching partial results.
 
-    if (warpId < num_parts && laneid < dimWorker){
+    if (warpId < num_parts){
 
         int srcId = part2Node[warpId];              // aggregated source node
         int partBeg = part_pointers[warpId];        // partitioning pointer start
         int partEnd = part_pointers[warpId + 1];    // part pointer end
         float src_norm = degrees[srcId];            // norm of the source node
 
-        // Cache the part neighbors.
+        // Cache the part neighbors by all threads from a warp.
         const int pindex_base = block_warpId * partSize;
         #pragma unroll
-        for (int nidx = partBeg + laneid; nidx < partEnd; nidx += dimWorker){
+        for (int nidx = partBeg + laneid; nidx < partEnd; nidx += threadPerWarp){
             partial_ids[pindex_base + laneid] = column_index[nidx];
         }
 
@@ -195,11 +195,13 @@ __global__ void spmm_forward_cuda_kernel(
 
             // Initialize shared memory for partial results
             if (nIdx == 0)
+                if (laneid < dimWorker)
                 #pragma unroll
                 for (int d = laneid; d < dim; d += dimWorker){
                     partial_results[presult_base + d] = 0;
                 }
             
+            if (laneid < dimWorker)
             #pragma unroll
             for (int d = laneid; d < dim; d += dimWorker){
                 partial_results[presult_base + d] += __fmaf_rn(degree_norm_inv, input[nid][d], 0);
@@ -207,6 +209,7 @@ __global__ void spmm_forward_cuda_kernel(
         }
 
         // output the result to global memory from the shared memory
+        if (laneid < dimWorker)
         #pragma unroll
         for (int d = laneid; d < dim; d += dimWorker){
             atomicAdd_F((float*)&output[srcId][d], partial_results[presult_base + d]);
@@ -291,16 +294,16 @@ __global__ void spmm_backward_cuda_kernel(
 ) {
 
     int tid =  blockIdx.x * blockDim.x + threadIdx.x;
-    int warpId =  tid / 32;
-    int block_warpId = threadIdx.x / 32;
-    int laneid = threadIdx.x % 32;
+    int warpId =  tid / threadPerWarp;
+    int block_warpId = threadIdx.x / threadPerWarp;
+    int laneid = threadIdx.x % threadPerWarp;
 
     extern __shared__ float part_info[];                    // part information.
     const int part_shift_base = partSize * warpPerBlock;    // shared memory shift for partial result.
     int *partial_ids = (int*) part_info;                    // caching ids
     float *partial_results = part_info + part_shift_base;   // caching partial results.
     
-    if (warpId < num_parts && laneid < dimWorker){
+    if (warpId < num_parts){
 
         int srcId = part2Node[warpId];
         int partBeg = part_pointers[warpId];
@@ -309,7 +312,7 @@ __global__ void spmm_backward_cuda_kernel(
 
         const int pindex_base = block_warpId * partSize;
         #pragma unroll
-        for (int nid = partBeg + laneid; nid < partEnd; nid += dimWorker){
+        for (int nid = partBeg + laneid; nid < partEnd; nid += threadPerWarp){
             partial_ids[pindex_base + laneid] = column_index[nid];
         }
 
@@ -322,17 +325,20 @@ __global__ void spmm_backward_cuda_kernel(
             float degree_norm =  __fmaf_rn(src_norm, degrees[nid], 0);
 
             if (nIdx == 0)
+                if (laneid < dimWorker)
                 #pragma unroll
                 for (int d = laneid; d < dim; d += dimWorker){
                     partial_results[presult_base + d] = 0;
                 }
             
+            if (laneid < dimWorker)
             #pragma unroll
             for (int d = laneid; d < dim; d += dimWorker){
                 partial_results[presult_base + d] += __fmaf_rn(degree_norm, d_output[nid][d], 0);
             }
         }
 
+        if (laneid < dimWorker)
         #pragma unroll
         for (int d = laneid; d < dim; d += dimWorker){
             atomicAdd_F((float*)&d_input[srcId][d], partial_results[presult_base + d]);

@@ -49,7 +49,7 @@ class inputProperty(object):
         auto_mode:   determining the parameters according to the GPU resources and scheduling performance consideration.
         '''
         if self.manual_mode:
-            self.dataset_obj.reorder_flag = True
+            self.dataset_obj.reorder_flag = False
             self.dataset_obj.rabbit_reorder()
             print("\n=> MANUAL Config Complete !!!\n")
         else:

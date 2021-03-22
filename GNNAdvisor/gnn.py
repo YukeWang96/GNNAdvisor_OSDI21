@@ -71,6 +71,7 @@ part2Node = part2Node.int().to(device)
 column_index = column_index.to(device)
 row_pointers = row_pointers.to(device)
 
+dimWorker = 16
 # Building input property profile.
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node,

@@ -229,7 +229,6 @@ std::map<int, int> reorder(adjacency_list adj) {
   return perm_mapping;
 }
 
-
 #define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
 #define CHECK_INPUT(x) CHECK_CONTIGUOUS(x)
 

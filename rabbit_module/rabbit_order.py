@@ -41,14 +41,14 @@ class graph_input(object):
             src_li = []
             dst_li = []
             for line in fp:
-                tmp = line.rstrip('\n').split(" ")
+                tmp = line.rstrip('\n').split()
                 src, dst = int(tmp[0]), int(tmp[1])
                 src_li.append(src)
                 dst_li.append(dst)
             src_idx = torch.IntTensor(src_li)
             dst_idx = torch.IntTensor(dst_li)
             self.edge_index = torch.stack([src_idx, dst_idx], dim=0)
-            print(self.edge_index)
+            # print(self.edge_index)
             # print(src_idx)
             # print(dst_idx)
         else:
@@ -77,13 +77,12 @@ class graph_input(object):
         if not self.load_flag: 
             raise ValueError("Graph MUST be loaded Before reordering.")
         
-        print(self.edge_index.size())
-
+        print("Original edge_index\n", self.edge_index)
         new_edge_index = rabbit.reorder(self.edge_index)
-        
-        print(new_edge_index)
-        for i in range(len(new_edge_index[1])):
-            src, dst = new_edge_index[0][i], new_edge_index[1][i]
+        print("Reordered edge_index\n", new_edge_index)
+
+        # for i in range(len(new_edge_index[1])):
+        #     src, dst = new_edge_index[0][i], new_edge_index[1][i]
             # print('{}--{}'.format(src, dst))
         # print(new_edge_index.size())
 
@@ -135,7 +134,8 @@ class graph_input(object):
 
 if __name__ == "__main__":
     # path = "/home/ssd2T_1/yuke/.graphs/orig/amazon0505"
-    path = "/home/ssd2T_1/yuke/.graphs/orig/cora"
+    # path = "/home/ssd2T_1/yuke/.graphs/orig/cora"
+    path = "/home/yuke/.graphs/orig/toy"
     graph = graph_input(path)
-    graph.load()
+    graph.load(load_from_txt=True)
     graph.reorder()

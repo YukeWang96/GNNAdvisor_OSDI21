@@ -4,11 +4,14 @@ import numpy as np
 import time
 import dgl 
 import sys
+import os.path as osp
+
 from scipy.sparse import *
+import rabbit
 
 def func(x):
     '''
-    mapping degrees
+    node degrees function
     '''
     if x > 0:
         return x
@@ -46,6 +49,7 @@ class custom_dataset(object):
         self.val_mask = torch.BoolTensor(self.val_mask).cuda()
         self.test_mask = torch.BoolTensor(self.test_mask).cuda()
 
+        self.reorder_flag = False
 
 
     def init_edges(self, path):
@@ -64,6 +68,7 @@ class custom_dataset(object):
                 dst_li.append(dst)
                 self.nodes.add(src)
                 self.nodes.add(dst)
+            
             self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
             self.num_nodes = max(self.nodes) + 1
@@ -81,6 +86,7 @@ class custom_dataset(object):
             graph_obj = np.load(path)
             src_li = graph_obj['src_li']
             dst_li = graph_obj['dst_li']
+
             self.num_nodes = graph_obj['num_nodes']
             self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
@@ -113,11 +119,56 @@ class custom_dataset(object):
     def init_embedding(self, dim):
         '''
         Generate node embedding for nodes.
+        Called from __init__.
         '''
         self.x = torch.randn(self.num_nodes, dim).cuda()
     
     def init_labels(self, num_class):
         '''
         Generate the node label.
+        Called from __init__.
         '''
         self.y = torch.ones(self.num_nodes).long().cuda()
+
+    def rabbit_reorder(self):
+        '''
+        If the decider set this reorder flag,
+        then reorder and rebuild a graph CSR.
+        otherwise skipped this reorder routine.
+        Called from external
+        '''
+        if not self.reorder_flag:
+            print("Reorder flag is not set. Skipped...")
+        else:
+            print("Reorder flag is set. Continue...")
+
+            print("Original edge_index\n", self.edge_index)
+            start = time.perf_counter()
+            self.edge_index = rabbit.reorder(torch.IntTensor(self.edge_index))
+            reorder_time = time.perf_counter() - start
+            print("# Reorder time (s): {}".format(reorder_time))
+            print("Reordered edge_index\n", self.edge_index)
+
+            # Rebuild a new graph CSR according to the updated edge_index
+            val = [1] * self.num_edges
+            start = time.perf_counter()
+            scipy_coo = coo_matrix((val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
+            scipy_csr = scipy_coo.tocsr()
+            build_csr = time.perf_counter() - start
+
+            self.column_index = torch.IntTensor(scipy_csr.indices)
+            self.row_pointers = torch.IntTensor(scipy_csr.indptr)
+
+            # Re-generate degrees array.
+            degrees = (self.row_pointers[1:] - self.row_pointers[:-1]).tolist()
+            self.degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
+
+            print("# Re-Build CSR (s): {:.3f}".format(build_csr))
+
+
+if __name__ == '__main__':
+    path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", "cora.npz")
+    dataset = custom_dataset(path, 16, 10, load_from_txt=False)
+    dataset.reorder_flag = True
+    dataset.rabbit_reorder()
+

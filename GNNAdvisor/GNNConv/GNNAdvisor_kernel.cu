@@ -113,6 +113,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     // printf("grid: %d, block: %d\n", blocks, block_size);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
     // printf("input: (%d, %d)", tmp.size(0), tmp.size(1));
+    printf("dimWorker: %d\n", dimWorker);
     int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {

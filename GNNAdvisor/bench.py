@@ -20,7 +20,7 @@ dataset = [
 		# ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
 		# ('SW-620H'                   , 66       , 2) ,
 		
-		( 'amazon0505'               , 96	, 22),
+		# ( 'amazon0505'               , 96	, 22),
 		# ( 'artist'                   , 100  , 12),
 		# ( 'com-amazon'               , 96	, 22),
 		# ( 'soc-BlogCatalog'	       	 , 128  , 39), 

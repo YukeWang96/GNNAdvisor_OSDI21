@@ -49,8 +49,9 @@ class inputProperty(object):
         auto_mode:   determining the parameters according to the GPU resources and scheduling performance consideration.
         '''
         if self.manual_mode:
-            print("=> MANUAL Config Complete !!!")
-            return
+            self.dataset_obj.reorder_flag = True
+            self.dataset_obj.rabbit_reorder()
+            print("\n=> MANUAL Config Complete !!!\n")
         else:
             # Determine the neighbor partitioning.
             self.partSize = int(self.avgNodeDegree)
@@ -89,9 +90,7 @@ class inputProperty(object):
             
             self.dataset_obj.rabbit_reorder()
 
-            print()
-            print("** AUTO Decider Complete !!!")
-            print()
+            print("\n AUTO Decider Complete !!!\n")
 
     def set_input(self):
         '''

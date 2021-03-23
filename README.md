@@ -9,12 +9,18 @@
 > + `gcc > 7.5`
 > + `nvcc > 11.1`
 
-## 2. Dependency. 
-### 1) Install system packages for compiling rabbit reordering (root user required). 
+## 2. Set up the Environment. 
+### Method 1: (**Recommended**) Set up the environment via Docker.
++ Install Docker Engine with NVIDIA GPU Support [Toturial](https://cnvrg.io/how-to-setup-docker-and-nvidia-docker-2-0-on-ubuntu-18-04/).
++ `cd Docker` then run `./build.sh`, it may takes a while for installation.
++ run `./launch.sh`
+
+### Method 2: Setp up via conda.
+#### 1) Install system packages for compiling rabbit reordering (root user required). 
 + **`libboost`**: `sudo apt-get install libboost-all-dev`
 + **`tcmalloc`**: `sudo apt-get install libgoogle-perftools-dev`
 
-### 2) Install Pytorch environment.
+#### 2) Install Pytorch environment.
 + Install **`conda`** on system [Toturial](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart).
 + Create a **`conda`** environment: 
 ```

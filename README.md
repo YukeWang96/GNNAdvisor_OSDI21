@@ -42,14 +42,14 @@ pip install torch-geometric
 > + **GCN (2-layer with 16 hidden dimension)**
 > + **GIN (5-layer with 64 hidden dimension)**
 + **Datasets**.
-> Type I:
->> `citeseer, cora, pubmed, ppi`
+> **Type I**:
+> `citeseer, cora, pubmed, ppi`
 
-> Type II:
->> `PROTEINS_full, OVCAR-8H, Yeast, DD, TWITTER-Real-Graph-Partial, SW-620H`
+> **Type II**:
+> `PROTEINS_full, OVCAR-8H, Yeast, DD, TWITTER-Real-Graph-Partial, SW-620H`
 
-> Type III:
->> `amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
+> **Type III**:
+>`amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
 
 + Running **DGL** baseline on GNN training.
 > +  Go to **`dgl_baseline/`** directory
@@ -68,5 +68,17 @@ pip install torch-geometric
 > + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model;
 > + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model; 
 > + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> +  Stand alone running with specified parameters.
+>> + `--dataset`: the name of the dataset.
+>> + `--dim`: the size of input embedding dimension, default: 96.
+>> + `--hidden`: the size of hidden dimension, default: 16.
+>> + `--classes`: the number of output classes, default: 22.
+>> + `--partSize`: the size of neighbor-group, default: 32. 
+>> + `--dimWorker`: the number of worker threads (MUST < 32), default: 32.
+>> + `--warpPerBlock`: the number of warp per block, default: 8, recommended: GCN: 8, GIN: 2.
+>> + `--loadFromTxt`: whether to load the graph TXT edge list. default: `False` (will load from npz fast).
+>> + `--model`: `gcn` or `gin`. gcn has 2 layers with 16 hidden dimensions, while gin has 5 layers with 64 hidden dimensions.
+>> + `--num_epoches`: the number of epoches for training, default: 200.
+>> + `--manual_mode`: this a **flag** without parameter value. If this flag is specified, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.
 
 **Note** that 1) accuracy evaluation are omitted; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 

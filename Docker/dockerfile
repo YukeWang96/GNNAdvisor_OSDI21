@@ -1,5 +1,4 @@
 # FROM nvidia/cuda:11.0-devel-ubuntu20.04
-# FROM nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu18.04
 FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu18.04
 
 RUN apt-get update && apt-get install -y libboost-all-dev \
@@ -27,5 +26,8 @@ RUN CUDA=cu111 \
     pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html \
     pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html \
     pip install torch-geometric
+
+RUN conda init \
+    source ~/.bashrc
 
 WORKDIR /GNNA

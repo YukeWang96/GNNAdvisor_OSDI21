@@ -27,7 +27,7 @@ RUN CUDA=cu111 \
     pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html \
     pip install torch-geometric
 
-RUN conda init \
-    source ~/.bashrc
+RUN conda init
+RUN /bin/bash -c "source root/.bashrc"
 
 WORKDIR /GNNA

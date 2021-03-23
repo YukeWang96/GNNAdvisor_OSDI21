@@ -1,5 +1,9 @@
-# FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu18.0
-FROM nvidia/cuda:11.0-devel-ubuntu20.04
+# FROM nvidia/cuda:11.0-devel-ubuntu20.04
+# FROM nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu18.04
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu18.04
+
+RUN apt-get update && apt-get install -y libboost-all-dev \
+                                         libgoogle-perftools-dev
 
 ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"

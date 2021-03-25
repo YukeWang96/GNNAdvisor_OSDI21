@@ -30,4 +30,10 @@ RUN CUDA=cu111 \
 RUN conda init
 RUN /bin/bash -c "source root/.bashrc"
 
+WORKDIR /GNNA/GNNAdvisor/GNNConv
+RUN python setup.py install
+
+WORKDIR /GNNA/rabbit_module/src
+RUN python setup.py install
+
 WORKDIR /GNNA

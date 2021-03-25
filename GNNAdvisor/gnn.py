@@ -39,7 +39,6 @@ parser.add_argument('-loadFromTxt', action='store_true', help="whether to load t
 parser.add_argument('-enable_rabbit', action='store_true', help="whether to enable rabbit reordering, default: False for both manual and auto mode.")
 parser.add_argument('-manual_mode', action='store_true', help="whether to use manual config, defuatl: auto config mode")
 
-
 args = parser.parse_args()
 print(args)
 partSize, dimWorker, warpPerBlock, sharedMem = args.partSize, args.dimWorker, args.warpPerBlock, args.sharedMem
@@ -74,14 +73,13 @@ part2Node = part2Node.int().to(device)
 column_index = column_index.to(device)
 row_pointers = row_pointers.to(device)
 
-dimWorker = 16
+# dimWorker = 10
 # Building input property profile.
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node,
                             partSize, dimWorker, warpPerBlock, sharedMem,
-                            hiddenDim=args.hidden, dataset_obj=dataset,enable_rabbit=args.enable_rabbit,
-                            manual_mode=True) # args.manual_mode
-
+                            hiddenDim=args.hidden, dataset_obj=dataset, enable_rabbit=args.enable_rabbit,
+                            manual_mode=args.manual_mode)
 
 print('----------------------------')
 inputInfo.decider()

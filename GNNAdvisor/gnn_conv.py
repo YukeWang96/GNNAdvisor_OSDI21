@@ -9,7 +9,7 @@ class GNNAFunction(torch.autograd.Function):
     def forward(ctx, X, weight, inputInfo):
         ctx.save_for_backward(X, weight)
         ctx.inputInfo = inputInfo
-
+        # print("partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock))
         X_prime = GNNA.forward(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)[0]
@@ -52,7 +52,7 @@ class GNNAFunction_GIN(torch.autograd.Function):
     def forward(ctx, X, weight, inputInfo, eplison):
 
         X_prime, X_agg = GNNA.forward_gin(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
-                                        eplison, inputInfo.partPtr, inputInfo.part2Node,
+                                        eplison, inputInfo.partPtr, inputInfo.part2Node, 
                                         inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
 
         ctx.save_for_backward(X_agg, weight)

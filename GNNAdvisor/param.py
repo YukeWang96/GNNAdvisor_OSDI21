@@ -11,7 +11,7 @@ class inputProperty(object):
                 manual_mode=True):
         
         if dataset_obj is None:
-            raise ValueError("Dataset object MUST SET.")
+            raise ValueError("Dataset object MUST SET !!!")
 
         self.row_pointers = row_pointers
         self.column_index = column_index
@@ -93,7 +93,7 @@ class inputProperty(object):
                 
                 self.dataset_obj.rabbit_reorder()
 
-            print("\n AUTO Decider Complete !!!\n")
+            print("\n=> AUTO Decider Complete !!!\n")
 
     def set_input(self):
         '''

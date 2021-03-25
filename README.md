@@ -10,9 +10,9 @@
 > + `nvcc > 11.1`
 
 ### **Environment Setup** 
-There are two ways to setup the environment of GNNAdvisor and its baselines.
+There are two ways to setup the environment of GNNAdvisor and baselines.
 ### + **Method 1**:  Setup the environment via Docker (**Recommended**).
-+ Install Docker Engine with NVIDIA GPU Support [Toturial](https://cnvrg.io/how-to-setup-docker-and-nvidia-docker-2-0-on-ubuntu-18-04/).
++ Install Docker Engine with NVIDIA GPU Support **[Toturial](https://cnvrg.io/how-to-setup-docker-and-nvidia-docker-2-0-on-ubuntu-18-04/)**.
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
 
@@ -22,7 +22,7 @@ There are two ways to setup the environment of GNNAdvisor and its baselines.
 + **`tcmalloc`**: `sudo apt-get install libgoogle-perftools-dev`
 
 #### 2) Install Pytorch environment.
-+ Install **`conda`** on system [Toturial](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart).
++ Install **`conda`** on system **[Toturial](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart)**.
 + Create a **`conda`** environment: 
 ```
 conda create -n env_name python=3.6
@@ -54,6 +54,10 @@ pip install torch-geometric
 + Install GNNAdvisor Pytorch Binding.
 > + Go to `GNNAdvisor/GNNConv`, then `python setup.py install` to install the GNNAdvisor modules.
 > + Go to `rabbit_module/src`, then `python setup.py install` to install the rabbit reordering modules.
+
+### Download the graph datasets.
++ Our preprocessed graph datasets in .npy can be downloaded via this **[link](https://drive.google.com/file/d/12lPJi9eV9hbiy5Q3Fs1luEhkkvA0Yyk5/view?usp=sharing)**.
++ Note that node inital embeeding is not included, and we generate an all 1s embeeding matrix according to users `input dimension` parameter at the runtime for just performance evaluation.
 
 ## 3. Detailed Instructions.
 

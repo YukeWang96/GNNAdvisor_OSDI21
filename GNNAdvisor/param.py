@@ -42,7 +42,8 @@ class inputProperty(object):
 
         self.dataset_obj = dataset_obj
         self.MAX_warpPerBlock = 8               # for better scheduling.
-        self.share_memory = sharedMem           # 96 KB for RTX3090.
+        self.share_memory = sharedMem * 0.4         
+        self.gap_smem = 100
 
     def decider(self):
         '''
@@ -58,13 +59,15 @@ class inputProperty(object):
             # Determine the neighbor partitioning.
             self.partSize = int(self.avgNodeDegree)
 
-            est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.inputDim * 4)/1e3
-            print("input-layer shared memory (KB): {} ".format(est_shared))
+            est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.inputDim * 4 + self.gap_smem * 4)/1e3
+            print("input-layer shared memory (KB): {:.3f} ".format(est_shared))
             share_memory_input = min(est_shared, self.share_memory)
-            
-            est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.hiddenDim * 4)/1e3
-            print("hidden-layer shared memory (KB): {}".format(est_shared))
+            print("input-layer updated (KB): {:.3f}".format(share_memory_input))
+
+            est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.hiddenDim + 4 * self.gap_smem)/1e3
+            print("hidden-layer shared memory (KB): {:.3f}".format(est_shared))
             share_memory_hidden = min(est_shared, self.share_memory)
+            print("hidden-layer updated (KB): {:.3f}".format(share_memory_hidden))
 
             # Determine the warpPerBlock for input and hidden layer.
             self.warpPerBlock_input = int(share_memory_input * 1e3 / (self.partSize * 4 + self.inputDim * 4))

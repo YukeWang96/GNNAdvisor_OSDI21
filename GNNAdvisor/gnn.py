@@ -29,10 +29,10 @@ parser.add_argument("--classes", type=int, default=22, help="output classes size
 # Manually set the performance related parameters
 parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
 parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
-parser.add_argument("--warpPerBlock", type=int, default=16, help="number of warp per block, recommended: GCN: 8, GIN: 2")
+parser.add_argument("--warpPerBlock", type=int, default=3, help="number of warp per block, recommended: GCN: 8, GIN: 2")
 parser.add_argument("--sharedMem", type=int, default=96, help="shared memory size of each block, default=96KB for RTX3090")
 
-parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")
+parser.add_argument('--model', type=str, default='gin', choices=['gcn', 'gin'],  help="GCN or GIN")
 parser.add_argument("--num_epoches", type=int, default=200, help="number of epoches for training, default=200")
 
 parser.add_argument('-loadFromTxt', action='store_true', help="whether to load the graph TXT edge list, default: False (load from npz fast)")
@@ -79,7 +79,7 @@ inputInfo = inputProperty(row_pointers, column_index, degrees,
                             partPtr, part2Node,
                             partSize, dimWorker, warpPerBlock, sharedMem,
                             hiddenDim=args.hidden, dataset_obj=dataset, enable_rabbit=args.enable_rabbit,
-                            manual_mode=args.manual_mode)
+                            manual_mode=False)
 
 print('----------------------------')
 inputInfo.decider()
@@ -93,7 +93,6 @@ inputInfo.print_param()
 print()
 
 print('----------------------------')
-
 # sys.exit(0)
 
 if TEST:
@@ -129,11 +128,11 @@ else:
 
         def forward(self):
             x = dataset.x
-            x = F.relu(self.conv1(x, inputInfo))
-            x = F.relu(self.conv2(x, inputInfo))
-            x = F.relu(self.conv3(x, inputInfo))
-            x = F.relu(self.conv4(x, inputInfo))
-            x = self.conv5(x, inputInfo)
+            x = F.relu(self.conv1(x, inputInfo.set_input()))
+            x = F.relu(self.conv2(x, inputInfo.set_hidden()))
+            x = F.relu(self.conv3(x, inputInfo.set_hidden()))
+            x = F.relu(self.conv4(x, inputInfo.set_hidden()))
+            x = self.conv5(x, inputInfo.set_hidden())
             return F.log_softmax(x, dim=1)
 
 model, dataset = Net().to(device), dataset.to(device)

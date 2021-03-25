@@ -66,7 +66,6 @@ __global__ void spmm_backward_cuda_kernel(
     const int warpPerBlock
 );
 
-
 template <typename scalar_t>
 __global__ void spmm_backward_cuda_kernel_gin(
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> d_input,
@@ -115,7 +114,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
     // printf("input: (%d, %d)\n", tmp.size(0), tmp.size(1));
     // printf("dimWorker: %d\n", dimWorker);
-    int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap;
+    int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap * sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward", ([&] {
                                 spmm_forward_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
@@ -186,7 +185,7 @@ __global__ void spmm_forward_cuda_kernel(
             partial_ids[pindex_base + laneid] = column_index[nidx];
         }
 
-        __syncthreads();
+        __syncwarp();
 
         // if (laneid == 0)
         // for (int nIdx = laneid; nIdx < partEnd - partBeg; nIdx++){
@@ -264,7 +263,7 @@ std::vector<torch::Tensor> spmm_backward_cuda(
 
     const int block = warpPerBlock * threadPerWarp;
     const int grid = (num_parts * 32 + block - 1) / block; 
-    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap;
+    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap * sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward", ([&] {
                                 spmm_backward_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
@@ -391,7 +390,13 @@ std::vector<torch::Tensor> spmm_forward_cuda_gin(
 
     const int block = warpPerBlock * threadPerWarp;
     const int grid = (num_parts * 32 + block  - 1) / block; 
-    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
+    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap * sizeof(float);
+
+    // printf("grid: %d, block: %d\n", grid, block);
+    // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
+    // printf("input: (%d, %d)\n", tmp.size(0), tmp.size(1));
+    // printf("dimWorker: %d\n", dimWorker);
+    // printf("warpPerBlock: %d, shared_memory: %d\n", warpPerBlock, shared_memory);
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "spmm_cuda_forward_gin", ([&] {
                             spmm_forward_cuda_kernel_gin<scalar_t><<<grid, block, shared_memory>>>(
@@ -448,12 +453,12 @@ __global__ void spmm_forward_cuda_kernel_gin(
     int block_warpId = threadIdx.x / 32;               // block warp-id
     int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
 
-    extern __shared__ float part_info[];                    // part information.
-    const int part_shift_base = partSize * warpPerBlock;     // shared memory shift for partial result.
-    int *partial_ids = (int*) part_info;                    // caching ids
-    float *partial_results = part_info + part_shift_base;   // caching partial results.
+    extern __shared__ float part_info[];                                // part information.
+    const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
+    int *partial_ids = (int*) part_info;                                // caching ids
+    float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
 
-    if (warpId < num_parts && laneid < dimWorker){
+    if (warpId < num_parts){
 
         int srcId = part2Node[warpId];              // aggregated source node
         int partBeg = part_pointers[warpId];        // partitioning pointer start
@@ -476,11 +481,13 @@ __global__ void spmm_forward_cuda_kernel_gin(
 
             // Initialize shared memory for partial results
             if (nIdx == 0)
+                if (laneid < dimWorker)
                 #pragma unroll
                 for (int d = laneid; d < dim; d += dimWorker){
-                    partial_results[presult_base + d] = 0;
+                    partial_results[presult_base + d] = 0.0f;
                 }
             
+            if (laneid < dimWorker)
             #pragma unroll
             for (int d = laneid; d < dim; d += dimWorker){
                 partial_results[presult_base + d] += input[nid][d];
@@ -488,6 +495,7 @@ __global__ void spmm_forward_cuda_kernel_gin(
         }
 
         // output the result to global memory from the shared memory
+        if (laneid < dimWorker)
         #pragma unroll
         for (int d = laneid; d < dim; d += dimWorker){
             atomicAdd_F((float*)&output[srcId][d], epsilon*partial_results[presult_base + d]);
@@ -525,8 +533,9 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
 
     const int block = warpPerBlock * threadPerWarp;
     const int grid = (num_parts * 32 + block - 1) / block; 
-    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
+    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap * sizeof(float);
 
+    // printf("warpPerBlock: %d, shared_memory: %d\n", warpPerBlock, shared_memory);
     AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward_gin", ([&] {
                                 spmm_backward_cuda_kernel_gin<scalar_t><<<grid, block, shared_memory>>>(
                                     d_input.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
@@ -576,12 +585,12 @@ __global__ void spmm_backward_cuda_kernel_gin(
     int block_warpId = threadIdx.x / 32;
     int laneid = threadIdx.x % 32;
 
-    extern __shared__ float part_info[];                    // part information.
-    const int part_shift_base = partSize * warpPerBlock;    // shared memory shift for partial result.
-    int *partial_ids = (int*) part_info;                    // caching ids
-    float *partial_results = part_info + part_shift_base;   // caching partial results.
+    extern __shared__ float part_info[];                                // part information.
+    const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
+    int *partial_ids = (int*) part_info;                                // caching ids
+    float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
     
-    if (warpId < num_parts && laneid < dimWorker){
+    if (warpId < num_parts){
 
         int srcId = part2Node[warpId];
         int partBeg = part_pointers[warpId];
@@ -602,16 +611,19 @@ __global__ void spmm_backward_cuda_kernel_gin(
 
             if (nIdx == 0)
                 #pragma unroll
+                if (laneid < dimWorker)
                 for (int d = laneid; d < dim; d += dimWorker){
                     partial_results[presult_base + d] = 0;
                 }
             
+            if (laneid < dimWorker)
             #pragma unroll
             for (int d = laneid; d < dim; d += dimWorker){
                 partial_results[presult_base + d] += d_output[nid][d];
             }
         }
 
+        if (laneid < dimWorker)
         #pragma unroll
         for (int d = laneid; d < dim; d += dimWorker){
             atomicAdd_F((float*)&d_input[srcId][d], epsilon*partial_results[presult_base + d]);

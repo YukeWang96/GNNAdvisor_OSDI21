@@ -21,6 +21,7 @@ if TEST == True:
 
 parser = argparse.ArgumentParser()
 # Dataset related parameters.
+parser.add_argument("--dataDir", type=str, default="../osdi-ae-graphs", help="the path to graphs")
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension size")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension size")
@@ -32,7 +33,7 @@ parser.add_argument("--dimWorker", type=int, default=32, help="number of worker 
 parser.add_argument("--warpPerBlock", type=int, default=3, help="number of warp per block, recommended: GCN: 8, GIN: 2")
 parser.add_argument("--sharedMem", type=int, default=96, help="shared memory size of each block, default=96KB for RTX3090")
 
-parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")
+parser.add_argument('--model', type=str, default='gin', choices=['gcn', 'gin'],  help="GCN or GIN")
 parser.add_argument("--num_epoches", type=int, default=200, help="number of epoches for training, default=200")
 
 parser.add_argument('-loadFromTxt', action='store_true', help="whether to load the graph TXT edge list, default: False (load from npz fast)")
@@ -49,11 +50,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # loading data from files
 if args.loadFromTxt:
-    path = osp.join("/home/yuke/.graphs/orig", args.dataset)
+    path = osp.join(args.dataDir, args.dataset)
     dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
     # path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
 else:
-    path = osp.join("/home/yuke/.graphs/osdi-ae-graphs/", args.dataset+".npz")
+    path = osp.join(args.dataDir, args.dataset+".npz")
     dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 
 num_nodes = dataset.num_nodes

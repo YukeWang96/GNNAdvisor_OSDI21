@@ -6,9 +6,9 @@ hidden = [16]
 
 dataset = [
         ('citeseer'	        , 3703	    , 6   ),  
-        # ('cora' 	        , 1433	    , 7   ),  
-        # ('pubmed'	        , 500	    , 3   ),      
-        # ('ppi'	            , 50	    , 121 ),   
+        ('cora' 	        , 1433	    , 7   ),  
+        ('pubmed'	        , 500	    , 3   ),      
+        ('ppi'	            , 50	    , 121 ),   
 
         # ('PROTEINS_full'             , 29       , 2) ,   
         # ('OVCAR-8H'                  , 66       , 2) , 
@@ -27,5 +27,5 @@ dataset = [
 
 for hid in hidden:
     for data, d, c in dataset:
-        command = "python gnn.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
+        command = "python pyg_main.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
         os.system(command)

@@ -15,6 +15,7 @@ from dataset import *
 run_GCN = False
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--dataDir", type=str, default="../osdi-ae-graphs", help="the path to graphs")
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
@@ -23,7 +24,7 @@ parser.add_argument("--epochs", type=int, default=200, help="number of epoches")
 args = parser.parse_args()
 print(args)
 
-path = osp.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset+".npz")
+path = osp.join(args.dataDir, args.dataset+".npz")
 dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 data = dataset
 
@@ -96,19 +97,12 @@ def test():
         accs.append(acc)
     return accs
 
-# best_val_acc = test_acc = 0
 torch.cuda.synchronize()
 start = time.perf_counter()
 for epoch in tqdm(range(1, args.epochs + 1)):
     train()
-    # train_acc, val_acc, tmp_test_acc = test()
-    # if val_acc > best_val_acc:
-    #     best_val_acc = val_acc
-    #     test_acc = tmp_test_acc
-    # log = 'Epoch: {:03d}, Train: {:.4f}, Val: {:.4f}, Test: {:.4f}'
-    # print(log.format(epoch, train_acc, best_val_acc, test_acc))
 torch.cuda.synchronize()
-
 dur = time.perf_counter() - start
+
 print("GCN (L2-H16) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/args.epochs))
 print()

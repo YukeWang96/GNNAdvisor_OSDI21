@@ -12,7 +12,7 @@
 ### **Environment Setup** 
 There are two ways to setup the environment of GNNAdvisor and baselines.
 ### + **Method 1**:  Setup the environment via Docker (**Recommended**).
-+ Install Docker Engine with NVIDIA GPU Support **[Toturial](https://cnvrg.io/how-to-setup-docker-and-nvidia-docker-2-0-on-ubuntu-18-04/)**.
++ Install Docker Engine with NVIDIA GPU Support **[Toturial](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)**.
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
 + Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module.

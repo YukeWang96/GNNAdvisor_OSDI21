@@ -4,9 +4,10 @@ import math
 class inputProperty(object):
     def __init__(self, row_pointers=None, column_index=None, 
                 degrees=None, partPtr=None, 
-                part2Node=None, partSize=None, dimWorker=None, warpPerBlock=None,
+                part2Node=None, partSize=None, dimWorker=None, warpPerBlock=None, sharedMem=None,
                 hiddenDim=None,
                 dataset_obj=None,
+                enable_rabbit=False,
                 manual_mode=True):
         
         if dataset_obj is None:
@@ -37,10 +38,11 @@ class inputProperty(object):
         self.reorder_flag = False
 
         self.state_set_input = False
+        self.enable_rabbit = enable_rabbit
 
         self.dataset_obj = dataset_obj
         self.MAX_warpPerBlock = 8               # for better scheduling.
-        self.share_memory = 96                  # 96 KB for RTX3090.
+        self.share_memory = sharedMem           # 96 KB for RTX3090.
 
     def decider(self):
         '''
@@ -83,12 +85,13 @@ class inputProperty(object):
             else:
                 self.dimWorker_hidden = self.hiddenDim
 
-            # Determine whether to reorder a graph.
-            if math.sqrt(self.avgEdgeSpan) > math.sqrt(self.num_nodes)/100:
-                self.dataset_obj.reorder_flag = True
-                self.reorder_flag = True
-            
-            self.dataset_obj.rabbit_reorder()
+            if self.enable_rabbit:
+                # Determine whether to reorder a graph.
+                if math.sqrt(self.avgEdgeSpan) > math.sqrt(self.num_nodes)/100:
+                    self.dataset_obj.reorder_flag = True
+                    self.reorder_flag = True
+                
+                self.dataset_obj.rabbit_reorder()
 
             print("\n AUTO Decider Complete !!!\n")
 

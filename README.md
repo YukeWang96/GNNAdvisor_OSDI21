@@ -3,19 +3,20 @@
 ## 1. System Requirement.
 + **Hardware**: 
 > + `CPU x86_64` with host memory > 8GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
-> + `NVIDIA GPU (arch>sm_60)` with devcie memory > 12GB. (Tested on NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`) and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`).
+> + `NVIDIA GPU (arch>sm_60)` with devcie memory > 12GB. (Tested on NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`) and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`).
 + **OS & Compiler**: 
 > + `Ubuntu 16.04+`
 > + `gcc > 7.5`
 > + `nvcc > 11.1`
 
-## 2. Set up the Environment. 
-### Method 1: (**Recommended**) Set up the environment via Docker.
+## 2. Environment Setup. 
+There are two ways to setup the environment of GNNAdvisor and its baselines.
+### **Method 1**:  Set up the environment via Docker (**Recommended**).
 + Install Docker Engine with NVIDIA GPU Support [Toturial](https://cnvrg.io/how-to-setup-docker-and-nvidia-docker-2-0-on-ubuntu-18-04/).
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
 + run `./launch.sh`
 
-### Method 2: Setp up via conda.
+### **Method 2**: Setp up via conda.
 #### 1) Install system packages for compiling rabbit reordering (root user required). 
 + **`libboost`**: `sudo apt-get install libboost-all-dev`
 + **`tcmalloc`**: `sudo apt-get install libgoogle-perftools-dev`
@@ -90,11 +91,11 @@ pip install torch-geometric
 >> + `--partSize`: the size of neighbor-group, default: 32. 
 >> + `--dimWorker`: the number of worker threads (**<=32**), default: 32.
 >> + `--warpPerBlock`: the number of warp per block, default: 8, recommended: GCN: 8, GIN: 2.
->> + `--sharedMem`: the shared memory size for each Stream-Multiprocessor on NVIDIA GPUs. A reference for different GPU architecture and its shared memory size can be found at [here](https://en.wikipedia.org/wiki/CUDA), default
->> + `--loadFromTxt`: whether to load the graph TXT edge list. default: `False` (will load from npz fast).
+>> + `--sharedMem`: the shared memory size for each Stream-Multiprocessor on NVIDIA GPUs. A reference for different GPU architecture and its shared memory size can be found at [here](https://en.wikipedia.org/wiki/CUDA), default 96KB for RTX3090.
 >> + `--model`: `gcn` or `gin`. gcn has 2 layers with 16 hidden dimensions, while gin has 5 layers with 64 hidden dimensions.
 >> + `--num_epoches`: the number of epoches for training, default: 200.
->> + `-enable_rabbit`: this a **flag** parameter without value. If this flag is specified, it will be possible to use the rabbit-reordering routine. Otherwise, it will skip rabbit reordering under all cases no matter what kind of parameters decider or user specify.
->> + `-manual_mode`: this a **flag** parameter without value. If this flag is specified, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.
+>> + `-loadFromTxt`: this a **flag** parameter without value. If this flag is specified, it will load the graph TXT edge list, where each line is an `s1 d1`. default: `False` (load from `.npz` which is fast).
+>> + `-enable_rabbit`: this a **flag** parameter without value. If this flag is specified, it will be possible to use the rabbit-reordering routine. Otherwise, it will skip rabbit reordering for both **auto** and **manual** mode.
+>> + `-manual_mode`: this a **flag** parameter without value. If this flag is specified, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. **Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.** In manual mode the value of `partSize`, `dimWorker` and `dimWorker` will be applied to both input and hidden layer.
 
 **Note** that 1) accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 

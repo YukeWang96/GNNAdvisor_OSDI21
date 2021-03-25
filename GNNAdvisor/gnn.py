@@ -30,16 +30,19 @@ parser.add_argument("--classes", type=int, default=22, help="output classes size
 parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
 parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
 parser.add_argument("--warpPerBlock", type=int, default=16, help="number of warp per block, recommended: GCN: 8, GIN: 2")
-
-parser.add_argument('--loadFromTxt', action='store_true', help="whether to load the graph TXT edge list, default: False (load from npz fast)")
-parser.add_argument('--manual_mode', action='store_true', help="whether to auto config")
+parser.add_argument("--sharedMem", type=int, default=96, help="shared memory size of each block, default=96KB for RTX3090")
 
 parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")
 parser.add_argument("--num_epoches", type=int, default=200, help="number of epoches for training, default=200")
 
+parser.add_argument('-loadFromTxt', action='store_true', help="whether to load the graph TXT edge list, default: False (load from npz fast)")
+parser.add_argument('-enable_rabbit', action='store_true', help="whether to enable rabbit reordering, default: False for both manual and auto mode.")
+parser.add_argument('-manual_mode', action='store_true', help="whether to use manual config, defuatl: auto config mode")
+
+
 args = parser.parse_args()
 print(args)
-partSize, dimWorker, warpPerBlock = args.partSize, args.dimWorker, args.warpPerBlock
+partSize, dimWorker, warpPerBlock, sharedMem = args.partSize, args.dimWorker, args.warpPerBlock, args.sharedMem
 
 # requires GPU for evaluation.
 assert torch.cuda.is_available()
@@ -75,8 +78,8 @@ dimWorker = 16
 # Building input property profile.
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node,
-                            partSize, dimWorker, warpPerBlock,
-                            hiddenDim=args.hidden, dataset_obj=dataset,
+                            partSize, dimWorker, warpPerBlock, sharedMem,
+                            hiddenDim=args.hidden, dataset_obj=dataset,enable_rabbit=args.enable_rabbit,
                             manual_mode=True) # args.manual_mode
 
 

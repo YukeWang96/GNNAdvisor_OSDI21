@@ -1,6 +1,6 @@
 # GNNAdvisor
 
-## 1. System Requirement.
+## 1. Getting Started Instructions.
 + **Hardware**: 
 > + `CPU x86_64` with host memory > 8GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
 > + `NVIDIA GPU (arch>sm_60)` with devcie memory > 12GB. (Tested on NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`) and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`).
@@ -9,14 +9,14 @@
 > + `gcc > 7.5`
 > + `nvcc > 11.1`
 
-## 2. Environment Setup. 
+### **Environment Setup** 
 There are two ways to setup the environment of GNNAdvisor and its baselines.
-### **Method 1**:  Set up the environment via Docker (**Recommended**).
+### + **Method 1**:  Setup the environment via Docker (**Recommended**).
 + Install Docker Engine with NVIDIA GPU Support [Toturial](https://cnvrg.io/how-to-setup-docker-and-nvidia-docker-2-0-on-ubuntu-18-04/).
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
-+ run `./launch.sh`
++ Run `./launch.sh` then it will bring up an new interactive command line interface.
 
-### **Method 2**: Setp up via conda.
+### + **Method 2**: Setup via conda and pip
 #### 1) Install system packages for compiling rabbit reordering (root user required). 
 + **`libboost`**: `sudo apt-get install libboost-all-dev`
 + **`tcmalloc`**: `sudo apt-get install libgoogle-perftools-dev`
@@ -51,7 +51,11 @@ pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+$
 pip install torch-geometric
 ```
 
-## 3. Running Experiments.
++ Install GNNAdvisor Pytorch Binding.
+> + Go to `GNNAdvisor/GNNConv`, then `python setup.py install` to install the GNNAdvisor modules.
+> + Go to `rabbit_module/src`, then `python setup.py install` to install the rabbit reordering modules.
+
+## 3. Detailed Instructions.
 
 + **GNN Model Setting**.
 > + **GCN (2-layer with 16 hidden dimension)**

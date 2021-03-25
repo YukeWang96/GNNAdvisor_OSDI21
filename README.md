@@ -15,6 +15,8 @@ There are two ways to setup the environment of GNNAdvisor and baselines.
 + Install Docker Engine with NVIDIA GPU Support **[Toturial](https://cnvrg.io/how-to-setup-docker-and-nvidia-docker-2-0-on-ubuntu-18-04/)**.
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
++ Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module.
++ To clean the building packages when exit docker, run `./clean_build.sh`, root access premission may required.  
 
 ### + **Method 2**: Setup via conda and pip
 #### 1) Install system packages for compiling rabbit reordering (root user required). 

@@ -20,20 +20,15 @@ RUN conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c 
 RUN conda install -c dglteam dgl-cuda11.0
 RUN pip install requests
 
-RUN CUDA=cu111 \ 
-    pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html \
-    pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html  \
-    pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html \
-    pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html \
+RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html \
+    pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html  \
+    pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html \
+    pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html \
     pip install torch-geometric
 
 RUN conda init
 RUN /bin/bash -c "source root/.bashrc"
 
-WORKDIR /GNNA/GNNAdvisor/GNNConv
-RUN python setup.py install
-
-WORKDIR /GNNA/rabbit_module/src
-RUN python setup.py install
 
 WORKDIR /GNNA
+

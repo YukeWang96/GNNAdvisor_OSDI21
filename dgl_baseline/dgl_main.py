@@ -2,12 +2,8 @@
 import argparse
 import time
 import os
-import numpy as np
 from tqdm import *
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import dgl
 from dgl.data import register_data_args
 
 from dataset import *

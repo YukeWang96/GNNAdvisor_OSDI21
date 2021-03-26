@@ -3,7 +3,6 @@ import torch
 import numpy as np
 import time
 import dgl 
-import sys
 
 class custom_dataset(torch.nn.Module):
     """
@@ -50,9 +49,9 @@ class custom_dataset(torch.nn.Module):
                 dst_li.append(dst)
                 self.nodes.add(src)
                 self.nodes.add(dst)
-            self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
             self.num_nodes = max(self.nodes) + 1
+            self.edge_index = torch.stack([torch.Tensor(src_li),torch.Tensor(dst_li)], dim=0).long().cuda()
             dur = time.perf_counter() - start
             print("=> Loading (txt) {:.3f}s ".format(dur))
 
@@ -67,7 +66,6 @@ class custom_dataset(torch.nn.Module):
             src_li = graph_obj['src_li']
             dst_li = graph_obj['dst_li']
             self.num_nodes = graph_obj['num_nodes']
-            self.g.add_edges(src_li, dst_li)
             self.num_edges = len(src_li)
             self.edge_index = torch.stack([torch.Tensor(src_li),torch.Tensor(dst_li)], dim=0).long().cuda()
 

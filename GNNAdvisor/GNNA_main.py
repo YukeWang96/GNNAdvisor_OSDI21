@@ -30,7 +30,7 @@ parser.add_argument("--classes", type=int, default=22, help="output classes size
 # Manually set the performance related parameters
 parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
 parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
-parser.add_argument("--warpPerBlock", type=int, default=3, help="number of warp per block, recommended: GCN: 8, GIN: 2")
+parser.add_argument("--warpPerBlock", type=int, default=8, help="number of warp per block, recommended: GCN: 8, GIN: 2")
 parser.add_argument("--sharedMem", type=int, default=64, help="shared memory size of each block (Quadro P6000 64KB), default=100 KB for RTX3090")
 
 parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")
@@ -80,7 +80,7 @@ inputInfo = inputProperty(row_pointers, column_index, degrees,
                             partPtr, part2Node,
                             partSize, dimWorker, warpPerBlock, sharedMem,
                             hiddenDim=args.hidden, dataset_obj=dataset, enable_rabbit=args.enable_rabbit,
-                            manual_mode=False)
+                            manual_mode=True)
 
 print('----------------------------')
 inputInfo.decider()
@@ -139,10 +139,7 @@ else:
 model, dataset = Net().to(device), dataset.to(device)
 print(model)
 
-optimizer = torch.optim.Adam([
-    dict(params=model.conv1.parameters(), weight_decay=5e-4),
-    dict(params=model.conv2.parameters(), weight_decay=0)
-], lr=0.01)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
 # Define training function.
 def train():

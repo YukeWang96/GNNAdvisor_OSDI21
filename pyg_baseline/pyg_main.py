@@ -12,8 +12,6 @@ from torch.nn import Linear
 
 from dataset import *
 
-run_GCN = False
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataDir", type=str, default="../osdi-ae-graphs", help="the path to graphs")
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
@@ -21,15 +19,16 @@ parser.add_argument("--dim", type=int, default=96, help="input embedding dimensi
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=200, help="number of epoches")
+parser.add_argument("--model", type=str, default='gcn', choices=['gcn', 'gin'], help="type of model")
 args = parser.parse_args()
 print(args)
 
 path = osp.join(args.dataDir, args.dataset+".npz")
+# path = osp.join("/home/yuke/.graphs/orig/", args.dataset)
 dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 data = dataset
 
-
-if run_GCN:
+if args.model == 'gcn':
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
@@ -60,7 +59,6 @@ else:
             self.conv2 = GINConv(hidden_fc)
             self.conv3 = GINConv(hidden_fc)
             self.conv4 = GINConv(hidden_fc)
-            self.conv4 = GINConv(hidden_fc)
             self.conv5 = GINConv(output_fc)
 
         def forward(self):
@@ -74,28 +72,13 @@ else:
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model, data = Net().to(device), data.to(device)
-optimizer = torch.optim.Adam([
-    dict(params=model.conv1.parameters(), weight_decay=5e-4),
-    dict(params=model.conv2.parameters(), weight_decay=0)
-], lr=0.01) 
-
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01) 
 
 def train():
     model.train()
     optimizer.zero_grad()
     F.nll_loss(model()[data.train_mask], data.y[data.train_mask]).backward()
     optimizer.step()
-
-
-@torch.no_grad()
-def test():
-    model.eval()
-    logits, accs = model(), []
-    for _, mask in data('train_mask', 'val_mask', 'test_mask'):
-        pred = logits[mask].max(1)[1]
-        acc = pred.eq(data.y[mask]).sum().item() / mask.sum().item()
-        accs.append(acc)
-    return accs
 
 torch.cuda.synchronize()
 start = time.perf_counter()
@@ -104,5 +87,8 @@ for epoch in tqdm(range(1, args.epochs + 1)):
 torch.cuda.synchronize()
 dur = time.perf_counter() - start
 
-print("GCN (L2-H16) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/args.epochs))
+if args.model == 'gcn':
+    print("GCN (L2-H16) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/args.epochs))
+else:
+    print("GIN (L5-H64) -- Avg Epoch (ms): {:.3f}".format(dur*1e3/args.epochs))
 print()

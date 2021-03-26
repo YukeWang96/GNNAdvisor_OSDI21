@@ -16,11 +16,11 @@ parser.add_argument("--n-epochs", type=int, default=200, help="number of trainin
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="number of hidden gcn units")
 parser.add_argument("--classes", type=int, default=10, help="number of output classes")
+parser.add_argument("--model", type=str, default='gcn', choices=['gcn', 'gin'], help="type of model")
 args = parser.parse_args()
 print(args)
 
-run_GCN = True
-if run_GCN:
+if args.model == 'gcn':
     from gcn import GCN
 else:
     from gin import GIN
@@ -50,7 +50,7 @@ def main(args):
         norm = norm.cuda()
     g.ndata['norm'] = norm.unsqueeze(1)
 
-    if run_GCN:    
+    if args.model == 'gcn':    
         model = GCN(g,
                     in_feats=in_feats,
                     n_hidden=args.hidden,
@@ -84,7 +84,10 @@ def main(args):
     torch.cuda.synchronize()
     dur = time.perf_counter() - start
 
-    print("DGL Time: (ms) {:.3f}". format(dur*1e3/args.n_epochs))
+    if args.model == 'gcn': 
+        print("DGL GCN (L2-H16) Time: (ms) {:.3f}". format(dur*1e3/args.n_epochs))
+    else:
+        print("DGL GIN (L5-H64) Time: (ms) {:.3f}". format(dur*1e3/args.n_epochs))
     print()
 
 if __name__ == '__main__':

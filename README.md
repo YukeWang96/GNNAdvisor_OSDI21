@@ -45,11 +45,10 @@ pip install torch requests
 
 + Install [**`Pytorch-Geometric (PyG)`**](https://github.com/rusty1s/pytorch_geometric).
 ```
-CUDA=cu111
-pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html
-pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html
-pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html
-pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+${CUDA}.html
+pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html
+pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html
+pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html
+pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html
 pip install torch-geometric
 ```
 
@@ -58,7 +57,7 @@ pip install torch-geometric
 > + Go to `rabbit_module/src`, then `python setup.py install` to install the rabbit reordering modules.
 
 ### **Download the graph datasets.**
-+ Our preprocessed graph datasets in `.npy` format can be downloaded via this **[link](https://drive.google.com/file/d/12lPJi9eV9hbiy5Q3Fs1luEhkkvA0Yyk5/view?usp=sharing)**.
++ Our preprocessed graph datasets in `.npy` format can be downloaded via this **[link](https://drive.google.com/file/d/12lPJi9eV9hbiy5Q3Fs1luEhkkvA0Yyk5/view?usp=sharing)** (filename: `osdi-ae-graphs.tar.gz`).
 + Unzip the graph datasets `tar -zxvf osdi-ae-graphs.tar.gz` at the project root directory.
 + Note that node inital embeeding is not included, and we generate an all 1s embeeding matrix according to users `input dimension` parameter at the runtime for just performance evaluation.
 
@@ -79,20 +78,16 @@ pip install torch-geometric
 
 + Running **DGL** baseline on GNN training.
 > +  Go to **`dgl_baseline/`** directory
-> + `run_GCN` in `train.py` set to `True` to profiling the GCN model;
-> + `run_GCN` in `train.py` set to `False` to profiling the GIN model; 
+> +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
 > + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 
 + Running **PyG** baseline on GNN training.
 > +  Go to **`pyg_baseline/`** directory;
-> + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model;
-> + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model; 
+> + Pass the `--model` parameter in `pyg_main.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
 > + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 
 + Running GNNAdvisor 
-> +  Go to **`GNNAdvisor/`** directory
-> + `run_GCN` in `gnn.py` set to `True` to profiling the GCN model;
-> + `run_GCN` in `gnn.py` set to `False` to profiling the GIN model; 
+> +  Go to **`GNNAdvisor/`** directory 
 > + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 > +  Stand alone running with specified parameters.
 >> + `--dataset`: the name of the dataset.
@@ -103,7 +98,7 @@ pip install torch-geometric
 >> + `--dimWorker`: the number of worker threads (**<=32**), default: 32.
 >> + `--warpPerBlock`: the number of warp per block, default: 8, recommended: GCN: 8, GIN: 2.
 >> + `--sharedMem`: the shared memory size for each Stream-Multiprocessor on NVIDIA GPUs. A reference for different GPU architecture and its shared memory size can be found at [here](https://en.wikipedia.org/wiki/CUDA), default 96KB for RTX3090.
->> + `--model`: `gcn` or `gin`. gcn has 2 layers with 16 hidden dimensions, while gin has 5 layers with 64 hidden dimensions.
+>> + `--model`: `gcn` or `gin`. The evaluated example GCN model has 2 layers with 16 hidden dimensions, while the example GIN model has 5 layers with 64 hidden dimensions.
 >> + `--num_epoches`: the number of epoches for training, default: 200.
 >> + `-loadFromTxt`: this a **flag** parameter without value. If this flag is specified, it will load the graph TXT edge list, where each line is an `s1 d1`. default: `False` (load from `.npz` which is fast).
 >> + `-enable_rabbit`: this a **flag** parameter without value. If this flag is specified, it will be possible to use the rabbit-reordering routine. Otherwise, it will skip rabbit reordering for both **auto** and **manual** mode.

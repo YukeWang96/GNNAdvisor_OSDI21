@@ -22,7 +22,7 @@ class custom_dataset(torch.nn.Module):
     """
     data loading for more graphs
     """
-    def __init__(self, path, dim, num_class, load_from_txt=True):
+    def __init__(self, path, dim, num_class, load_from_txt=True, verbose=False):
         super(custom_dataset, self).__init__()
 
         self.nodes = set()
@@ -32,6 +32,9 @@ class custom_dataset(torch.nn.Module):
         self.num_features = dim 
         self.num_classes = num_class
         self.edge_index = None
+        
+        self.reorder_flag = False
+        self.verbose_flag = verbose
 
         self.avg_degree = -1
         self.avg_edgeSpan = -1
@@ -49,9 +52,6 @@ class custom_dataset(torch.nn.Module):
         self.train_mask = torch.BoolTensor(self.train_mask).cuda()
         self.val_mask = torch.BoolTensor(self.val_mask).cuda()
         self.test_mask = torch.BoolTensor(self.test_mask).cuda()
-
-        self.reorder_flag = False
-
 
     def init_edges(self, path):
         self.g = dgl.DGLGraph()
@@ -76,7 +76,8 @@ class custom_dataset(torch.nn.Module):
             self.edge_index = np.stack([src_li, dst_li])
 
             dur = time.perf_counter() - start
-            print("# Loading (txt) {:.3f}s ".format(dur))
+            if self.verbose_flag:
+                print("# Loading (txt) {:.3f}s ".format(dur))
 
         # loading from a .npz graph file
         else: 
@@ -93,14 +94,16 @@ class custom_dataset(torch.nn.Module):
             self.num_edges = len(src_li)
             self.edge_index = np.stack([src_li, dst_li])
             dur = time.perf_counter() - start
-            print("# Loading (npz)(s): {:.3f}".format(dur))
+            if self.verbose_flag:
+                print("# Loading (npz)(s): {:.3f}".format(dur))
         
         self.avg_degree = self.num_edges / self.num_nodes
         self.avg_edgeSpan = np.mean(np.abs(np.subtract(src_li, dst_li)))
 
-        print('# nodes: {}'.format(self.num_nodes))
-        print("# avg_degree: {:.2f}".format(self.avg_degree))
-        print("# avg_edgeSpan: {}".format(int(self.avg_edgeSpan)))
+        if self.verbose_flag:
+            print('# nodes: {}'.format(self.num_nodes))
+            print("# avg_degree: {:.2f}".format(self.avg_degree))
+            print("# avg_edgeSpan: {}".format(int(self.avg_edgeSpan)))
 
         # Build graph CSR.
         val = [1] * self.num_edges
@@ -108,7 +111,9 @@ class custom_dataset(torch.nn.Module):
         scipy_coo = coo_matrix((val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
         scipy_csr = scipy_coo.tocsr()
         build_csr = time.perf_counter() - start
-        print("# Build CSR (s): {:.3f}".format(build_csr))
+
+        if self.verbose_flag:
+            print("# Build CSR (s): {:.3f}".format(build_csr))
 
         self.column_index = torch.IntTensor(scipy_csr.indices)
         self.row_pointers = torch.IntTensor(scipy_csr.indptr)
@@ -139,16 +144,19 @@ class custom_dataset(torch.nn.Module):
         Called from external
         '''
         if not self.reorder_flag:
-            print("Reorder flag is not set. Skipped...")
+            if self.verbose_flag:
+                print("Reorder flag is not set. Skipped...")
         else:
-            print("Reorder flag is set. Continue...")
-
-            print("Original edge_index\n", self.edge_index)
+            if self.verbose_flag:
+                print("Reorder flag is set. Continue...")
+                print("Original edge_index\n", self.edge_index)
             start = time.perf_counter()
             self.edge_index = rabbit.reorder(torch.IntTensor(self.edge_index))
             reorder_time = time.perf_counter() - start
-            print("# Reorder time (s): {}".format(reorder_time))
-            print("Reordered edge_index\n", self.edge_index)
+
+            if self.verbose_flag:
+                print("# Reorder time (s): {}".format(reorder_time))
+                print("Reordered edge_index\n", self.edge_index)
 
             # Rebuild a new graph CSR according to the updated edge_index
             val = [1] * self.num_edges
@@ -164,7 +172,8 @@ class custom_dataset(torch.nn.Module):
             degrees = (self.row_pointers[1:] - self.row_pointers[:-1]).tolist()
             self.degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
 
-            print("# Re-Build CSR (s): {:.3f}".format(build_csr))
+            if self.verbose_flag:
+                print("# Re-Build CSR (s): {:.3f}".format(build_csr))
 
 
 if __name__ == '__main__':

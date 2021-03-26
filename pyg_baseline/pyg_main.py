@@ -13,7 +13,7 @@ from torch.nn import Linear
 from dataset import *
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dataDir", type=str, default="../osdi-ae-graphs", help="the path to graphs")
+parser.add_argument("--dataDir", type=str, default="../osdi-ae-graphs", help="the directory path to graphs")
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")

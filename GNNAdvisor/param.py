@@ -8,7 +8,8 @@ class inputProperty(object):
                 hiddenDim=None,
                 dataset_obj=None,
                 enable_rabbit=False,
-                manual_mode=True):
+                manual_mode=True,
+                verbose=False):
         
         if dataset_obj is None:
             raise ValueError("Dataset object MUST SET !!!")
@@ -18,6 +19,7 @@ class inputProperty(object):
         self.degrees = degrees
         self.partPtr = partPtr 
         self.part2Node = part2Node 
+        self.verbose_flag = verbose
 
         self.partSize = partSize
         self.dimWorker = dimWorker
@@ -54,20 +56,25 @@ class inputProperty(object):
         if self.manual_mode:
             self.dataset_obj.reorder_flag = False
             self.dataset_obj.rabbit_reorder()
-            print("\n=> MANUAL Config Complete !!!\n")
+            if self.verbose_flag:
+                print("\n=> MANUAL Config Complete !!!\n")
         else:
             # Determine the neighbor partitioning.
             self.partSize = int(self.avgNodeDegree)
 
             est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.inputDim * 4 + self.gap_smem * 4)/1e3
-            print("input-layer shared memory (KB): {:.3f} ".format(est_shared))
+            if self.verbose_flag:
+                print("input-layer shared memory (KB): {:.3f} ".format(est_shared))
             share_memory_input = min(est_shared, self.share_memory)
-            print("input-layer updated (KB): {:.3f}".format(share_memory_input))
+            if self.verbose_flag:
+                print("input-layer updated (KB): {:.3f}".format(share_memory_input))
 
             est_shared = self.MAX_warpPerBlock * (self.partSize * 4 + self.hiddenDim + 4 * self.gap_smem)/1e3
-            print("hidden-layer shared memory (KB): {:.3f}".format(est_shared))
+            if self.verbose_flag:
+                print("hidden-layer shared memory (KB): {:.3f}".format(est_shared))
             share_memory_hidden = min(est_shared, self.share_memory)
-            print("hidden-layer updated (KB): {:.3f}".format(share_memory_hidden))
+            if self.verbose_flag:
+                print("hidden-layer updated (KB): {:.3f}".format(share_memory_hidden))
 
             # Determine the warpPerBlock for input and hidden layer.
             self.warpPerBlock_input = int(share_memory_input * 1e3 / (self.partSize * 4 + self.inputDim * 4))
@@ -96,7 +103,8 @@ class inputProperty(object):
                 
                 self.dataset_obj.rabbit_reorder()
 
-            print("\n=> AUTO Decider Complete !!!\n")
+            if self.verbose_flag:
+                print("\n=> AUTO Decider Complete !!!\n")
 
     def set_input(self):
         '''
@@ -120,23 +128,24 @@ class inputProperty(object):
         return self   
 
     def print_param(self):
-        if self.state_set_input:
-            if self.manual_mode:
-                print("# manual INPUT partSize: {}".format(self.partSize))
-                print("# manual INPUT dimWorker: {}".format(self.dimWorker))
-                print("# manual INPUT warpPerBlock: {}".format(self.warpPerBlock))
+        if self.verbose_flag:
+            if self.state_set_input:
+                if self.manual_mode:
+                    print("# manual INPUT partSize: {}".format(self.partSize))
+                    print("# manual INPUT dimWorker: {}".format(self.dimWorker))
+                    print("# manual INPUT warpPerBlock: {}".format(self.warpPerBlock))
+                else:
+                    print("# auto INPUT partSize: {}".format(self.partSize))
+                    print("# auto INPUT dimWorker: {}".format(self.dimWorker))
+                    print("# auto INPUT warpPerBlock: {}".format(self.warpPerBlock))
+                    print("# auto INPUT reorder_flag: {}".format(self.reorder_flag))
             else:
-                print("# auto INPUT partSize: {}".format(self.partSize))
-                print("# auto INPUT dimWorker: {}".format(self.dimWorker))
-                print("# auto INPUT warpPerBlock: {}".format(self.warpPerBlock))
-                print("# auto INPUT reorder_flag: {}".format(self.reorder_flag))
-        else:
-            if self.manual_mode:
-                print("# manual HIDDEN partSize: {}".format(self.partSize))
-                print("# manual HIDDEN dimWorker: {}".format(self.dimWorker))
-                print("# manual HIDDEN warpPerBlock: {}".format(self.warpPerBlock))
-            else:
-                print("# auto HIDDEN partSize: {}".format(self.partSize))
-                print("# auto HIDDEN dimWorker: {}".format(self.dimWorker))
-                print("# auto HIDDEN warpPerBlock: {}".format(self.warpPerBlock))
-                print("# auto HIDDEN reorder_flag: {}".format(self.reorder_flag))
+                if self.manual_mode:
+                    print("# manual HIDDEN partSize: {}".format(self.partSize))
+                    print("# manual HIDDEN dimWorker: {}".format(self.dimWorker))
+                    print("# manual HIDDEN warpPerBlock: {}".format(self.warpPerBlock))
+                else:
+                    print("# auto HIDDEN partSize: {}".format(self.partSize))
+                    print("# auto HIDDEN dimWorker: {}".format(self.dimWorker))
+                    print("# auto HIDDEN warpPerBlock: {}".format(self.warpPerBlock))
+                    print("# auto HIDDEN reorder_flag: {}".format(self.reorder_flag))

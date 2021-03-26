@@ -79,16 +79,20 @@ pip install torch-geometric
 + Running **DGL** baseline on GNN training.
 > +  Go to **`dgl_baseline/`** directory
 > +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench.py| tee run_dgl.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization.
 
 + Running **PyG** baseline on GNN training.
 > +  Go to **`pyg_baseline/`** directory;
 > + Pass the `--model` parameter in `pyg_main.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench.py| tee run_pyg.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis.
+
 
 + Running GNNAdvisor 
 > +  Go to **`GNNAdvisor/`** directory 
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./1_log2csv.py` to convert the `run_GNNA.log` to `run_GNNA.csv` for ease of analysis.
 > +  Stand alone running with specified parameters.
 >> + `--dataset`: the name of the dataset.
 >> + `--dim`: the size of input embedding dimension, default: 96.

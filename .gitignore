@@ -10,4 +10,5 @@ osdi-ae-graphs/*
 *.pyc
 *pycache*
 *.egg-info
+*.vscode
 *.tar.gz

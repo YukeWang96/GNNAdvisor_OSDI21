@@ -1,0 +1,60 @@
+Namespace(classes=6, dataDir='../osdi-ae-graphs', dataset='citeseer', dim=3703, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.007s 
+DGL GIN (L5-H64) Time: (ms) 15.239
+
+Namespace(classes=7, dataDir='../osdi-ae-graphs', dataset='cora', dim=1433, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.008s 
+DGL GIN (L5-H64) Time: (ms) 15.031
+
+Namespace(classes=3, dataDir='../osdi-ae-graphs', dataset='pubmed', dim=500, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.011s 
+DGL GIN (L5-H64) Time: (ms) 15.499
+
+Namespace(classes=121, dataDir='../osdi-ae-graphs', dataset='ppi', dim=50, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.033s 
+DGL GIN (L5-H64) Time: (ms) 15.829
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='PROTEINS_full', dim=29, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.016s 
+DGL GIN (L5-H64) Time: (ms) 15.224
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='OVCAR-8H', dim=66, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.116s 
+DGL GIN (L5-H64) Time: (ms) 134.378
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='Yeast', dim=74, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.125s 
+DGL GIN (L5-H64) Time: (ms) 124.168
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='DD', dim=89, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.057s 
+DGL GIN (L5-H64) Time: (ms) 25.495
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='TWITTER-Real-Graph-Partial', dim=1323, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.057s 
+DGL GIN (L5-H64) Time: (ms) 89.975
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='SW-620H', dim=66, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.109s 
+DGL GIN (L5-H64) Time: (ms) 134.656
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.127s 
+DGL GIN (L5-H64) Time: (ms) 42.406
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.049s 
+DGL GIN (L5-H64) Time: (ms) 15.399
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.056s 
+DGL GIN (L5-H64) Time: (ms) 31.502
+
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.059s 
+DGL GIN (L5-H64) Time: (ms) 15.246
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, gpu=0, hidden=64, model='gin', n_epochs=200)
+# Loading (npz): 0.095s 
+DGL GIN (L5-H64) Time: (ms) 38.329
+

@@ -16,8 +16,6 @@ class GNNAFunction(torch.autograd.Function):
         X_prime = GNNA.forward(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)[0]
-        # X_prime = torch.mm(X, weight)
-        
         return X_prime
 
     @staticmethod

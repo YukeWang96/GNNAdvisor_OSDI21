@@ -14,9 +14,9 @@ dataset = [
 
 for hidden in hidden_li:
     print("******************************")
-    print("hiddenDimension: {}".format(hidden))
+    print("++ hiddenDimension: {}".format(hidden))
     print("******************************")
     for data, d, c in dataset:
-        print("{}--hidden: {}".format(data, hidden))
+        print("{}---hidden: {}".format(data, hidden))
         command = "python GNNA_main.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hidden, c)		
         os.system(command)

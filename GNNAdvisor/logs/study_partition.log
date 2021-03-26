@@ -1,0 +1,54 @@
+GNNAdvisor Time (ms): 28.507
+
+GNNAdvisor Time (ms): 8.665
+
+GNNAdvisor Time (ms): 19.410
+
+GNNAdvisor Time (ms): 13.491
+
+GNNAdvisor Time (ms): 24.245
+
+GNNAdvisor Time (ms): 24.895
+
+GNNAdvisor Time (ms): 7.776
+
+GNNAdvisor Time (ms): 18.268
+
+GNNAdvisor Time (ms): 10.459
+
+GNNAdvisor Time (ms): 22.292
+
+GNNAdvisor Time (ms): 23.746
+
+GNNAdvisor Time (ms): 7.436
+
+GNNAdvisor Time (ms): 17.675
+
+GNNAdvisor Time (ms): 9.634
+
+GNNAdvisor Time (ms): 21.909
+
+******************************
+++ Part-size: 2
+******************************
+amazon0505---partsize: 2
+artist---partsize: 2
+com-amazon---partsize: 2
+soc-BlogCatalog---partsize: 2
+amazon0601---partsize: 2
+******************************
+++ Part-size: 4
+******************************
+amazon0505---partsize: 4
+artist---partsize: 4
+com-amazon---partsize: 4
+soc-BlogCatalog---partsize: 4
+amazon0601---partsize: 4
+******************************
+++ Part-size: 8
+******************************
+amazon0505---partsize: 8
+artist---partsize: 8
+com-amazon---partsize: 8
+soc-BlogCatalog---partsize: 8
+amazon0601---partsize: 8

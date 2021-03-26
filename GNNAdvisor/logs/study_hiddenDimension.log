@@ -1,0 +1,144 @@
+GNNAdvisor Time (ms): 22.807
+
+GNNAdvisor Time (ms): 7.285
+
+GNNAdvisor Time (ms): 17.875
+
+GNNAdvisor Time (ms): 9.371
+
+GNNAdvisor Time (ms): 20.677
+
+GNNAdvisor Time (ms): 23.585
+
+GNNAdvisor Time (ms): 7.453
+
+GNNAdvisor Time (ms): 18.453
+
+GNNAdvisor Time (ms): 9.357
+
+GNNAdvisor Time (ms): 21.460
+
+GNNAdvisor Time (ms): 26.160
+
+GNNAdvisor Time (ms): 7.594
+
+GNNAdvisor Time (ms): 20.257
+
+GNNAdvisor Time (ms): 9.672
+
+GNNAdvisor Time (ms): 23.362
+
+GNNAdvisor Time (ms): 31.373
+
+GNNAdvisor Time (ms): 7.949
+
+GNNAdvisor Time (ms): 23.749
+
+GNNAdvisor Time (ms): 10.218
+
+GNNAdvisor Time (ms): 27.536
+
+GNNAdvisor Time (ms): 42.660
+
+GNNAdvisor Time (ms): 10.300
+
+GNNAdvisor Time (ms): 30.716
+
+GNNAdvisor Time (ms): 12.651
+
+GNNAdvisor Time (ms): 36.485
+
+GNNAdvisor Time (ms): 65.023
+
+GNNAdvisor Time (ms): 16.358
+
+GNNAdvisor Time (ms): 44.332
+
+GNNAdvisor Time (ms): 18.315
+
+GNNAdvisor Time (ms): 54.170
+
+GNNAdvisor Time (ms): 133.063
+
+GNNAdvisor Time (ms): 36.257
+
+GNNAdvisor Time (ms): 83.144
+
+GNNAdvisor Time (ms): 38.913
+
+GNNAdvisor Time (ms): 104.648
+
+GNNAdvisor Time (ms): 384.792
+
+GNNAdvisor Time (ms): 114.315
+
+GNNAdvisor Time (ms): 216.651
+
+GNNAdvisor Time (ms): 122.792
+
+GNNAdvisor Time (ms): 284.168
+
+******************************
+++ hiddenDimension: 16
+******************************
+amazon0505---hidden: 16
+artist---hidden: 16
+com-amazon---hidden: 16
+soc-BlogCatalog---hidden: 16
+amazon0601---hidden: 16
+******************************
+++ hiddenDimension: 32
+******************************
+amazon0505---hidden: 32
+artist---hidden: 32
+com-amazon---hidden: 32
+soc-BlogCatalog---hidden: 32
+amazon0601---hidden: 32
+******************************
+++ hiddenDimension: 64
+******************************
+amazon0505---hidden: 64
+artist---hidden: 64
+com-amazon---hidden: 64
+soc-BlogCatalog---hidden: 64
+amazon0601---hidden: 64
+******************************
+++ hiddenDimension: 128
+******************************
+amazon0505---hidden: 128
+artist---hidden: 128
+com-amazon---hidden: 128
+soc-BlogCatalog---hidden: 128
+amazon0601---hidden: 128
+******************************
+++ hiddenDimension: 256
+******************************
+amazon0505---hidden: 256
+artist---hidden: 256
+com-amazon---hidden: 256
+soc-BlogCatalog---hidden: 256
+amazon0601---hidden: 256
+******************************
+++ hiddenDimension: 512
+******************************
+amazon0505---hidden: 512
+artist---hidden: 512
+com-amazon---hidden: 512
+soc-BlogCatalog---hidden: 512
+amazon0601---hidden: 512
+******************************
+++ hiddenDimension: 1024
+******************************
+amazon0505---hidden: 1024
+artist---hidden: 1024
+com-amazon---hidden: 1024
+soc-BlogCatalog---hidden: 1024
+amazon0601---hidden: 1024
+******************************
+++ hiddenDimension: 2048
+******************************
+amazon0505---hidden: 2048
+artist---hidden: 2048
+com-amazon---hidden: 2048
+soc-BlogCatalog---hidden: 2048
+amazon0601---hidden: 2048

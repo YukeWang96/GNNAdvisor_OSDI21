@@ -1,0 +1,108 @@
+GNNAdvisor Time (ms): 38.515
+
+GNNAdvisor Time (ms): 9.036
+
+GNNAdvisor Time (ms): 26.672
+
+GNNAdvisor Time (ms): 17.199
+
+GNNAdvisor Time (ms): 32.261
+
+GNNAdvisor Time (ms): 31.384
+
+GNNAdvisor Time (ms): 7.976
+
+GNNAdvisor Time (ms): 22.958
+
+GNNAdvisor Time (ms): 12.762
+
+GNNAdvisor Time (ms): 27.126
+
+GNNAdvisor Time (ms): 28.380
+
+GNNAdvisor Time (ms): 7.652
+
+GNNAdvisor Time (ms): 21.256
+
+GNNAdvisor Time (ms): 10.634
+
+GNNAdvisor Time (ms): 24.753
+
+GNNAdvisor Time (ms): 26.515
+
+GNNAdvisor Time (ms): 7.560
+
+GNNAdvisor Time (ms): 20.072
+
+GNNAdvisor Time (ms): 9.978
+
+GNNAdvisor Time (ms): 23.245
+
+GNNAdvisor Time (ms): 23.954
+
+GNNAdvisor Time (ms): 7.352
+
+GNNAdvisor Time (ms): 18.595
+
+GNNAdvisor Time (ms): 9.539
+
+GNNAdvisor Time (ms): 21.567
+
+GNNAdvisor Time (ms): 22.916
+
+GNNAdvisor Time (ms): 7.260
+
+GNNAdvisor Time (ms): 17.915
+
+GNNAdvisor Time (ms): 9.384
+
+GNNAdvisor Time (ms): 20.742
+
+******************************
+++ dimWorker: 1
+******************************
+amazon0505---dimWorker: 1
+artist---dimWorker: 1
+com-amazon---dimWorker: 1
+soc-BlogCatalog---dimWorker: 1
+amazon0601---dimWorker: 1
+******************************
+++ dimWorker: 2
+******************************
+amazon0505---dimWorker: 2
+artist---dimWorker: 2
+com-amazon---dimWorker: 2
+soc-BlogCatalog---dimWorker: 2
+amazon0601---dimWorker: 2
+******************************
+++ dimWorker: 4
+******************************
+amazon0505---dimWorker: 4
+artist---dimWorker: 4
+com-amazon---dimWorker: 4
+soc-BlogCatalog---dimWorker: 4
+amazon0601---dimWorker: 4
+******************************
+++ dimWorker: 8
+******************************
+amazon0505---dimWorker: 8
+artist---dimWorker: 8
+com-amazon---dimWorker: 8
+soc-BlogCatalog---dimWorker: 8
+amazon0601---dimWorker: 8
+******************************
+++ dimWorker: 16
+******************************
+amazon0505---dimWorker: 16
+artist---dimWorker: 16
+com-amazon---dimWorker: 16
+soc-BlogCatalog---dimWorker: 16
+amazon0601---dimWorker: 16
+******************************
+++ dimWorker: 32
+******************************
+amazon0505---dimWorker: 32
+artist---dimWorker: 32
+com-amazon---dimWorker: 32
+soc-BlogCatalog---dimWorker: 32
+amazon0601---dimWorker: 32

@@ -42,8 +42,7 @@ parser.add_argument('-manual_mode', action='store_true', help="whether to use ma
 parser.add_argument('-verbose_mode', action='store_true', help="whether to use manual config, defuatl: auto config mode")
 
 args = parser.parse_args()
-if args.verbose_mode:
-    print(args)
+print(args)
 partSize, dimWorker, warpPerBlock, sharedMem = args.partSize, args.dimWorker, args.warpPerBlock, args.sharedMem
 
 # requires GPU for evaluation.

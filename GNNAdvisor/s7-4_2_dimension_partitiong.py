@@ -14,9 +14,9 @@ dataset = [
 
 for dimWorker in dimWorker_li:
     print("******************************")
-    print("dimWorker: {}".format(dimWorker))
+    print("++ dimWorker: {}".format(dimWorker))
     print("******************************")
     for data, d, c in dataset:
-        print("{}--dimWorker: {}".format(data, dimWorker))
+        print("{}---dimWorker: {}".format(data, dimWorker))
         command = "python GNNA_main.py --dataset {} --dim {} --classes {} --dimWorker {}".format(data, d, c, dimWorker)		
         os.system(command)

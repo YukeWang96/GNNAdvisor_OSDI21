@@ -28,9 +28,9 @@ parser.add_argument("--hidden", type=int, default=16, help="hidden dimension siz
 parser.add_argument("--classes", type=int, default=22, help="output classes size")
 
 # Manually set the performance related parameters
-parser.add_argument("--partSize", type=int, default=8, help="neighbor-group size")
+parser.add_argument("--partSize", type=int, default=32, help="neighbor-group size")
 parser.add_argument("--dimWorker", type=int, default=32, help="number of worker threads (MUST < 32)")
-parser.add_argument("--warpPerBlock", type=int, default=2, help="number of warp per block, recommended: GCN: 8, GIN: 2")
+parser.add_argument("--warpPerBlock", type=int, default=8, help="number of warp per block, recommended: GCN: 8, GIN: 2")
 parser.add_argument("--sharedMem", type=int, default=100, help="shared memory size of each block (Quadro P6000 64KB), default=100 KB for RTX3090")
 
 parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")

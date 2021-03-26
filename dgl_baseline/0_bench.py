@@ -2,9 +2,9 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-model = 'gin'
-# hidden = [16] 	# for GCN
-hidden = [64] 	# for GIN
+model = 'gcn'
+hidden = [128] 	# for GCN
+# hidden = [64] 	# for GIN
 
 dataset = [
 		('citeseer'	        , 3703	    , 6   ),  

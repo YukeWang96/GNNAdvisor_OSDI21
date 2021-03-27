@@ -1,7 +1,6 @@
 #include <torch/extension.h>
 #include <vector>
 
-
 torch::Tensor SAG_cuda(
     torch::Tensor input,
     torch::Tensor row_pointers,

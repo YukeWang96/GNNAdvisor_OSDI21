@@ -1,4 +1,3 @@
-import os
 import sys
 import time
 import argparse
@@ -15,7 +14,7 @@ from gnn_conv import *
 from dataset import *
 
 # Verify single sparse kernel
-TEST = True    
+TEST = False    
 if TEST == True:
     from unitest import *
 

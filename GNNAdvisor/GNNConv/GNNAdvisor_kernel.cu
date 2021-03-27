@@ -102,8 +102,6 @@ __global__ void spmm_backward_cuda_kernel_gin(
     const int warpPerBlock
 ); 
 
-
-
 ////////////////////////////////////////////
 //
 // Basic Scatter-And-Gather kernel.
@@ -130,7 +128,7 @@ torch::Tensor SAG_cuda(
     const int grid = (num_parts * 32 + block  - 1) / block; 
     int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
 
-    printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
+    // printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
     // printf("dimWorker: %d\n", dimWorker);
 
@@ -618,10 +616,14 @@ __global__ void spmm_forward_cuda_kernel_gin(
     int block_warpId = threadIdx.x / 32;               // block warp-id
     int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
 
-    extern __shared__ float part_info[];                                // part information.
-    const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
-    int *partial_ids = (int*) part_info;                                // caching ids
-    float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
+    // extern __shared__ float part_info[];                                // part information.
+    // const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
+    // int *partial_ids = (int*) part_info;                                // caching ids
+    // float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
+
+    extern __shared__ int part_meta[];                                      // part information.
+    int *partial_ids = part_meta;                                           // caching ids
+    float *partial_results = (float*)&part_meta[partSize*warpPerBlock];     // caching partial results.
 
     if (warpId < num_parts){
 
@@ -698,9 +700,8 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
 
     const int block = warpPerBlock * threadPerWarp;
     const int grid = (num_parts * 32 + block - 1) / block; 
-    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap * sizeof(float);
+    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
 
-    // printf("warpPerBlock: %d, shared_memory: %d\n", warpPerBlock, shared_memory);
     AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward_gin", ([&] {
                                 spmm_backward_cuda_kernel_gin<scalar_t><<<grid, block, shared_memory>>>(
                                     d_input.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
@@ -750,11 +751,15 @@ __global__ void spmm_backward_cuda_kernel_gin(
     int block_warpId = threadIdx.x / 32;
     int laneid = threadIdx.x % 32;
 
-    extern __shared__ float part_info[];                                // part information.
-    const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
-    int *partial_ids = (int*) part_info;                                // caching ids
-    float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
+    // extern __shared__ float part_info[];                                // part information.
+    // const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
+    // int *partial_ids = (int*) part_info;                                // caching ids
+    // float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
     
+    extern __shared__ int part_meta[];                                      // part information.
+    int *partial_ids = part_meta;                                           // caching ids
+    float *partial_results = (float*)&part_meta[partSize*warpPerBlock];     // caching partial results.
+
     if (warpId < num_parts){
 
         int srcId = part2Node[warpId];

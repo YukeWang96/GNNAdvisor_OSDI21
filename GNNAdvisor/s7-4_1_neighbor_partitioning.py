@@ -2,19 +2,14 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-
-run_GCN = True
-manual_mode = True
-verbose_mode = False
-
 partsize_li = [2, 4, 8, 16, 32, 64, 128, 256, 512]
 
 dataset = [
         ( 'amazon0505'               , 96	, 22),
-        ( 'artist'                   , 100  , 12),
-        ( 'com-amazon'               , 96	, 22),
-        ( 'soc-BlogCatalog'	       	 , 128  , 39), 
-        ( 'amazon0601'  	         , 96	, 22), 
+        # ( 'artist'                   , 100  , 12),
+        # ( 'com-amazon'               , 96	, 22),
+        # ( 'soc-BlogCatalog'	       	 , 128  , 39), 
+        # ( 'amazon0601'  	         , 96	, 22), 
 ]
 
 for partsize in partsize_li:

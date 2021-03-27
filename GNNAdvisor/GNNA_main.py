@@ -53,7 +53,7 @@ assert torch.cuda.is_available()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # loading data from files
-if args.loadFromTxt:
+if loadFromTxt:
     path = osp.join(args.dataDir, args.dataset)
     dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=True, verbose=verbose_mode)
     # path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
@@ -84,7 +84,7 @@ row_pointers = row_pointers.to(device)
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
                             partPtr, part2Node,
                             partSize, dimWorker, warpPerBlock, sharedMem,
-                            hiddenDim=args.hidden, dataset_obj=dataset, enable_rabbit=args.enable_rabbit,
+                            hiddenDim=args.hidden, dataset_obj=dataset, enable_rabbit=enable_rabbit,
                             manual_mode=manual_mode, verbose=verbose_mode)
 
 inputInfo.decider()

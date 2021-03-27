@@ -260,7 +260,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 
     const int block = warpPerBlock * WARP_SIZE;
     const int grid = (num_parts * WARP_SIZE + block  - 1) / block; 
-    int shared_memory = warpPerBlock * dim * sizeof(float);
+    int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
 
     // printf("grid: %d, block: %d\n", grid, block);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
@@ -416,7 +416,7 @@ std::vector<torch::Tensor> spmm_backward_cuda(
     const int block = warpPerBlock*WARP_SIZE;
     const int grid = (num_parts*WARP_SIZE + block - 1) / block; 
     // const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
-    const int shared_memory = warpPerBlock * dim * sizeof(float);
+    int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward", ([&] {
                                 spmm_backward_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
@@ -689,9 +689,9 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
     const int num_nodes = d_input.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * WARP_SIZE;
-    const int grid = (num_parts * WARP_SIZE + block - 1) / block; 
-    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
+    const int block = warpPerBlock*WARP_SIZE;
+    const int grid = (num_parts*WARP_SIZE + block - 1) / block; 
+    int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward_gin", ([&] {
                                 spmm_backward_cuda_kernel_gin<scalar_t><<<grid, block, shared_memory>>>(

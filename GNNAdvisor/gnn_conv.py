@@ -14,7 +14,6 @@ class ScatterAndGather(torch.autograd.Function):
         ctx.inputInfo = inputInfo
         ctx.partSize, ctx.dimWorker, ctx.warpPerBlock = \
                         inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock
-        print("partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock))
         X_prime = GNNA.SAG(X,inputInfo.row_pointers, inputInfo.column_index, 
                             inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
@@ -40,7 +39,6 @@ class GNNAFunction(torch.autograd.Function):
         # X_prime = GNNA.forward(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
         #                         inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
         #                         inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)[0]
-
         # print(X.size())
         # print(weight.size())
         X_prime = torch.mm(X, weight)
@@ -54,7 +52,6 @@ class GNNAFunction(torch.autograd.Function):
     def backward(ctx, d_output):
         X, weight = ctx.saved_tensors
         inputInfo = ctx.inputInfo
-
         # d_input, d_weight = GNNA.backward(d_output, X, weight, inputInfo.row_pointers, inputInfo.column_index, 
         #                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
         #                                 ctx.partSize, ctx.dimWorker, ctx.warpPerBlock)

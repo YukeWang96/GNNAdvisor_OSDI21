@@ -33,7 +33,7 @@ parser.add_argument("--warpPerBlock", type=int, default=8, help="number of warp 
 parser.add_argument("--sharedMem", type=int, default=100, help="shared memory size of each block (Quadro P6000 64KB), default=100 KB for RTX3090")
 
 parser.add_argument('--model', type=str, default='gcn', choices=['gcn', 'gin'],  help="GCN or GIN")
-parser.add_argument("--num_epoches", type=int, default=1, help="number of epoches for training, default=200")
+parser.add_argument("--num_epoches", type=int, default=200, help="number of epoches for training, default=200")
 
 parser.add_argument('-loadFromTxt', action='store_true', help="whether to load the graph TXT edge list, default: False (load from npz fast)")
 parser.add_argument('-enable_rabbit', action='store_true', help="whether to enable rabbit reordering, default: False for both manual and auto mode.")
@@ -117,8 +117,6 @@ if args.model == 'gcn':
         def forward(self):
             x = dataset.x
             x = F.relu(self.conv1(x, inputInfo.set_input()))
-            print(x)
-            exit(0)
             x = self.conv2(x, inputInfo.set_hidden())
             return F.log_softmax(x, dim=1)
 else:
@@ -151,14 +149,14 @@ def train():
     model.train()
     optimizer.zero_grad()
     loss = F.nll_loss(model()[:], dataset.y[:])
-    # loss.backward()
-    # optimizer.step()
+    loss.backward()
+    optimizer.step()
 
 
 if __name__ == '__main__':
     # dry run
-    # for _ in range(3):
-    #     train()
+    for _ in range(10):
+        train()
 
     torch.cuda.synchronize()
     start_train = time.perf_counter()

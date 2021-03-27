@@ -5,9 +5,7 @@
 #include <stdio.h>
 #include <vector>
 
-#define MAX_PART 256
-#define threadPerWarp 32
-#define smem_gap 250
+#define WARP_SIZE 32
 
 __device__ inline 
 void atomicAdd_F(float* address, float value)
@@ -124,13 +122,13 @@ torch::Tensor SAG_cuda(
     const int dim = output.size(1);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * threadPerWarp;
+    const int block = warpPerBlock * WARP_SIZE;
     const int grid = (num_parts * 32 + block  - 1) / block; 
     int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
 
-    printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
-    printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
-    printf("dimWorker: %d\n", dimWorker);
+    // printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
+    // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
+    // printf("dimWorker: %d\n", dimWorker);
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "Scatter_and_Gather", ([&] {
                                 SAG_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
@@ -260,7 +258,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     const int num_nodes = output.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * threadPerWarp;
+    const int block = warpPerBlock * WARP_SIZE;
     const int grid = (num_parts * 32 + block  - 1) / block; 
     int shared_memory = warpPerBlock * dim * sizeof(float);
 
@@ -319,12 +317,10 @@ __global__ void spmm_forward_cuda_kernel(
     int block_warpId = threadIdx.x / 32;               // block warp-id
     int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
 
-    extern __shared__ float part_info[];                    // part information.
-    // int *partial_ids = (int*) part_info;                    // caching ids
-    // int part_shift_base = partSize * warpPerBlock;    // shared memory shift for partial result.
-    float *partial_results = part_info; // + part_shift_base;   // caching partial results.
-    int partial_ids[MAX_PART];
-    
+    extern __shared__ int part_meta[];                                      // part information.
+    int *partial_ids = part_meta;                                           // caching ids
+    float *partial_results = (float*)&part_meta[partSize*warpPerBlock];     // caching partial results.
+
     if (warpId < num_parts){
 
         int srcId = part2Node[warpId];              // aggregated source node
@@ -333,18 +329,18 @@ __global__ void spmm_forward_cuda_kernel(
         float src_norm = degrees[srcId];            // norm of the source node
 
         // Cache the part neighbors by all threads from a warp.
-        // const int pindex_base = block_warpId * partSize;
-        // #pragma unroll
-        // for (int nidx = partBeg + laneid; nidx < partEnd; nidx += threadPerWarp){
-        //     if(column_index[nidx] >= num_nodes || column_index[nidx] < 0) printf("column_index: %d\n", column_index[nidx]);
-        //     partial_ids[pindex_base + nidx - partBeg] = column_index[nidx];
-        // }
-        
+        const int pindex_base = block_warpId * partSize;
         #pragma unroll
-        for (int nidx = partBeg; nidx < partEnd; nidx++){
-        //     if(column_index[nidx] >= num_nodes || column_index[nidx] < 0) printf("column_index: %d\n", column_index[nidx]);
-            partial_ids[nidx - partBeg] = column_index[nidx];
+        for (int nidx = partBeg + laneid; nidx < partEnd; nidx += WARP_SIZE){
+            // if(column_index[nidx] >= num_nodes || column_index[nidx] < 0) printf("column_index: %d\n", column_index[nidx]);
+            partial_ids[pindex_base + nidx - partBeg] = column_index[nidx];
         }
+        
+        // #pragma unroll
+        // for (int nidx = partBeg; nidx < partEnd; nidx++){
+        // //     if(column_index[nidx] >= num_nodes || column_index[nidx] < 0) printf("column_index: %d\n", column_index[nidx]);
+        //     partial_ids[nidx - partBeg] = column_index[nidx];
+        // }
         
         __syncwarp();
 
@@ -360,8 +356,8 @@ __global__ void spmm_forward_cuda_kernel(
         const int presult_base = block_warpId * dim;
         for (int nIdx = 0; nIdx < partEnd - partBeg; nIdx++)
         {
-            // int nid = partial_ids[pindex_base + nIdx];
-            int nid = partial_ids[nIdx];
+            int nid = partial_ids[pindex_base + nIdx];
+            // int nid = partial_ids[nIdx];
             // if (laneid == 0)
             //     printf("verify nid - 222222: %d\n", nid);
             float degree_norm_inv = __fmaf_rn(src_norm, degrees[nid], 0);
@@ -417,8 +413,8 @@ std::vector<torch::Tensor> spmm_backward_cuda(
     const int num_nodes = d_input_prime.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * threadPerWarp;
-    const int grid = (num_parts * 32 + block - 1) / block; 
+    const int block = warpPerBlock * WARP_SIZE;
+    const int grid = (num_parts * WARP_SIZE + block - 1) / block; 
     // const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
     const int shared_memory = warpPerBlock * dim * sizeof(float);
 
@@ -471,43 +467,40 @@ __global__ void spmm_backward_cuda_kernel(
 ) {
 
     int tid =  blockIdx.x * blockDim.x + threadIdx.x;
-    int warpId =  tid / threadPerWarp;
-    int block_warpId = threadIdx.x / threadPerWarp;
-    int laneid = threadIdx.x % threadPerWarp;
+    int warpId =  tid / WARP_SIZE;
+    int block_warpId = threadIdx.x / WARP_SIZE;
+    int laneid = threadIdx.x % WARP_SIZE;
 
-    extern __shared__ float part_info[];                        // part information.
-    // int *partial_ids = (int*) part_info;                    // caching ids
-    // const int part_shift_base = partSize * warpPerBlock;    // shared memory shift for partial result.
-    // float *partial_results = (float*)&part_info[part_shift_base];   // caching partial results.
-    float *partial_results = part_info;                         // caching partial results.
-    int partial_ids[MAX_PART];
+    extern __shared__ int part_meta[];                                      // part information.
+    int *partial_ids = part_meta;                                           // caching ids
+    float *partial_results = (float*)&part_meta[partSize*warpPerBlock];     // caching partial results.
 
     if (warpId < num_parts){
 
-        int srcId = part2Node[warpId];
-        int partBeg = part_pointers[warpId];
-        int partEnd = part_pointers[warpId + 1];
+        const int srcId = part2Node[warpId];
+        const int partBeg = part_pointers[warpId];
+        const int partEnd = part_pointers[warpId + 1];
         float src_norm = degrees[srcId];
 
-        // const int pindex_base = block_warpId * partSize;
-        // #pragma unroll
-        // for (int nid = partBeg + laneid; nid < partEnd; nid += threadPerWarp){
-            // partial_ids[pindex_base + laneid] = column_index[nid];
-        // }
-        
+        const int pindex_base = block_warpId * partSize;
         #pragma unroll
-        for (int nidx = partBeg; nidx < partEnd; nidx++){
-        //     if(column_index[nidx] >= num_nodes || column_index[nidx] < 0) printf("column_index: %d\n", column_index[nidx]);
-            partial_ids[nidx - partBeg] = column_index[nidx];
+        for (int nid = partBeg + laneid; nid < partEnd; nid += WARP_SIZE){
+            partial_ids[pindex_base + nid - partBeg] = column_index[nid];
         }
+        
+        // #pragma unroll
+        // for (int nidx = partBeg; nidx < partEnd; nidx++){
+        // //     if(column_index[nidx] >= num_nodes || column_index[nidx] < 0) printf("column_index: %d\n", column_index[nidx]);
+        //     partial_ids[nidx - partBeg] = column_index[nidx];
+        // }
 
         __syncwarp();
 
         const int presult_base = block_warpId * dim;
         for (int nIdx = 0; nIdx < partEnd - partBeg; nIdx++)
         {
-            // int nid = partial_ids[pindex_base + nIdx];
-            int nid = partial_ids[nIdx];
+            int nid = partial_ids[pindex_base + nIdx];
+            // int nid = partial_ids[nIdx];
             float degree_norm =  __fmaf_rn(src_norm, degrees[nid], 0);
 
             if (nIdx == 0)
@@ -555,8 +548,8 @@ std::vector<torch::Tensor> spmm_forward_cuda_gin(
     const int num_nodes = tmp.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * threadPerWarp;
-    const int grid = (num_parts * 32 + block  - 1) / block; 
+    const int block = warpPerBlock * WARP_SIZE;
+    const int grid = (num_parts * WARP_SIZE + block  - 1) / block; 
     const int shared_memory = warpPerBlock*partSize*sizeof(int) + warpPerBlock*dim*sizeof(float);
 
     // printf("grid: %d, block: %d\n", grid, block);
@@ -616,14 +609,9 @@ __global__ void spmm_forward_cuda_kernel_gin(
 ) {
 
     int tid =  blockIdx.x * blockDim.x + threadIdx.x;  // global thread-id
-    int warpId = tid / 32;                             // global warp-id
-    int block_warpId = threadIdx.x / 32;               // block warp-id
-    int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
-
-    // extern __shared__ float part_info[];                                // part information.
-    // const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
-    // int *partial_ids = (int*) part_info;                                // caching ids
-    // float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
+    int warpId = tid / WARP_SIZE;                             // global warp-id
+    int block_warpId = threadIdx.x / WARP_SIZE;               // block warp-id
+    int laneid = threadIdx.x % WARP_SIZE;                     // warp thread-id -- laneid
 
     extern __shared__ int part_meta[];                                      // part information.
     int *partial_ids = part_meta;                                           // caching ids
@@ -639,7 +627,7 @@ __global__ void spmm_forward_cuda_kernel_gin(
         const int pindex_base = block_warpId * partSize;
         #pragma unroll
         for (int nidx = partBeg + laneid; nidx < partEnd; nidx += dimWorker){
-            partial_ids[pindex_base + laneid] = column_index[nidx];
+            partial_ids[pindex_base + nidx - partBeg] = column_index[nidx];
         }
 
          __syncwarp();
@@ -674,7 +662,6 @@ __global__ void spmm_forward_cuda_kernel_gin(
     }
 }
 
-
 ////////////////////////////////////////////
 // 
 // backward pass (GIN)
@@ -702,8 +689,8 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
     const int num_nodes = d_input.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * threadPerWarp;
-    const int grid = (num_parts * 32 + block - 1) / block; 
+    const int block = warpPerBlock * WARP_SIZE;
+    const int grid = (num_parts * WARP_SIZE + block - 1) / block; 
     const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
 
     AT_DISPATCH_FLOATING_TYPES(d_output.type(), "spmm_cuda_backward_gin", ([&] {
@@ -751,14 +738,9 @@ __global__ void spmm_backward_cuda_kernel_gin(
 ) {
 
     int tid =  blockIdx.x * blockDim.x + threadIdx.x;
-    int warpId =  tid / 32;
-    int block_warpId = threadIdx.x / 32;
-    int laneid = threadIdx.x % 32;
-
-    // extern __shared__ float part_info[];                                // part information.
-    // const int part_shift_base = partSize * warpPerBlock;                // shared memory shift for partial result.
-    // int *partial_ids = (int*) part_info;                                // caching ids
-    // float *partial_results = part_info + part_shift_base + smem_gap;   // caching partial results.
+    int warpId =  tid / WARP_SIZE;
+    int block_warpId = threadIdx.x / WARP_SIZE;
+    int laneid = threadIdx.x % WARP_SIZE;
     
     extern __shared__ int part_meta[];                                      // part information.
     int *partial_ids = part_meta;                                           // caching ids
@@ -773,7 +755,7 @@ __global__ void spmm_backward_cuda_kernel_gin(
         const int pindex_base = block_warpId * partSize;
         #pragma unroll
         for (int nid = partBeg + laneid; nid < partEnd; nid += dimWorker){
-            partial_ids[pindex_base + laneid] = column_index[nid];
+            partial_ids[pindex_base + nid - partBeg] = column_index[nid];
         }
 
         __syncwarp();

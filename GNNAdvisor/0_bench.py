@@ -30,10 +30,10 @@ dataset = [
         # ('SW-620H'                   , 66       , 2) ,
         
         ( 'amazon0505'               , 96	, 22),
-        # ( 'artist'                   , 100  , 12),
-        # ( 'com-amazon'               , 96	, 22),
-        # ( 'soc-BlogCatalog'	       	 , 128  , 39), 
-        # ( 'amazon0601'  	         , 96	, 22), 
+        ( 'artist'                   , 100  , 12),
+        ( 'com-amazon'               , 96	, 22),
+        ( 'soc-BlogCatalog'	       	 , 128  , 39), 
+        ( 'amazon0601'  	         , 96	, 22), 
 ]
 
 

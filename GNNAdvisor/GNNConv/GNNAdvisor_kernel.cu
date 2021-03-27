@@ -123,7 +123,7 @@ torch::Tensor SAG_cuda(
     const int num_parts = part2Node.size(0);
 
     const int block = warpPerBlock * WARP_SIZE;
-    const int grid = (num_parts * 32 + block  - 1) / block; 
+    const int grid = (num_parts * WARP_SIZE + block  - 1) / block; 
     int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
 
     // printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
@@ -175,9 +175,9 @@ __global__ void SAG_cuda_kernel(
 ) {
 
     int tid =  blockIdx.x * blockDim.x + threadIdx.x;  // global thread-id
-    int warpId = tid / 32;                             // global warp-id
-    int block_warpId = threadIdx.x / 32;               // block warp-id
-    int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
+    int warpId = tid / WARP_SIZE;                             // global warp-id
+    int block_warpId = threadIdx.x / WARP_SIZE;               // block warp-id
+    int laneid = threadIdx.x % WARP_SIZE;                     // warp thread-id -- laneid
 
     extern __shared__ int part_meta[];                                      // part information.
     int *partial_ids = part_meta;                                           // caching ids
@@ -259,7 +259,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     const int num_parts = part2Node.size(0);
 
     const int block = warpPerBlock * WARP_SIZE;
-    const int grid = (num_parts * 32 + block  - 1) / block; 
+    const int grid = (num_parts * WARP_SIZE + block  - 1) / block; 
     int shared_memory = warpPerBlock * dim * sizeof(float);
 
     // printf("grid: %d, block: %d\n", grid, block);
@@ -313,9 +313,9 @@ __global__ void spmm_forward_cuda_kernel(
 ) {
 
     int tid =  blockIdx.x * blockDim.x + threadIdx.x;  // global thread-id
-    int warpId = tid / 32;                             // global warp-id
-    int block_warpId = threadIdx.x / 32;               // block warp-id
-    int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
+    int warpId = tid / WARP_SIZE;                             // global warp-id
+    int block_warpId = threadIdx.x / WARP_SIZE;               // block warp-id
+    int laneid = threadIdx.x % WARP_SIZE;                     // warp thread-id -- laneid
 
     extern __shared__ int part_meta[];                                      // part information.
     int *partial_ids = part_meta;                                           // caching ids
@@ -413,8 +413,8 @@ std::vector<torch::Tensor> spmm_backward_cuda(
     const int num_nodes = d_input_prime.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * WARP_SIZE;
-    const int grid = (num_parts * WARP_SIZE + block - 1) / block; 
+    const int block = warpPerBlock*WARP_SIZE;
+    const int grid = (num_parts*WARP_SIZE + block - 1) / block; 
     // const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
     const int shared_memory = warpPerBlock * dim * sizeof(float);
 
@@ -548,8 +548,8 @@ std::vector<torch::Tensor> spmm_forward_cuda_gin(
     const int num_nodes = tmp.size(0);
     const int num_parts = part2Node.size(0);
 
-    const int block = warpPerBlock * WARP_SIZE;
-    const int grid = (num_parts * WARP_SIZE + block  - 1) / block; 
+    const int block = warpPerBlock*WARP_SIZE;
+    const int grid = (num_parts*WARP_SIZE + block  - 1) / block; 
     const int shared_memory = warpPerBlock*partSize*sizeof(int) + warpPerBlock*dim*sizeof(float);
 
     // printf("grid: %d, block: %d\n", grid, block);

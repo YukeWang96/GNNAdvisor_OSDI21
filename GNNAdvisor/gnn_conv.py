@@ -3,7 +3,31 @@ import torch
 import math
 import GNNAdvisor as GNNA
 from param import *
-import copy
+
+class ScatterAndGather(torch.autograd.Function):
+    '''
+    Basic Scatter and Gather kernel for GNN.
+    Graph is undirected.
+    '''
+    @staticmethod
+    def forward(ctx, X, inputInfo):
+        ctx.inputInfo = inputInfo
+        ctx.partSize, ctx.dimWorker, ctx.warpPerBlock = \
+                        inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock
+        # print("partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock))
+        X_prime = GNNA.SAG(X,inputInfo.row_pointers, inputInfo.column_index, 
+                            inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
+                                inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)[0]
+        return X_prime
+
+    @staticmethod
+    def backward(ctx, d_output):
+        inputInfo = ctx.inputInfo
+        d_input = GNNA.SAG(d_output, inputInfo.row_pointers, inputInfo.column_index, \
+                                    inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
+                                        ctx.partSize, ctx.dimWorker, ctx.warpPerBlock)
+        return d_input
+
 
 class GNNAFunction(torch.autograd.Function):
     @staticmethod

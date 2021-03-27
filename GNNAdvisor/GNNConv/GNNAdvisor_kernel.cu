@@ -17,6 +17,24 @@ void atomicAdd_F(float* address, float value)
 }
 
 template <typename scalar_t>
+__global__ void SAG_cuda_kernel(
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> output,
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> input,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers, 
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> column_index,
+    torch::PackedTensorAccessor32<float,1,torch::RestrictPtrTraits> degrees,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> part_pointers,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> part2Node,
+    const int num_nodes, 
+    const int dim,
+    const int num_parts,
+    const int partSize,
+    const int dimWorker,
+    const int warpPerBlock
+);
+
+
+template <typename scalar_t>
 __global__ void spmm_forward_cuda_kernel(
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> output,
     torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> input,
@@ -83,6 +101,137 @@ __global__ void spmm_backward_cuda_kernel_gin(
     const int dimWorker,
     const int warpPerBlock
 ); 
+
+
+
+////////////////////////////////////////////
+//
+// Basic Scatter-And-Gather kernel.
+//
+////////////////////////////////////////////
+torch::Tensor SAG_cuda(
+    torch::Tensor input,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index,
+    torch::Tensor degrees,
+    torch::Tensor part_pointers,
+    torch::Tensor part2Node,
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+){
+    auto output = torch::zeros_like(input);
+
+    const int num_nodes = output.size(0);
+    const int dim = output.size(1);
+    const int num_parts = part2Node.size(0);
+
+    const int block = warpPerBlock * threadPerWarp;
+    const int grid = (num_parts * 32 + block  - 1) / block; 
+    int shared_memory = num_parts*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
+    
+    printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
+    // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
+    // printf("dimWorker: %d\n", dimWorker);
+
+    AT_DISPATCH_FLOATING_TYPES(input.type(), "Scatter_and_Gather", ([&] {
+                                SAG_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
+                                    output.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
+                                    input.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
+                                    row_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
+                                    column_index.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
+                                    degrees.packed_accessor32<float,1,torch::RestrictPtrTraits>(),
+                                    part_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
+                                    part2Node.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
+                                    num_nodes, 
+                                    dim,
+                                    num_parts,
+                                    partSize,
+                                    dimWorker,
+                                    warpPerBlock
+                                );
+                            }));
+                                 
+    cudaError_t error = cudaGetLastError();
+    if(error != cudaSuccess){
+        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        exit(-1);
+    }
+    
+    return output;
+}
+
+template <typename scalar_t>
+__global__ void SAG_cuda_kernel(
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> output,
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> input,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers, 
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> column_index,
+    torch::PackedTensorAccessor32<float,1,torch::RestrictPtrTraits> degrees,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> part_pointers,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> part2Node,
+    const int num_nodes, 
+    const int dim,
+    const int num_parts,
+    const int partSize,
+    const int dimWorker,
+    const int warpPerBlock
+) {
+
+    int tid =  blockIdx.x * blockDim.x + threadIdx.x;  // global thread-id
+    int warpId = tid / 32;                             // global warp-id
+    int block_warpId = threadIdx.x / 32;               // block warp-id
+    int laneid = threadIdx.x % 32;                     // warp thread-id -- laneid
+
+    extern __shared__ int part_meta[];                                      // part information.
+    int *partial_ids = part_meta;                                           // caching ids
+    float *partial_results = (float*)&part_meta[partSize*warpPerBlock];     // caching partial results.
+
+    if (warpId < num_parts){
+
+        int srcId = part2Node[warpId];              // aggregated source node
+        int partBeg = part_pointers[warpId];        // partitioning pointer start
+        int partEnd = part_pointers[warpId + 1];    // part pointer end
+
+        // Cache the part neighbors.
+        const int pindex_base = block_warpId * partSize;
+        // #pragma unroll
+        for (int nidx = partBeg + laneid; nidx < partEnd; nidx += dimWorker){
+            partial_ids[pindex_base + laneid] = column_index[nidx];
+        }
+
+         __syncwarp();
+
+        // Neighbor aggregation within each part
+        const int presult_base = block_warpId * dim;
+        for (int nIdx = 0; nIdx < partEnd - partBeg; nIdx++)
+        {
+            int nid = partial_ids[pindex_base + nIdx];
+
+            // Initialize shared memory for partial results
+            if (nIdx == 0)
+                if (laneid < dimWorker)
+                #pragma unroll
+                for (int d = laneid; d < dim; d += dimWorker){
+                    partial_results[presult_base + d] = 0.0f;
+                }
+            
+            if (laneid < dimWorker)
+            #pragma unroll
+            for (int d = laneid; d < dim; d += dimWorker){
+                partial_results[presult_base + d] += input[nid][d];
+            }
+        }
+
+        // output the result to global memory from the shared memory
+        if (laneid < dimWorker)
+        #pragma unroll
+        for (int d = laneid; d < dim; d += dimWorker){
+            atomicAdd_F((float*)&output[srcId][d], partial_results[presult_base + d]);
+        }
+    }
+}
+
 
 ////////////////////////////////////////////
 //

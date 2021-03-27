@@ -1,0 +1,45 @@
+Namespace(classes=6, dataDir='../osdi-ae-graphs', dataset='citeseer', dim=3703, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 6.723
+
+Namespace(classes=7, dataDir='../osdi-ae-graphs', dataset='cora', dim=1433, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 6.603
+
+Namespace(classes=3, dataDir='../osdi-ae-graphs', dataset='pubmed', dim=500, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 6.683
+
+Namespace(classes=121, dataDir='../osdi-ae-graphs', dataset='ppi', dim=50, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 8.851
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='PROTEINS_full', dim=29, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 7.201
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='OVCAR-8H', dim=66, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 92.235
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='Yeast', dim=74, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 83.603
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='DD', dim=89, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 18.379
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='TWITTER-Real-Graph-Partial', dim=1323, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 49.034
+
+Namespace(classes=2, dataDir='../osdi-ae-graphs', dataset='SW-620H', dim=66, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 92.645
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 34.006
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 8.714
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 24.155
+
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 10.582
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=128, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=30, sharedMem=100, verbose_mode=False, warpPerBlock=8)
+GNNAdvisor Time (ms): 28.978
+

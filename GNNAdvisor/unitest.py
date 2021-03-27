@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import torch
-import torch.nn as nn
 import GNNAdvisor as GNNA
 import sys
 
@@ -19,8 +18,8 @@ class Verification(object):
         self.dimWorker = dimWorker
 
         self.num_nodes = len(row_pointers) - 1
-        self.test_embedding = 128
-        self.output_embedding = 128
+        self.test_embedding = 3
+        self.output_embedding = 3
 
         self.X = torch.ones(self.num_nodes, self.test_embedding)
         self.W = torch.ones(self.test_embedding, self.output_embedding)
@@ -43,15 +42,20 @@ class Verification(object):
     def compute(self):
         print("# Compute on GPU")
         X = self.X.cuda()
-        W = self.W.cuda()
+        # W = self.W.cuda()
         # print(X.size())
         # print(self.row_pointers)
         # print(self.column_index)
         # print(self.partPtr)
         # print(self.part2Node)
-        self.result = GNNA.forward(X, W, self.row_pointers, self.column_index, self.degrees,\
-                                    self.partPtr, self.part2Node, self.partSize, self.dimWorker, self.warpPerBlock)[0]
-        print(self.result)
+        # self.result = GNNA.forward(X, W, self.row_pointers, self.column_index, self.degrees,\
+                                    # self.partPtr, self.part2Node, self.partSize, self.dimWorker, self.warpPerBlock)[0]
+        
+        self.result = GNNA.SAG(X, self.row_pointers, self.column_index, self.degrees,\
+                                    self.partPtr, self.part2Node, self.partSize, self.dimWorker, self.warpPerBlock)
+        # print(self.result)
+        print("finished")
+
 
     def compare(self):
         if self.result_ref is None or self.result is None:

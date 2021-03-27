@@ -3,7 +3,30 @@ import torch
 import math
 import GNNAdvisor as GNNA
 from param import *
-import copy
+
+class ScatterAndGather(torch.autograd.Function):
+    '''
+    Basic Scatter and Gather kernel for GNN.
+    Graph is undirected.
+    '''
+    @staticmethod
+    def forward(ctx, X, inputInfo):
+        ctx.inputInfo = inputInfo
+        ctx.partSize, ctx.dimWorker, ctx.warpPerBlock = \
+                        inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock
+        X_prime = GNNA.SAG(X,inputInfo.row_pointers, inputInfo.column_index, 
+                            inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
+                                inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
+        return X_prime
+
+    @staticmethod
+    def backward(ctx, d_output):
+        inputInfo = ctx.inputInfo
+        d_input = GNNA.SAG(d_output, inputInfo.row_pointers, inputInfo.column_index, \
+                                    inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
+                                        ctx.partSize, ctx.dimWorker, ctx.warpPerBlock)
+        return d_input
+
 
 class GNNAFunction(torch.autograd.Function):
     @staticmethod
@@ -16,17 +39,29 @@ class GNNAFunction(torch.autograd.Function):
         X_prime = GNNA.forward(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)[0]
+        # print(X.size())
+        # print(weight.size())
+        # X_prime = torch.mm(X, weight)
+        # X_prime = GNNA.SAG(X_prime, inputInfo.row_pointers, inputInfo.column_index, 
+        #                     inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
+        #                         inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
         return X_prime
 
     @staticmethod
     def backward(ctx, d_output):
         X, weight = ctx.saved_tensors
         inputInfo = ctx.inputInfo
-
         d_input, d_weight = GNNA.backward(d_output, X, weight, inputInfo.row_pointers, inputInfo.column_index, 
                                         inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
                                         ctx.partSize, ctx.dimWorker, ctx.warpPerBlock)
-
+        # d_X_prime = GNNA.SAG(d_output, inputInfo.row_pointers, inputInfo.column_index, 
+        #                             inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
+        #                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
+        # print(weight.size())
+        # weight_p = weight.permute(1,0)
+        # print(weight_p.size())
+        # d_input =  torch.mm(d_X_prime, weight.permute(1,0));
+        # d_weight = torch.mm(X.permute(1,0), d_X_prime);
         return d_input, d_weight, None
 
 class GCNConv(torch.nn.Module):

@@ -2,7 +2,7 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-dimWorker_li = [1, 2, 4, 8, 16, 32]
+node_renumbering_li = ['True', 'False']
 
 dataset = [
 		( 'amazon0505'               , 96	, 22),
@@ -12,12 +12,12 @@ dataset = [
 		( 'amazon0601'  	         , 96	, 22), 
 ]
 
-for dimWorker in dimWorker_li:
+for nodeRenumber in node_renumbering_li:
     print("******************************")
-    print("++ dimWorker: {}".format(dimWorker))
+    print("++ NodeRenumber: {}".format(node_renumbering))
     print("******************************")
     for data, d, c in dataset:
-        print("{}---dimWorker: {}".format(data, dimWorker))
+        print("{}---NodeRenumber: {}".format(data, nodeRenumber))
         print("=================")
-        command = "python GNNA_main.py --dataset {} --dim {} --classes {} --dimWorker {}".format(data, d, c, dimWorker)		
+        command = "python GNNA_main.py --dataset {} --dim {} --classes {} --enable_rabbit {}".format(data, d, c, dimWorker, nodeRenumber)		
         os.system(command)

@@ -3,7 +3,6 @@ import torch
 import numpy as np
 import time
 import dgl 
-import sys
 import os.path as osp
 
 from scipy.sparse import *

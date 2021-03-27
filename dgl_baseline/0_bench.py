@@ -2,7 +2,9 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-hidden = [16] 
+model = 'gcn'
+hidden = [128] 	# for GCN
+# hidden = [64] 	# for GIN
 
 dataset = [
 		('citeseer'	        , 3703	    , 6   ),  
@@ -27,5 +29,5 @@ dataset = [
 
 for hid in hidden:
 	for data, d, c in dataset:
-		command = "python dgl_main.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
+		command = "python dgl_main.py --dataset {} --dim {} --hidden {} --classes {} --model {}".format(data, d, hid, c, model)		
 		os.system(command)

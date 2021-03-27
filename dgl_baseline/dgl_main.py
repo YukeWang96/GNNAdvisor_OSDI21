@@ -16,7 +16,7 @@ parser.add_argument("--n-epochs", type=int, default=200, help="number of trainin
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="number of hidden gcn units")
 parser.add_argument("--classes", type=int, default=10, help="number of output classes")
-parser.add_argument("--model", type=str, default='gcn', choices=['gcn', 'gin'], help="type of model")
+parser.add_argument("--model", type=str, default='gin', choices=['gcn', 'gin'], help="type of model")
 args = parser.parse_args()
 print(args)
 

@@ -79,16 +79,20 @@ pip install torch-geometric
 + Running **DGL** baseline on GNN training.
 > +  Go to **`dgl_baseline/`** directory
 > +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench.py| tee run_dgl.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization.
 
 + Running **PyG** baseline on GNN training.
 > +  Go to **`pyg_baseline/`** directory;
 > + Pass the `--model` parameter in `pyg_main.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench.py| tee run_pyg.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis.
+
 
 + Running GNNAdvisor 
 > +  Go to **`GNNAdvisor/`** directory 
-> + `./bench` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./1_log2csv.py` to convert the `run_GNNA.log` to `run_GNNA.csv` for ease of analysis.
 > +  Stand alone running with specified parameters.
 >> + `--dataset`: the name of the dataset.
 >> + `--dim`: the size of input embedding dimension, default: 96.
@@ -100,8 +104,9 @@ pip install torch-geometric
 >> + `--sharedMem`: the shared memory size for each Stream-Multiprocessor on NVIDIA GPUs. A reference for different GPU architecture and its shared memory size can be found at [here](https://en.wikipedia.org/wiki/CUDA), default 96KB for RTX3090.
 >> + `--model`: `gcn` or `gin`. The evaluated example GCN model has 2 layers with 16 hidden dimensions, while the example GIN model has 5 layers with 64 hidden dimensions.
 >> + `--num_epoches`: the number of epoches for training, default: 200.
->> + `-loadFromTxt`: this a **flag** parameter without value. If this flag is specified, it will load the graph TXT edge list, where each line is an `s1 d1`. default: `False` (load from `.npz` which is fast).
->> + `-enable_rabbit`: this a **flag** parameter without value. If this flag is specified, it will be possible to use the rabbit-reordering routine. Otherwise, it will skip rabbit reordering for both **auto** and **manual** mode.
->> + `-manual_mode`: this a **flag** parameter without value. If this flag is specified, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. **Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.** In manual mode the value of `partSize`, `dimWorker` and `dimWorker` will be applied to both input and hidden layer.
+>> + `--loadFromTxt`: If this flag is `True`, it will load the graph TXT edge list, where each line is an `s1 d1`. default: `False` (load from `.npz` which is fast).
+>> + `--enable_rabbit`: If this flag is `True`, it will be possible to use the rabbit-reordering routine. Otherwise, it will skip rabbit reordering for both **auto** and **manual** mode.
+>> + `--manual_mode`: If this flag is `True`, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. **Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.** In manual mode the value of `partSize`, `dimWorker` and `dimWorker` will be applied to both input and hidden layer.
+>> + `--verbose_mode`: If this flag is `True`, it will print out all the details of configuration for running the experiments.
 
 **Note** that 1) accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 

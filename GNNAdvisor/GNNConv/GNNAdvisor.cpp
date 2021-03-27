@@ -1,6 +1,19 @@
 #include <torch/extension.h>
 #include <vector>
 
+torch::Tensor SAG_cuda(
+    torch::Tensor input,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index,
+    torch::Tensor degrees,
+    torch::Tensor part_pointers,
+    torch::Tensor part2Node,
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock
+);
+
+
 std::vector<torch::Tensor> spmm_forward_cuda(
     torch::Tensor input,
     torch::Tensor weight,
@@ -58,6 +71,30 @@ std::vector<torch::Tensor> spmm_backward_cuda_gin(
 #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
 #define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
 #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+
+torch::Tensor SAG(
+    torch::Tensor input,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index, 
+    torch::Tensor degrees,
+    torch::Tensor part_pointers,
+    torch::Tensor part2Node,
+    int partSize, 
+    int dimWorker, 
+    int warpPerBlock) 
+{
+  CHECK_INPUT(input);
+  CHECK_INPUT(row_pointers);
+  CHECK_INPUT(column_index);
+  CHECK_INPUT(degrees);
+  CHECK_INPUT(part_pointers);
+  CHECK_INPUT(part2Node);
+
+  return SAG_cuda(input, row_pointers, column_index, 
+              degrees, part_pointers, part2Node, 
+              partSize, dimWorker, warpPerBlock);
+}
+
 
 std::vector<torch::Tensor> spmm_forward(
     torch::Tensor input,
@@ -214,6 +251,8 @@ std::vector<torch::Tensor> build_part(
 }
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
+  m.def("SAG", &SAG, "GNNAdvisor base Scatter-and-Gather Kernel (CUDA)");
+
   m.def("forward", &spmm_forward, "GNNAdvisor forward (CUDA)");
   m.def("backward", &spmm_backward, "GNNAdvisor backward (CUDA)");
 

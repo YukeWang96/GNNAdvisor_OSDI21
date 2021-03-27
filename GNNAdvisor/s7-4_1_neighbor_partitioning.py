@@ -14,9 +14,10 @@ dataset = [
 
 for partsize in partsize_li:
     print("******************************")
-    print("Part-size: {}".format(partsize))
+    print("++ Part-size: {}".format(partsize))
     print("******************************")
     for data, d, c in dataset:
-        print("{}--partsize: {}".format(data, partsize))
+        print("{}---partsize: {}".format(data, partsize))
+        print("=================")
         command = "python GNNA_main.py --dataset {} --dim {} --classes {} --partSize {}".format(data, d, c, partsize)		
         os.system(command)

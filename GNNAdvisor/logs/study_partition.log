@@ -1,0 +1,175 @@
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=2, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 28.518
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=2, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 8.608
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=2, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 19.480
+
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=2, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 13.510
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=2, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 24.596
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=4, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 25.025
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=4, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 7.762
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=4, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 18.278
+
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=4, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 10.362
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=4, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 22.376
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=8, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 23.859
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=8, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 7.493
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=8, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 17.863
+
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=8, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 9.718
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=8, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 22.070
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=16, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 22.939
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=16, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 7.354
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=16, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 17.912
+
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=16, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 9.418
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=16, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 20.779
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 22.814
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 7.245
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 17.922
+
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 9.367
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 20.840
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=64, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=64, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=64, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=64, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=64, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 20.786
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=128, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=128, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=128, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=128, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=128, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 20.823
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=256, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=256, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=256, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=256, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=256, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 20.845
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=512, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=512, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=512, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=512, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit=False, hidden=16, loadFromTxt=False, manual_mode=False, model='gcn', num_epoches=200, partSize=512, sharedMem=100, verbose_mode=False, warpPerBlock=2)
+GNNAdvisor Time (ms): 20.795
+
+******************************
+++ Part-size: 2
+******************************
+amazon0505---partsize: 2
+artist---partsize: 2
+com-amazon---partsize: 2
+soc-BlogCatalog---partsize: 2
+amazon0601---partsize: 2
+******************************
+++ Part-size: 4
+******************************
+amazon0505---partsize: 4
+artist---partsize: 4
+com-amazon---partsize: 4
+soc-BlogCatalog---partsize: 4
+amazon0601---partsize: 4
+******************************
+++ Part-size: 8
+******************************
+amazon0505---partsize: 8
+artist---partsize: 8
+com-amazon---partsize: 8
+soc-BlogCatalog---partsize: 8
+amazon0601---partsize: 8
+******************************
+++ Part-size: 16
+******************************
+amazon0505---partsize: 16
+artist---partsize: 16
+com-amazon---partsize: 16
+soc-BlogCatalog---partsize: 16
+amazon0601---partsize: 16
+******************************
+++ Part-size: 32
+******************************
+amazon0505---partsize: 32
+artist---partsize: 32
+com-amazon---partsize: 32
+soc-BlogCatalog---partsize: 32
+amazon0601---partsize: 32
+******************************
+++ Part-size: 64
+******************************
+amazon0505---partsize: 64
+artist---partsize: 64
+com-amazon---partsize: 64
+soc-BlogCatalog---partsize: 64
+amazon0601---partsize: 64
+******************************
+++ Part-size: 128
+******************************
+amazon0505---partsize: 128
+artist---partsize: 128
+com-amazon---partsize: 128
+soc-BlogCatalog---partsize: 128
+amazon0601---partsize: 128
+******************************
+++ Part-size: 256
+******************************
+amazon0505---partsize: 256
+artist---partsize: 256
+com-amazon---partsize: 256
+soc-BlogCatalog---partsize: 256
+amazon0601---partsize: 256
+******************************
+++ Part-size: 512
+******************************
+amazon0505---partsize: 512
+artist---partsize: 512
+com-amazon---partsize: 512
+soc-BlogCatalog---partsize: 512
+amazon0601---partsize: 512

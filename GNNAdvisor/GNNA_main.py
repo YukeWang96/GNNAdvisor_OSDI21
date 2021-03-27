@@ -1,7 +1,6 @@
 import sys
 import time
 import argparse
-import numpy as np
 import os.path as osp
 import torch
 import torch.nn.functional as F

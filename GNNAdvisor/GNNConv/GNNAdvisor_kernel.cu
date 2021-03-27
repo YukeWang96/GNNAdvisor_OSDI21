@@ -174,7 +174,7 @@ __global__ void SAG_cuda_kernel(
     const int warpPerBlock
 ) {
 
-    int tid =  blockIdx.x * blockDim.x + threadIdx.x;  // global thread-id
+    int tid =  blockIdx.x * blockDim.x + threadIdx.x;         // global thread-id
     int warpId = tid / WARP_SIZE;                             // global warp-id
     int block_warpId = threadIdx.x / WARP_SIZE;               // block warp-id
     int laneid = threadIdx.x % WARP_SIZE;                     // warp thread-id -- laneid

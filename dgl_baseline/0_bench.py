@@ -2,7 +2,7 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-run_GCN = True
+run_GCN = False
 
 if run_GCN:
     model = 'gcn'

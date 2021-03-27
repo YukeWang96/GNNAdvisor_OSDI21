@@ -2,7 +2,7 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-run_GCN = True
+run_GCN = False
 manual_mode = True
 verbose_mode = False
 
@@ -16,7 +16,7 @@ else:
     model = 'gin'
     partSize = 8
     dimWorker = 32
-    warpPerBlock = 6
+    warpPerBlock = 8
     hidden = [64] 		
 
 partsize_li = [32]
@@ -26,7 +26,7 @@ dataset = [
         # ('tc_gnn_verify'	, 16	, 2),
         # ('tc_gnn_verify_2x'	, 16	, 2),
 
-        ('citeseer'	        , 3703	    , 6   ),  
+        # ('citeseer'	        , 3703	    , 6   ),  
         ('cora' 	        , 1433	    , 7   ),  
         ('pubmed'	        , 500	    , 3   ),      
         ('ppi'	            , 50	    , 121 ),   

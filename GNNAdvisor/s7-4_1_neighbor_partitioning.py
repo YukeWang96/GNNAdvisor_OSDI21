@@ -2,9 +2,12 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-# partsize_li = [2, 4, 8, 16, 32, 64, 128, 256, 512]
-partsize_li = [32]
-# partsize_li = [64, 128, 256, 512]
+
+run_GCN = True
+manual_mode = True
+verbose_mode = False
+
+partsize_li = [2, 4, 8, 16, 32, 64, 128, 256, 512]
 
 dataset = [
         ( 'amazon0505'               , 96	, 22),

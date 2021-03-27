@@ -149,17 +149,22 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 def train():
     model.train()
     optimizer.zero_grad()
-    loss = F.nll_loss(model()[dataset.train_mask], dataset.y[dataset.train_mask])
+    loss = F.nll_loss(model()[:], dataset.y[:])
     loss.backward()
     optimizer.step()
 
-# Training iteration begin.
-time_avg = []
-for epoch in tqdm(range(1, args.num_epoches + 1)):
-    start_train = time.perf_counter()
-    train()
-    train_time = time.perf_counter() - start_train
-    time_avg.append(train_time)
 
-print('GNNAdvisor Time (ms): {:.3f}'.format(np.mean(time_avg)*1e3))
-print()
+if __name__ == '__main__':
+    # dry run
+    for _ in range(3):
+        train()
+
+    torch.cuda.synchronize()
+    start_train = time.perf_counter()
+    for _ in tqdm(range(1, args.num_epoches + 1)):
+        train()
+    torch.cuda.synchronize()
+    train_time = time.perf_counter() - start_train
+
+    print('Time (ms): {:.3f}'.format(train_time*1e3/args.num_epoches))
+    print()

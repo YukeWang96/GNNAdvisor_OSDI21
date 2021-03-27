@@ -2,8 +2,8 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-# hidden = [16] 			# for GCN
-hidden = [128] 		# for GIN
+hidden = [16] 			# for GCN
+# hidden = [128] 		# for GIN
 partsize_li = [30]  	# [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
 model = 'gcn'
 

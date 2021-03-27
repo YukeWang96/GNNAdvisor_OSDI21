@@ -128,8 +128,8 @@ torch::Tensor SAG_cuda(
 
     const int block = warpPerBlock * threadPerWarp;
     const int grid = (num_parts * 32 + block  - 1) / block; 
-    int shared_memory = num_parts*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
-    
+    int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
+
     printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
     // printf("dimWorker: %d\n", dimWorker);
@@ -555,7 +555,7 @@ std::vector<torch::Tensor> spmm_forward_cuda_gin(
 
     const int block = warpPerBlock * threadPerWarp;
     const int grid = (num_parts * 32 + block  - 1) / block; 
-    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float) + smem_gap * sizeof(float);
+    const int shared_memory = warpPerBlock*partSize*sizeof(int) + warpPerBlock*dim*sizeof(float);
 
     // printf("grid: %d, block: %d\n", grid, block);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);

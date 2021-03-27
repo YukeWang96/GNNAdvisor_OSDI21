@@ -16,7 +16,7 @@ parser.add_argument("--n-epochs", type=int, default=200, help="number of trainin
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="number of hidden gcn units")
 parser.add_argument("--classes", type=int, default=10, help="number of output classes")
-parser.add_argument("--model", type=str, default='gin', choices=['gcn', 'gin'], help="type of model")
+parser.add_argument("--model", type=str, default='gcn', choices=['gcn', 'gin'], help="type of model")
 args = parser.parse_args()
 print(args)
 
@@ -69,18 +69,23 @@ def main(args):
     optimizer = torch.optim.Adam(model.parameters(),
                                  lr=1e-2,
                                  weight_decay=5e-4)
+    model.train()
+    #dry run
+    for _ in range(10):
+        logits = model(features)
 
     torch.cuda.synchronize()
     start = time.perf_counter()
     for _ in tqdm(range(args.n_epochs)):
-        model.train()
 
+        # forward
         logits = model(features)
         loss = loss_fcn(logits[:], labels[:])
-
+        # backward
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
     torch.cuda.synchronize()
     dur = time.perf_counter() - start
 

@@ -128,9 +128,9 @@ torch::Tensor SAG_cuda(
     const int grid = (num_parts * 32 + block  - 1) / block; 
     int shared_memory = partSize*warpPerBlock*sizeof(int)+warpPerBlock*dim*sizeof(float);
 
-    // printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
-    // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
-    // printf("dimWorker: %d\n", dimWorker);
+    printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
+    printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
+    printf("dimWorker: %d\n", dimWorker);
 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "Scatter_and_Gather", ([&] {
                                 SAG_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
@@ -195,7 +195,9 @@ __global__ void SAG_cuda_kernel(
         const int pindex_base = block_warpId * partSize;
         // #pragma unroll
         for (int nidx = partBeg + laneid; nidx < partEnd; nidx += dimWorker){
-            partial_ids[pindex_base + laneid] = column_index[nidx];
+            // printf("1--pindex_base: %d, laneid: %d\n", pindex_base, laneid);
+            partial_ids[pindex_base + nidx - partBeg] = column_index[nidx];
+            // if(partial_ids[pindex_base + laneid]  >= num_nodes || partial_ids[pindex_base + laneid]  < 0) printf("---- partial_ids: %d\n", partial_ids[pindex_base + laneid] );
         }
 
          __syncwarp();
@@ -204,7 +206,9 @@ __global__ void SAG_cuda_kernel(
         const int presult_base = block_warpId * dim;
         for (int nIdx = 0; nIdx < partEnd - partBeg; nIdx++)
         {
+            // if (laneid == 0) printf("2--pindex_base: %d, nIdx: %d\n", pindex_base, nIdx);
             int nid = partial_ids[pindex_base + nIdx];
+            // if(nid >= num_nodes || nid < 0) printf("Error nid: %d\n", nid);
 
             // Initialize shared memory for partial results
             if (nIdx == 0)
@@ -333,7 +337,7 @@ __global__ void spmm_forward_cuda_kernel(
         // #pragma unroll
         // for (int nidx = partBeg + laneid; nidx < partEnd; nidx += threadPerWarp){
         //     if(column_index[nidx] >= num_nodes || column_index[nidx] < 0) printf("column_index: %d\n", column_index[nidx]);
-        //     partial_ids[pindex_base + laneid] = column_index[nidx];
+        //     partial_ids[pindex_base + nidx - partBeg] = column_index[nidx];
         // }
         
         #pragma unroll

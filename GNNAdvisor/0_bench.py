@@ -4,9 +4,9 @@ os.environ["PYTHONWARNINGS"] = "ignore"
 
 
 model = 'gcn'
-warpPerBlock = 8
+warpPerBlock = 1
 hidden = [16] 			# for GCN
-partsize_li = [32]
+partsize_li = [64]
 # hidden = [128] 		# for GIN
 # partsize_li = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
 # partsize_li = [32, 64, 128, 256, 512, 1024]
@@ -30,10 +30,10 @@ dataset = [
         # ('SW-620H'                   , 66       , 2) ,
         
         ( 'amazon0505'               , 96	, 22),
-        ( 'artist'                   , 100  , 12),
-        ( 'com-amazon'               , 96	, 22),
-        ( 'soc-BlogCatalog'	       	 , 128  , 39), 
-        ( 'amazon0601'  	         , 96	, 22), 
+        # ( 'artist'                   , 100  , 12),
+        # ( 'com-amazon'               , 96	, 22),
+        # ( 'soc-BlogCatalog'	       	 , 128  , 39), 
+        # ( 'amazon0601'  	         , 96	, 22), 
 ]
 
 

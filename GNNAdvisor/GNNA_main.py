@@ -103,11 +103,12 @@ if verbose_mode:
 # sys.exit(0)
 
 if TEST:
-    valid = Verification(row_pointers, column_index, degrees, partPtr, part2Node, \
+    valid = Verification(args.hidden, row_pointers, column_index, degrees, partPtr, part2Node, \
                         partSize, dimWorker, warpPerBlock)
-    valid.compute()
+    # valid.compute()
     # valid.reference()
     # valid.compare()
+    valid.profile_spmm(round=args.num_epoches)
     sys.exit(0)
 
 # Building GNN model

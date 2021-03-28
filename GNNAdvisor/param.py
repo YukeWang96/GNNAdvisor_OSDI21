@@ -3,8 +3,9 @@ import math
 # package of input parameters
 class inputProperty(object):
     def __init__(self, row_pointers=None, column_index=None, 
-                degrees=None, partPtr=None, 
-                part2Node=None, partSize=None, dimWorker=None, warpPerBlock=None, sharedMem=None,
+                degrees=None, partPtr=None, part2Node=None, 
+                partSize=None, dimWorker=None, warpPerBlock=None, 
+                sharedMem=None,
                 hiddenDim=None,
                 dataset_obj=None,
                 enable_rabbit=False,
@@ -37,11 +38,10 @@ class inputProperty(object):
         self.hiddenDim = hiddenDim
 
         self.manual_mode = manual_mode
-        self.reorder_flag = False
-
         self.state_set_input = False
         self.enable_rabbit = enable_rabbit
-
+        self.reorder_status = False
+        
         self.dataset_obj = dataset_obj
         self.MAX_warpPerBlock = 8               # for better scheduling.
         self.share_memory = sharedMem * 0.4         
@@ -53,10 +53,16 @@ class inputProperty(object):
         manual_mode: using user-specified parameters
         auto_mode:   determining the parameters according to the GPU resources and scheduling performance consideration.
         '''
+
         if self.manual_mode:
-            if self.reorder_flag:
+            if self.enable_rabbit:
                 self.dataset_obj.reorder_flag = True
                 self.dataset_obj.rabbit_reorder()
+                self.reorder_status = True
+            else:
+                self.dataset_obj.reorder_flag = False
+                self.reorder_status = False
+
             if self.verbose_flag:
                 print("\n=> MANUAL Config Complete !!!\n")
         else:
@@ -100,7 +106,10 @@ class inputProperty(object):
                 # Determine whether to reorder a graph.
                 if math.sqrt(self.avgEdgeSpan) > math.sqrt(self.num_nodes)/100:
                     self.dataset_obj.reorder_flag = True
-                    self.reorder_flag = True
+                    self.reorder_status = True
+                else:
+                    self.dataset_obj.reorder_flag = False
+                    self.reorder_status = False
                 
                 self.dataset_obj.rabbit_reorder()
 
@@ -139,7 +148,7 @@ class inputProperty(object):
                     print("# auto INPUT partSize: {}".format(self.partSize))
                     print("# auto INPUT dimWorker: {}".format(self.dimWorker))
                     print("# auto INPUT warpPerBlock: {}".format(self.warpPerBlock))
-                    print("# auto INPUT reorder_flag: {}".format(self.reorder_flag))
+                    print("# auto INPUT reorder_flag: {}".format(self.reorder_status))
             else:
                 if self.manual_mode:
                     print("# manual HIDDEN partSize: {}".format(self.partSize))
@@ -149,4 +158,4 @@ class inputProperty(object):
                     print("# auto HIDDEN partSize: {}".format(self.partSize))
                     print("# auto HIDDEN dimWorker: {}".format(self.dimWorker))
                     print("# auto HIDDEN warpPerBlock: {}".format(self.warpPerBlock))
-                    print("# auto HIDDEN reorder_flag: {}".format(self.reorder_flag))
+                    print("# auto HIDDEN reorder_flag: {}".format(self.reorder_status))

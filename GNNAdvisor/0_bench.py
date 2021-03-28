@@ -4,7 +4,8 @@ os.environ["PYTHONWARNINGS"] = "ignore"
 
 run_GCN = True
 manual_mode = True
-verbose_mode = False
+verbose_mode = True
+enable_rabbit = True
 
 if run_GCN:
     model = 'gcn'
@@ -22,13 +23,13 @@ dataset = [
         # ('tc_gnn_verify'	, 16	, 2),
         # ('tc_gnn_verify_2x'	, 16	, 2),
 
-        ('citeseer'	        , 3703	    , 6   ),  
-        ('cora' 	        , 1433	    , 7   ),  
-        ('pubmed'	        , 500	    , 3   ),      
-        ('ppi'	            , 50	    , 121 ),   
+        # ('citeseer'	        , 3703	    , 6   ),  
+        # ('cora' 	        , 1433	    , 7   ),  
+        # ('pubmed'	        , 500	    , 3   ),      
+        # ('ppi'	            , 50	    , 121 ),   
 
         # ('PROTEINS_full'             , 29       , 2) ,   
-        # ('OVCAR-8H'                  , 66       , 2) , 
+        ('OVCAR-8H'                  , 66       , 2) , 
         # ('Yeast'                     , 74       , 2) ,
         # ('DD'                        , 89       , 2) ,
         # ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
@@ -47,7 +48,8 @@ for partsize in partsize_li:
         for data, d, c in dataset:
             command = "python GNNA_main.py --dataset {} --dim {} --hidden {} \
                         --classes {} --partSize {} --model {} --warpPerBlock {}\
-                        --manual_mode {} --verbose_mode {}"
-            command = command.format(data, d, hid, c, partsize, model, warpPerBlock, manual_mode, verbose_mode)		
+                        --manual_mode {} --verbose_mode {} --enable_rabbit {}"
+            command = command.format(data, d, hid, c, partsize, model, warpPerBlock,\
+                                     manual_mode, verbose_mode, enable_rabbit)		
             # command = "python GNNA_main.py -loadFromTxt --dataset {} --partSize {} --dataDir {}".format(data, partsize, '/home/yuke/.graphs/orig')		 
             os.system(command)

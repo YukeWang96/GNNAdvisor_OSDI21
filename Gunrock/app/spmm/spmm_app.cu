@@ -119,7 +119,7 @@ cudaError_t RunTests(util::Parameters &parameters, GraphT &graph,
   cpu_timer.Stop();
   total_timer.Stop();
 
-  info.Finalize(cpu_timer.ElapsedMillis(), total_timer.ElapsedMillis());
+  // info.Finalize(cpu_timer.ElapsedMillis(), total_timer.ElapsedMillis());
   return retval;
 }
 

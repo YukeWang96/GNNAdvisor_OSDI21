@@ -112,7 +112,7 @@ class custom_dataset(torch.nn.Module):
         build_csr = time.perf_counter() - start
 
         if self.verbose_flag:
-            print("# Build CSR (s): {:.3f}".format(build_csr))
+            print("# Build CSR after reordering (s): {:.3f}".format(build_csr))
 
         self.column_index = torch.IntTensor(scipy_csr.indices)
         self.row_pointers = torch.IntTensor(scipy_csr.indptr)
@@ -160,12 +160,12 @@ class custom_dataset(torch.nn.Module):
             # Rebuild a new graph CSR according to the updated edge_index
             val = [1] * self.num_edges
             start = time.perf_counter()
+            
             scipy_coo = coo_matrix((val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
             scipy_csr = scipy_coo.tocsr()
-            build_csr = time.perf_counter() - start
-
             self.column_index = torch.IntTensor(scipy_csr.indices)
             self.row_pointers = torch.IntTensor(scipy_csr.indptr)
+            build_csr = time.perf_counter() - start
 
             # Re-generate degrees array.
             degrees = (self.row_pointers[1:] - self.row_pointers[:-1]).tolist()

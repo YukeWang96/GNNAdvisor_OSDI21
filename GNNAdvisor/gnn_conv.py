@@ -14,7 +14,7 @@ class ScatterAndGather(torch.autograd.Function):
         ctx.inputInfo = inputInfo
         ctx.partSize, ctx.dimWorker, ctx.warpPerBlock = \
                         inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock
-        X_prime = GNNA.SAG(X,inputInfo.row_pointers, inputInfo.column_index, 
+        X_prime = GNNA.SAG(X, inputInfo.row_pointers, inputInfo.column_index, 
                             inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)
         return X_prime

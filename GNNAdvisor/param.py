@@ -2,8 +2,7 @@ import math
 
 # package of input parameters
 class inputProperty(object):
-    def __init__(self, row_pointers=None, column_index=None, 
-                degrees=None, partPtr=None, part2Node=None, 
+    def __init__(self, row_pointers=None, column_index=None, degrees=None,
                 partSize=None, dimWorker=None, warpPerBlock=None, 
                 sharedMem=None,
                 hiddenDim=None,
@@ -15,12 +14,15 @@ class inputProperty(object):
         if dataset_obj is None:
             raise ValueError("Dataset object MUST SET !!!")
 
+        self.dataset_obj = dataset_obj
+
         self.row_pointers = row_pointers
         self.column_index = column_index
         self.degrees = degrees
-        self.partPtr = partPtr 
-        self.part2Node = part2Node 
-        self.verbose_flag = verbose
+
+        self.num_nodes = dataset_obj.num_nodes
+        self.avgNodeDegree = dataset_obj.avg_degree
+        self.avgEdgeSpan = dataset_obj.avg_edgeSpan
 
         self.partSize = partSize
         self.dimWorker = dimWorker
@@ -30,22 +32,21 @@ class inputProperty(object):
         self.dimWorker_hidden = dimWorker
         self.warpPerBlock_input = warpPerBlock
         self.warpPerBlock_hidden = warpPerBlock
-
-        self.num_nodes = dataset_obj.num_nodes
-        self.avgNodeDegree = dataset_obj.avg_degree
-        self.avgEdgeSpan = dataset_obj.avg_edgeSpan
         self.inputDim = dataset_obj.num_features
         self.hiddenDim = hiddenDim
 
         self.manual_mode = manual_mode
-        self.state_set_input = False
         self.enable_rabbit = enable_rabbit
+        self.verbose_flag = verbose
+        self.state_set_input = False
         self.reorder_status = False
-        
-        self.dataset_obj = dataset_obj
-        self.MAX_warpPerBlock = 8               # for better scheduling.
+
+        self.MAX_warpPerBlock = 8              
         self.share_memory = sharedMem * 0.4         
         self.gap_smem = 100
+
+        self.partPtr = None
+        self.part2Node = None
 
     def decider(self):
         '''
@@ -59,6 +60,8 @@ class inputProperty(object):
                 self.dataset_obj.reorder_flag = True
                 self.dataset_obj.rabbit_reorder()
                 self.reorder_status = True
+                self.row_pointers = self.dataset_obj.row_pointers
+                self.column_index = self.dataset_obj.column_index
             else:
                 self.dataset_obj.reorder_flag = False
                 self.reorder_status = False

@@ -41,7 +41,6 @@ parser.add_argument('--loadFromTxt', type=str, choices=['True', 'False'], defaul
 
 args = parser.parse_args()
 print(args)
-
 partSize, dimWorker, warpPerBlock, sharedMem = args.partSize, args.dimWorker, args.warpPerBlock, args.sharedMem
 manual_mode = args.manual_mode == 'True'
 verbose_mode = args.verbose_mode == 'True'
@@ -52,11 +51,14 @@ loadFromTxt = args.loadFromTxt == 'True'
 assert torch.cuda.is_available()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+####################################
 # loading data from files
+####################################
 if loadFromTxt:
     path = osp.join(args.dataDir, args.dataset)
+    # path = osp.join("/home/yuke/.graphs/orig", args.dataset)
+    # path = osp.join("/home/yuke/.graphs/orig_rabbit", args.dataset)
     dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=True, verbose=verbose_mode)
-    # path = osp.join("/home/yuke/.graphs/orig_rabbit", dataset)
 else:
     path = osp.join(args.dataDir, args.dataset+".npz")
     dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False, verbose=verbose_mode)
@@ -67,26 +69,17 @@ column_index = dataset.column_index
 row_pointers = dataset.row_pointers
 degrees = dataset.degrees
 
-# Building neighbor partitioning.
-start = time.perf_counter()
-partPtr, part2Node = GNNA.build_part(partSize, row_pointers)
-build_neighbor_parts = time.perf_counter() - start
-if verbose_mode:
-    print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
-
-partPtr = partPtr.int().to(device)
-part2Node = part2Node.int().to(device)
-column_index = column_index.to(device)
-row_pointers = row_pointers.to(device)
-
-# dimWorker = 10
+####################################
 # Building input property profile.
+####################################
 inputInfo = inputProperty(row_pointers, column_index, degrees, 
-                            partPtr, part2Node,
                             partSize, dimWorker, warpPerBlock, sharedMem,
                             hiddenDim=args.hidden, dataset_obj=dataset, enable_rabbit=enable_rabbit,
                             manual_mode=manual_mode, verbose=verbose_mode)
 
+####################################
+# Decider for parameter selection.
+####################################
 inputInfo.decider()
 
 inputInfo = inputInfo.set_input()
@@ -102,8 +95,23 @@ if verbose_mode:
     print('----------------------------')
 # sys.exit(0)
 
+####################################
+# Building neighbor partitioning.
+####################################
+start = time.perf_counter()
+partPtr, part2Node = GNNA.build_part(partSize, inputInfo.row_pointers)
+build_neighbor_parts = time.perf_counter() - start
+if verbose_mode:
+    print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
+
+inputInfo.row_pointers  = inputInfo.row_pointers.to(device)
+inputInfo.column_index  = inputInfo.column_index.to(device)
+inputInfo.partPtr = partPtr.int().to(device)
+inputInfo.part2Node  = part2Node.int().to(device)
+
+
 if TEST:
-    valid = Verification(args.hidden, row_pointers, column_index, degrees, partPtr, part2Node, \
+    valid = Verification(args.hidden, row_pointers, inputInfo.column_index, degrees, partPtr, part2Node, \
                         partSize, dimWorker, warpPerBlock)
     # valid.compute()
     # valid.reference()
@@ -111,7 +119,9 @@ if TEST:
     valid.profile_spmm(round=args.num_epoches)
     sys.exit(0)
 
+####################################
 # Building GNN model
+####################################
 if args.model == 'gcn':
     class Net(torch.nn.Module):
         def __init__(self):
@@ -149,7 +159,9 @@ if verbose_mode:
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
+####################################
 # Define training function.
+####################################
 def train():
     model.train()
     optimizer.zero_grad()

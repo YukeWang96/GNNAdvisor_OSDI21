@@ -10,5 +10,5 @@ cd gunrock
 mkdir build && cd build
 cmake .. && make spmm -j8
 
-cd build/bin
+cd bin
 cp spmm ../../../

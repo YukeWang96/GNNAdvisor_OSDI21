@@ -1,0 +1,107 @@
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit='True', hidden=16, loadFromTxt='False', manual_mode='True', model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='True', warpPerBlock=8)
+# Loading (npz)(s): 0.126
+# nodes: 410236
+# avg_degree: 11.89
+# avg_edgeSpan: 77939
+# Build CSR (s): 0.691
+Reorder flag is set. Continue...
+Original edge_index
+ [[     0      0      0 ... 410235 410235 410235]
+ [     1      2      3 ... 410232 410233 410234]]
+# Reorder time (s): 2.7687594149901997
+Reordered edge_index
+ tensor([[348542, 348542, 348542,  ...,  82889,  82889,  82889],
+        [348543, 348544, 348545,  ...,  82894,  82895,  82890]],
+       dtype=torch.int32)
+# Re-Build CSR (s): 0.846
+
+=> MANUAL Config Complete !!!
+
+----------------------------
+# manual INPUT partSize: 32
+# manual INPUT dimWorker: 32
+# manual INPUT warpPerBlock: 8
+
+# manual HIDDEN partSize: 32
+# manual HIDDEN dimWorker: 32
+# manual HIDDEN warpPerBlock: 8
+
+----------------------------
+# Build nb_part (s): 0.723
+Net(
+  (conv1): GCNConv()
+  (conv2): GCNConv()
+)
+Time (ms): 18.160
+
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit='True', hidden=16, loadFromTxt='False', manual_mode='True', model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='True', warpPerBlock=8)
+# Loading (npz)(s): 0.049
+# nodes: 50515
+# avg_degree: 32.43
+# avg_edgeSpan: 16900
+# Build CSR (s): 0.228
+Reorder flag is set. Continue...
+Original edge_index
+ [[    0     0     0 ... 50514 50514 50514]
+ [ 1794  3102  3822 ... 27901 38264 45612]]
+# Reorder time (s): 0.5326611460041022
+Reordered edge_index
+ tensor([[ 6043,  6043,  6043,  ..., 28551, 28551, 28551],
+        [ 8474,  6042,  8564,  ..., 22193, 17436, 28552]], dtype=torch.int32)
+# Re-Build CSR (s): 0.290
+
+=> MANUAL Config Complete !!!
+
+----------------------------
+# manual INPUT partSize: 32
+# manual INPUT dimWorker: 32
+# manual INPUT warpPerBlock: 8
+
+# manual HIDDEN partSize: 32
+# manual HIDDEN dimWorker: 32
+# manual HIDDEN warpPerBlock: 8
+
+----------------------------
+# Build nb_part (s): 0.143
+Net(
+  (conv1): GCNConv()
+  (conv2): GCNConv()
+)
+Time (ms): 3.262
+
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit='True', hidden=16, loadFromTxt='False', manual_mode='True', model='gcn', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='True', warpPerBlock=8)
+# Loading (npz)(s): 0.056
+# nodes: 334863
+# avg_degree: 5.53
+# avg_edgeSpan: 110800
+# Build CSR (s): 0.274
+Reorder flag is set. Continue...
+Original edge_index
+ [[     0      0      0 ... 334861 334862 334862]
+ [ 53525  71631  98005 ... 267222 117359 212820]]
+# Reorder time (s): 1.3719504509936087
+Reordered edge_index
+ tensor([[196013, 196013, 196013,  ..., 190539, 207102, 207102],
+        [196012, 196059, 196034,  ..., 190377, 207101, 111356]],
+       dtype=torch.int32)
+# Re-Build CSR (s): 0.304
+
+=> MANUAL Config Complete !!!
+
+----------------------------
+# manual INPUT partSize: 32
+# manual INPUT dimWorker: 32
+# manual INPUT warpPerBlock: 8
+
+# manual HIDDEN partSize: 32
+# manual HIDDEN dimWorker: 32
+# manual HIDDEN warpPerBlock: 8
+
+----------------------------
+# Build nb_part (s): 0.566
+Net(
+  (conv1): GCNConv()
+  (conv2): GCNConv()
+)
+Time (ms): 13.988
+

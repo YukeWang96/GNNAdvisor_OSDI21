@@ -79,10 +79,10 @@ struct SPMMIterationLoop
     auto null_ptr = &vertices;
     null_ptr = NULL;
     // util::Array1D<SizeT, VertexT> *null_frontier = NULL;
-    util::PrintMsg("nodes." + std::to_string(graph.nodes), 1);
+    // util::PrintMsg("nodes." + std::to_string(graph.nodes), 1);
 
     long ct = 0;
-    util::PrintMsg("counts." + std::to_string(ct), 1);
+    // util::PrintMsg("counts." + std::to_string(ct), 1);
 
 
     // (h1 + h2 + h3) edge map
@@ -104,7 +104,7 @@ struct SPMMIterationLoop
       graph.csr(), &vertices, null_ptr, oprtr_parameters,
       advance_op1));
    
-    util::PrintMsg("core end");
+    // util::PrintMsg("core end");
 
     GUARD_CU2(cudaMemcpyAsync(
               data_slice.h_output.GetPointer(util::HOST),
@@ -112,7 +112,7 @@ struct SPMMIterationLoop
               ((uint64_t)graph.nodes) * feature_len * sizeof(ValueT),
               cudaMemcpyDeviceToHost, data_slice.d2h_stream),
           "source_result D2H copy failed");
-    util::PrintMsg("copy end");
+    // util::PrintMsg("copy end");
 
     return retval;
   }

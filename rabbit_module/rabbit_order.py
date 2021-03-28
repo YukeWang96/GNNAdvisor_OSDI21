@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
-
-
 import time
 import torch
 
-import sys
 import pickle
 import rabbit
 

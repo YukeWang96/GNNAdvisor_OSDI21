@@ -129,7 +129,7 @@ struct SPMMIterationLoop
    */
   template <int NUM_VERTEX_ASSOCIATES, int NUM_VALUE__ASSOCIATES>
   cudaError_t ExpandIncoming(SizeT &received_length, int peer_) {
-    util::PrintMsg("ExpandIncoming", 1);
+    // util::PrintMsg("ExpandIncoming", 1);
     auto &data_slice = this->enactor->problem->data_slices[this->gpu_num][0];
     auto &enactor_slice =
         this->enactor
@@ -303,7 +303,7 @@ class Enactor
    * \return cudaError_t error message(s), if any
    */
   cudaError_t Run(ThreadSlice &thread_data) {
-    util::PrintMsg("spmm enactor Enact run.", 1);
+    // util::PrintMsg("spmm enactor Enact run.", 1);
     gunrock::app::Iteration_Loop<0, 1,
         IterationT>(thread_data, iterations[thread_data.thread_num]);
     return cudaSuccess;
@@ -316,9 +316,9 @@ class Enactor
    */
   cudaError_t Enact() {
     cudaError_t retval = cudaSuccess;
-    util::PrintMsg("spmm enactor Enact.", 1);
+    // util::PrintMsg("spmm enactor Enact.", 1);
     GUARD_CU(this->Run_Threads(this));
-    util::PrintMsg("GPU spmm Done.", this->flag & Debug);
+    // util::PrintMsg("GPU spmm Done.", this->flag & Debug);
     return retval;
   }
 

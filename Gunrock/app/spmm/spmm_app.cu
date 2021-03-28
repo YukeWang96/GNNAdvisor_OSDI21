@@ -73,21 +73,23 @@ cudaError_t RunTests(util::Parameters &parameters, GraphT &graph,
     // src = srcs[run_num % num_srcs];
     GUARD_CU(problem.Reset(target));
     GUARD_CU(enactor.Reset(target));
-    util::PrintMsg("__________________________", !quiet_mode);
+    if (run_num == num_runs - 1)
+      util::PrintMsg("__________________________", !quiet_mode);
 
     cpu_timer.Start();
     GUARD_CU(enactor.Enact());
     cpu_timer.Stop();
     info.CollectSingleRun(cpu_timer.ElapsedMillis());
 
-    util::PrintMsg(
-      "--------------------------\nRun " + std::to_string(run_num) +
-          " elapsed: " +
-          std::to_string(cpu_timer.ElapsedMillis())
-          //+ " ms, src = "+ std::to_string(src)
-          + " ms, #iterations = " +
-          std::to_string(enactor.enactor_slices[0].enactor_stats.iteration),
-      !quiet_mode);
+    if (run_num == num_runs - 1)
+      util::PrintMsg(
+        "--------------------------\nRun " + std::to_string(run_num) +
+            " elapsed: " +
+            std::to_string(cpu_timer.ElapsedMillis())
+            //+ " ms, src = "+ std::to_string(src)
+            + " ms, #iterations = " +
+            std::to_string(enactor.enactor_slices[0].enactor_stats.iteration) + "\n=======================\n\n",
+        !quiet_mode);
     if (validation == "each") {
       GUARD_CU(problem.Extract(h_output));
       /*TODO: host test gets segfault. debug*/

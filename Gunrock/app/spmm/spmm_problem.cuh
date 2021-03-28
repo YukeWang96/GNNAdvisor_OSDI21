@@ -92,7 +92,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
      * \return    cudaError_t Error message(s), if any
      */
     cudaError_t Release(util::Location target = util::LOCATION_ALL) {
-      util::PrintMsg("spmm probem Release", 1);
+      // util::PrintMsg("spmm probem Release", 1);
       cudaError_t retval = cudaSuccess;
       if (target & util::DEVICE) GUARD_CU(util::SetDevice(this->gpu_idx));
 
@@ -123,7 +123,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
                      util::Location target = util::DEVICE,
                      ProblemFlag flag = Problem_None) {
       cudaError_t retval = cudaSuccess;
-      util::PrintMsg("SPMM probem init", 1);
+      // util::PrintMsg("SPMM probem init", 1);
 
       GUARD_CU(BaseDataSlice::Init(sub_graph, num_gpus, gpu_idx, target, flag));
       GUARD_CU(input.Allocate(sub_graph.nodes * feature_len, target));
@@ -163,7 +163,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
      * \return    cudaError_t Error message(s), if any
      */
     cudaError_t Reset(util::Location target = util::DEVICE) {
-      util::PrintMsg("spmm probem Reset", 1);
+      // util::PrintMsg("spmm probem Reset", 1);
       cudaError_t retval = cudaSuccess;
       SizeT nodes = this->sub_graph->nodes;
 
@@ -224,7 +224,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
    * \return    cudaError_t Error message(s), if any
    */
   cudaError_t Release(util::Location target = util::LOCATION_ALL) {
-    util::PrintMsg("spmm probem Release", 1);
+    // util::PrintMsg("spmm probem Release", 1);
     cudaError_t retval = cudaSuccess;
     if (data_slices == NULL) return retval;
     for (int i = 0; i < this->num_gpus; i++)
@@ -255,7 +255,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
   cudaError_t Extract(ValueT *h_output, 
                       // VertexT *h_preds = NULL,
                       util::Location target = util::DEVICE) {
-      util::PrintMsg("spmm probem Extract", 1);
+      // util::PrintMsg("spmm probem Extract", 1);
     cudaError_t retval = cudaSuccess;
     SizeT nodes = this->org_graph->nodes;
     auto &data_slice = data_slices[0][0];
@@ -266,7 +266,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
         },
         ((uint64_t)nodes) * data_slice.feature_len, util::HOST));
     // Set device
-    util::PrintMsg("spmm probem Extract over", 1);
+    // util::PrintMsg("spmm probem Extract over", 1);
     return retval;
   }
 
@@ -307,7 +307,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
    * \return    cudaError_t Error message(s), if any
    */
   cudaError_t Init(GraphT &graph, util::Location target = util::DEVICE) {
-      util::PrintMsg("spmm probem Init2", 1);
+      // util::PrintMsg("spmm probem Init2", 1);
     cudaError_t retval = cudaSuccess;
     GUARD_CU(BaseProblem::Init(graph, target));
     data_slices = new util::Array1D<SizeT, DataSlice>[this->num_gpus];
@@ -342,7 +342,7 @@ struct Problem : ProblemBase<_GraphT, _FLAG> {
    */
   cudaError_t Reset(//VertexT src,
    util::Location target = util::DEVICE) {
-      util::PrintMsg("spmm probem reset2", 1);
+      // util::PrintMsg("spmm probem reset2", 1);
     cudaError_t retval = cudaSuccess;
 
     for (int gpu = 0; gpu < this->num_gpus; ++gpu) {

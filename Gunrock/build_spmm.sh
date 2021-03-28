@@ -1,3 +1,4 @@
+rm spmm
 rm -rf gunrock/
 # git submodule add git@github.com:gunrock/gunrock.git
 git submodule init

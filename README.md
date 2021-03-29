@@ -67,29 +67,35 @@ pip install torch-geometric
 > + **GCN (2-layer with 16 hidden dimension)**
 > + **GIN (5-layer with 64 hidden dimension)**
 + **Datasets**.
-> **Type I**:
+> + **Type I**:
 > `citeseer, cora, pubmed, ppi`
 
-> **Type II**:
+> + **Type II**:
 > `PROTEINS_full, OVCAR-8H, Yeast, DD, TWITTER-Real-Graph-Partial, SW-620H`
 
-> **Type III**:
+> + **Type III**:
 >`amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
 
-+ Running **DGL** baseline on GNN training.
++ **Running **DGL** baseline on GNN training**.
 > +  Go to **`dgl_baseline/`** directory
 > +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
 > + `./0_bench.py| tee run_dgl.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization.
 
-+ Running **PyG** baseline on GNN training.
++ **Running **PyG** baseline on GNN training**.
 > +  Go to **`pyg_baseline/`** directory;
 > + Pass the `--model` parameter in `pyg_main.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
 > + `./0_bench.py| tee run_pyg.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis.
 
++ **Running **Gunrock** for single SpMM (neighbor aggregation) kernel**.
+> + We measure the single SpMM kernel performance with Gunrock (Note that based on most reviewers' feedback directly end-to-end inference comparison with Gunrock on sampled GraphSAGE model is not fair, therfore, we decide to compare our single SpMM kernel with Gunrock SpMM kernel).
+> + Go to `Gunrock/` directory then call `git submodule init && git submodule update` to pull the `Gunrock` repo.
+> + Download the `.mtx` dataset for Gunrock from [here](), then uncompress the `.tar.gz` file using `tar -zxvf *.tar.gz`.
+> + Under `Gunrock/` call `./build_spmm.sh` to build the Gunrock spmm kernel. (it may take for a while for complete).
+> + Then call `./0_bench.py` for profile `spmm`. The instruction to run single neighbor aggregation kernel for GNNAdvisor can be found below by specifying an command line option.
 
-+ Running GNNAdvisor 
++ **Running GNNAdvisor**
 > +  Go to **`GNNAdvisor/`** directory 
 > + `./0_bench.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_GNNA.log` to `run_GNNA.csv` for ease of analysis.
@@ -110,3 +116,10 @@ pip install torch-geometric
 >> + `--verbose_mode`: If this flag is `True`, it will print out all the details of configuration for running the experiments.
 
 **Note** that 1) accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 
+
++ **Running GNNAdvisor-related Studies**
+> + `./s7-4_1_neighbor_partitioning.py` for neighbor partitioning study in Section 7.4.
+> + `./s7-4_2_dimension_partitiong.py` for dimension partitioning study in Section 7.4.
+> + `./s7-4_3_node_renumbering.py` for node renumbering study in Section 7.4.
+> + `./s7-5_1_hidden_dimension.py` for hidden dimension study in Section 7.5.
+> + You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis.

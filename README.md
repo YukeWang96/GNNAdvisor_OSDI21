@@ -69,10 +69,8 @@ pip install torch-geometric
 + **Datasets**.
 > + **Type I**:
 > `citeseer, cora, pubmed, ppi`
-
 > + **Type II**:
 > `PROTEINS_full, OVCAR-8H, Yeast, DD, TWITTER-Real-Graph-Partial, SW-620H`
-
 > + **Type III**:
 >`amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
 
@@ -97,7 +95,7 @@ pip install torch-geometric
 
 + **Running GNNAdvisor**
 > +  Go to **`GNNAdvisor/`** directory 
-> + `./0_bench.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. Note that there are also several options (such as run_GCN, enable_rabbit) for configuring a profiling.
 > + `./1_log2csv.py` to convert the `run_GNNA.log` to `run_GNNA.csv` for ease of analysis.
 > +  Stand alone running with specified parameters.
 >> + `--dataset`: the name of the dataset.
@@ -106,7 +104,7 @@ pip install torch-geometric
 >> + `--classes`: the number of output classes, default: 22.
 >> + `--partSize`: the size of neighbor-group, default: 32. 
 >> + `--dimWorker`: the number of worker threads (**<=32**), default: 32.
->> + `--warpPerBlock`: the number of warp per block, default: 8, recommended: GCN: 8, GIN: 2.
+>> + `--warpPerBlock`: the number of warp per block, default: 8, recommended: GCN: (8), GIN: (2 for citeseer, 8 for remaining datasets).
 >> + `--sharedMem`: the shared memory size for each Stream-Multiprocessor on NVIDIA GPUs. A reference for different GPU architecture and its shared memory size can be found at [here](https://en.wikipedia.org/wiki/CUDA), default 96KB for RTX3090.
 >> + `--model`: `gcn` or `gin`. The evaluated example GCN model has 2 layers with 16 hidden dimensions, while the example GIN model has 5 layers with 64 hidden dimensions.
 >> + `--num_epoches`: the number of epoches for training, default: 200.
@@ -114,6 +112,7 @@ pip install torch-geometric
 >> + `--enable_rabbit`: If this flag is `True`, it will be possible to use the rabbit-reordering routine. Otherwise, it will skip rabbit reordering for both **auto** and **manual** mode.
 >> + `--manual_mode`: If this flag is `True`, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. **Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.** In manual mode the value of `partSize`, `dimWorker` and `dimWorker` will be applied to both input and hidden layer.
 >> + `--verbose_mode`: If this flag is `True`, it will print out all the details of configuration for running the experiments.
+>> + `--single_spmm`: If this flag is `True`, it will only profile a single spmm for 200 rounds. with the provided `--dim` as the `D` in `NxNxD`, where `N` is the number of nodes in a graph. 
 
 **Note** that 1) accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 
 

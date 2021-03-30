@@ -3,11 +3,29 @@
 ## 1. Getting Started Instructions.
 + **Hardware**: 
 > + `CPU x86_64` with host memory > 8GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
-> + `NVIDIA GPU (arch>sm_60)` with devcie memory > 12GB. (Tested on NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`) and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`).
+> + `NVIDIA GPU (arch>sm_60)` with devcie memory > 12GB. (Support NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`), [**RTX3070**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3070.c3674) (`sm_86`), and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`). Note that upon creating this artifact, we mainly evaluate our design on **RTX3090**.
+
 + **OS & Compiler**: 
 > + `Ubuntu 16.04+`
 > + `gcc > 7.5`
-> + `nvcc > 11.1`
+> + `CUDA > 11.0` and `nvcc > 11.0`
+
++ **Important Files/Directories**
+> + `dgl_baseline/`: contains latest DGL implementation and python benchmark and result analysis scripts. 
+> + `pyg_baseline/`: contains latest PyG implementation and python benchmark and result analysis scripts. 
+> + `Gunrock/`: contains latest Gunrock implementation of SpMM kernel for neighbor aggregation and python benchmark script. 
+> + `Docker/`: contains docker file for setting up the compilation and running environment.
+> + `rabbit_module/`: contains the source of rabbit reordering and python binding.
+> + `GNNAdvisor/`: the directory for GNNAdvisor and Python benchmark and result analysis scripts. 
+>> + `GNNConv/`: the C++/CUDA source code (`GNNAdvisor_kernel.cu`) for GNN sparse computation kernel, python binding of kernels (`GNNAdvisor.cpp`) and python `setup.py` installation script.
+>> + `gnn_conv.py`: the Python script for defining the GNN convolution at high-level.
+>> + `param.py`: the Python script for defining the input-level properties and different rules for handling this properties to generate performance-related configuration, such as `warpPerBlock`.
+>> + `dataset.py`: the Python loader for datasets from either plain `.txt` edgeList files or binary `.npy` file.
+>> + `./s7-4_1_neighbor_partitioning.py`, `./s7-4_2_dimension_partitiong.py`, `./s7-4_3_node_renumbering.py` and `./s7-5_1_hidden_dimension.py` are for running additional studies in our paper.
+> + `unitest.py`: the Python script for verifying our basic sparse kernel.
+> + `osdi-ae-graphs/` containts the `.npy` files for all three Types of datasets.
+> + `osdi-ae-graphs-mtx/` containts the plain `.mtx` files for the Type III datasets for Gunrock SpMM kernel evaluation. 
+
 
 ### **Environment Setup** 
 There are two ways to setup the environment of GNNAdvisor and baselines.
@@ -89,7 +107,7 @@ pip install torch-geometric
 + **Running **Gunrock** for single SpMM (neighbor aggregation) kernel**.
 > + We measure the single SpMM kernel performance with Gunrock (Note that based on most reviewers' feedback directly end-to-end inference comparison with Gunrock on sampled GraphSAGE model is not fair, therfore, we decide to compare our single SpMM kernel with Gunrock SpMM kernel).
 > + Go to `Gunrock/` directory then call `git submodule init && git submodule update` to pull the `Gunrock` repo.
-> + Download the `.mtx` dataset for Gunrock from [here](), then uncompress the `.tar.gz` file using `tar -zxvf *.tar.gz`.
+> + Download the `.mtx` dataset of Type III graphs for Gunrock from [here](https://drive.google.com/file/d/174tuObwEqm-rcV3Y7uL1JkJNrHFblLj9/view?usp=sharing), then uncompress the `.tar.gz` file using `tar -zxvf osdi-ae-graphs-mtx.tar.gz`.
 > + Under `Gunrock/` call `./build_spmm.sh` to build the Gunrock spmm kernel. (it may take for a while for complete).
 > + Then call `./0_bench.py` for profile `spmm`. The instruction to run single neighbor aggregation kernel for GNNAdvisor can be found below by specifying an command line option.
 
@@ -114,11 +132,18 @@ pip install torch-geometric
 >> + `--verbose_mode`: If this flag is `True`, it will print out all the details of configuration for running the experiments.
 >> + `--single_spmm`: If this flag is `True`, it will only profile a single spmm for 200 rounds. with the provided `--dim` as the `D` in `NxNxD`, where `N` is the number of nodes in a graph. 
 
-**Note** that 1) accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`; 2) the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 
+**Note**
+> + Accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`
+> + We focus on the training evaluation of the GNNs, and the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 
+> + Since the paper draft submission and the creation of this artifact, DGL has update several of its kernel library (from v0.52 to v0.60). In this comparion we focus on the latest DGL version (v0.60). Based on our profiling on RTX3090, our design would show minor speedup on the simple GCN model (2-layer and 16 hidden dimension), but show more evident speedup on more complicated GIN model (5-layer and 64 hidden dimension), which can still demonstrate the effectiveness of our optimizations. Our observation is that on small Type I graphs, our frameworks achieve for both GCN and GIN. On larger Type II and Type III datasets, our GIN model implementation would show more evident speedups.  
 
 + **Running GNNAdvisor-related Studies**
 > + `./s7-4_1_neighbor_partitioning.py` for neighbor partitioning study in Section 7.4.
 > + `./s7-4_2_dimension_partitiong.py` for dimension partitioning study in Section 7.4.
 > + `./s7-4_3_node_renumbering.py` for node renumbering study in Section 7.4.
 > + `./s7-5_1_hidden_dimension.py` for hidden dimension study in Section 7.5.
-> + You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis.
+> + (**Recommended**) You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis. You expected to get several `.csv` files looks like these
+>> + For `neighbor_partitioning`
+>> + For `dimension_partitiong`
+>> + For `node_renumbering`
+>> + For `hidden_dimension`

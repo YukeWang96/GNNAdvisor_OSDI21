@@ -2,7 +2,7 @@
 
 ## 1. Getting Started Instructions.
 + **Hardware**: 
-> + `CPU x86_64` with host memory > 8GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
+> + `CPU x86_64` with host memory > 32GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
 > + `NVIDIA GPU (arch>sm_60)` with devcie memory > 12GB. (Support NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`), [**RTX3070**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3070.c3674) (`sm_86`), and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`). Note that upon creating this artifact, we mainly evaluate our design on **RTX3090**.
 
 + **OS & Compiler**: 
@@ -106,7 +106,7 @@ pip install torch-geometric
 
 + **Running **Gunrock** for single SpMM (neighbor aggregation) kernel**.
 > + We measure the single SpMM kernel performance with Gunrock (Note that based on most reviewers' feedback directly end-to-end inference comparison with Gunrock on sampled GraphSAGE model is not fair, therfore, we decide to compare our single SpMM kernel with Gunrock SpMM kernel).
-> + Go to `Gunrock/` directory then call `git submodule init && git submodule update` to pull the `Gunrock` repo.
+> + Go to `Gunrock/` directory then call `git submodule init && git submodule update` to pull `Gunrock` repo.
 > + Download the `.mtx` dataset of Type III graphs for Gunrock from [here](https://drive.google.com/file/d/174tuObwEqm-rcV3Y7uL1JkJNrHFblLj9/view?usp=sharing), then uncompress the `.tar.gz` file using `tar -zxvf osdi-ae-graphs-mtx.tar.gz`.
 > + Under `Gunrock/` call `./build_spmm.sh` to build the Gunrock spmm kernel. (it may take for a while for complete).
 > + Then call `./0_bench.py` for profile `spmm`. The instruction to run single neighbor aggregation kernel for GNNAdvisor can be found below by specifying an command line option.
@@ -142,8 +142,12 @@ pip install torch-geometric
 > + `./s7-4_2_dimension_partitiong.py` for dimension partitioning study in Section 7.4.
 > + `./s7-4_3_node_renumbering.py` for node renumbering study in Section 7.4.
 > + `./s7-5_1_hidden_dimension.py` for hidden dimension study in Section 7.5.
-> + (**Recommended**) You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis. You expected to get several `.csv` files looks like these
+> + (**Recommended**) You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis. You expected to get several `.csv` files looks like these (open with the [Edit CSV](https://marketplace.visualstudio.com/items?itemName=janisdd.vscode-edit-csv) plugin for vscode)
 >> + For `neighbor_partitioning`
+![Neighbor Partitioning](images/neighborPartition.png "Title")
 >> + For `dimension_partitiong`
->> + For `node_renumbering`
+![Dimension Partitioning](images/dimensionWorker.png "Title")
+>> + For `node_renumbering` <br/>
+ <img src="images/nodeReordering.png" width="200" height="50">
 >> + For `hidden_dimension`
+![Dimension Partitioning](images/hiddemDimension.png "Title")

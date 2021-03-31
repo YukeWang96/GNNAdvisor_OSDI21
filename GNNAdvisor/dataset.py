@@ -105,9 +105,9 @@ class custom_dataset(torch.nn.Module):
             print("# avg_edgeSpan: {}".format(int(self.avg_edgeSpan)))
 
         # Build graph CSR.
-        val = [1] * self.num_edges
+        self.val = [1] * self.num_edges
         start = time.perf_counter()
-        scipy_coo = coo_matrix((val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
+        scipy_coo = coo_matrix((self.val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
         scipy_csr = scipy_coo.tocsr()
         build_csr = time.perf_counter() - start
 

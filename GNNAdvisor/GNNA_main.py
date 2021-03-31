@@ -121,7 +121,7 @@ if verify_spmm:
                         inputInfo.partPtr, inputInfo.part2Node, \
                         partSize, dimWorker, warpPerBlock)
     valid.compute()
-    valid.reference()
+    valid.reference(dataset.edge_index, dataset.val, dataset.num_nodes)
     valid.compare()
     sys.exit(0)
 

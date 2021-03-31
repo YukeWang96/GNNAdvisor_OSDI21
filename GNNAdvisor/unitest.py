@@ -4,6 +4,8 @@ import GNNAdvisor as GNNA
 import sys
 import time
 from tqdm import *
+from torch_sparse import spmm
+
 
 class Verification(object):
     def __init__(self, dim, row_pointers, column_index, degrees, partPtr, part2Node, \
@@ -29,20 +31,23 @@ class Verification(object):
         self.result = None
         self.result_ref = None
         
-    def reference(self):
+    def reference(self, column_index, val, num_nodes):
         '''
         Compute reference SpMM (neighbor aggregation)
         result on CPU.
         '''
         print("# Compute reference on CPU")
-        self.result_ref = torch.zeros_like(self.X)
-
-        for i in range(len(self.row_pointers) - 1):
-            for eidx in range(self.row_pointers[i], self.row_pointers[i+1]):
-                eid = self.column_index[eidx]
-                for d in range(len(self.result_ref[0])):
-                    self.result_ref[i][d] +=  self.X[eid][d]
-        print(self.result_ref)
+        # self.result_ref = torch.zeros_like(self.X)
+        # sparse_A = torch.sparse_coo_tensor(column_index, val, [num_nodes, num_nodes])
+        self.result_ref = spmm(torch.tensor(column_index,  dtype=torch.int64), torch.FloatTensor(val), num_nodes, num_nodes, self.X)
+        # self.result_ref = torch.sspaddmm(sparse_A, self.X)
+        # for i in range(len(self.row_pointers) - 1):
+        #     for eidx in range(self.row_pointers[i], self.row_pointers[i+1]):
+        #         eid = self.column_index[eidx]
+        #         for d in range(len(self.result_ref[0])):
+        #             self.result_ref[i][d] +=  self.X[eid][d]
+        # print(self.result_ref)
+        # exit(0)
 
     def compute(self):
         '''
@@ -60,10 +65,12 @@ class Verification(object):
         if self.result_ref is None or self.result is None:
             raise ValueError("MUST compute result and result reference (CPU) first!!")
 
-        if torch.all(torch.eq(self.result_ref, self.result.cpu())):
-            print("Verification PASSED")
+        equs = torch.eq(self.result_ref, self.result.cpu())
+        correct  = torch.sum(equs)
+        if (1 - correct/self.result_ref.numel()) < 1e-4:
+            print("# Verification PASSED")
         else:
-            print("Verification FAILED")
+            print("# Verification FAILED")
 
     def profile_spmm(self, round=200):
         X = self.X.cuda()

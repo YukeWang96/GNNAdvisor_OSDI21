@@ -152,5 +152,6 @@ pip install torch-geometric
 ![Dimension Partitioning](images/dimensionWorker.png)
 >> + For `hidden_dimension`.
 ![Dimension Partitioning](images/hiddemDimension.png)
->> + For `node_renumbering`. <br/>
->> <img src="images/nodeReordering.png" width="200" height="60" style="vertical-align:middle;margin:0px 10px">
+>> + For `node_renumbering`.<br/>
+![Dimension Partitioning](images/nodeRenumbering.png)
+<!-- >> <img src="images/nodeReordering.png" width="200" height="60" style="vertical-align:middle;margin:0px 10px"> -->

@@ -1,0 +1,165 @@
+Loading Matrix-market coordinate-formatted graph ...
+  Reading meta data from ../osdi-ae-graphs-mtx/amazon0505.mtx.meta
+  Reading edge lists from ../osdi-ae-graphs-mtx/amazon0505.mtx.coo_edge_pairs
+Reading from ../osdi-ae-graphs-mtx/amazon0505.mtx.coo_edge_pairs, typeId = 262, targetId = 262, length = 4878874
+  Reading edge values from ../osdi-ae-graphs-mtx/amazon0505.mtx.coo_edge_values
+Reading from ../osdi-ae-graphs-mtx/amazon0505.mtx.coo_edge_values, typeId = 18, targetId = 18, length = 4878874
+  Substracting 1 from node Ids...
+  graph loaded as COO in 0.204341s.
+Converting 410236 vertices, 4878874 directed edges ( ordered tuples) to CSR format...Done (0s).
+Converting 410236 vertices, 4878874 directed edges (unordered tuples) to CSC format...Done (1s).
+Degree Histogram (410236 vertices, 4878874 edges):
+    Degree 0: 0 (0.000000 %)
+    Degree 2^0: 19410 (4.731423 %)
+    Degree 2^1: 33048 (8.055851 %)
+    Degree 2^2: 54142 (13.197769 %)
+    Degree 2^3: 236591 (57.671925 %)
+    Degree 2^4: 53965 (13.154623 %)
+    Degree 2^5: 10129 (2.469067 %)
+    Degree 2^6: 2270 (0.553340 %)
+    Degree 2^7: 542 (0.132119 %)
+    Degree 2^8: 121 (0.029495 %)
+    Degree 2^9: 13 (0.003169 %)
+    Degree 2^10: 2 (0.000488 %)
+    Degree 2^11: 3 (0.000731 %)
+
+==============================================
+64bit-VertexT=false 64bit-SizeT=false 64bit-ValueT=false undirected=false advance-mode=LB
+feature len 16Using advance mode LB
+Using filter mode CULL
+__________________________
+--------------------------
+Run 199 elapsed: 4.065037 ms, #iterations = 1
+=======================
+
+
+Loading Matrix-market coordinate-formatted graph ...
+  Reading meta data from ../osdi-ae-graphs-mtx/artist.mtx.meta
+  Reading edge lists from ../osdi-ae-graphs-mtx/artist.mtx.coo_edge_pairs
+Reading from ../osdi-ae-graphs-mtx/artist.mtx.coo_edge_pairs, typeId = 262, targetId = 262, length = 1638396
+  Reading edge values from ../osdi-ae-graphs-mtx/artist.mtx.coo_edge_values
+Reading from ../osdi-ae-graphs-mtx/artist.mtx.coo_edge_values, typeId = 18, targetId = 18, length = 1638396
+  Substracting 1 from node Ids...
+  Removed 216 duplicate edges and self circles.
+  graph loaded as COO in 0.080873s.
+Converting 50515 vertices, 1638180 directed edges ( ordered tuples) to CSR format...Done (0s).
+Converting 50515 vertices, 1638180 directed edges (unordered tuples) to CSC format...Done (0s).
+Degree Histogram (50515 vertices, 1638180 edges):
+    Degree 0: 0 (0.000000 %)
+    Degree 2^0: 3124 (6.184302 %)
+    Degree 2^1: 5919 (11.717312 %)
+    Degree 2^2: 8312 (16.454518 %)
+    Degree 2^3: 9938 (19.673364 %)
+    Degree 2^4: 9500 (18.806295 %)
+    Degree 2^5: 7242 (14.336336 %)
+    Degree 2^6: 4206 (8.326240 %)
+    Degree 2^7: 1649 (3.264377 %)
+    Degree 2^8: 478 (0.946254 %)
+    Degree 2^9: 126 (0.249431 %)
+    Degree 2^10: 21 (0.041572 %)
+
+==============================================
+64bit-VertexT=false 64bit-SizeT=false 64bit-ValueT=false undirected=false advance-mode=LB
+feature len 16Using advance mode LB
+Using filter mode CULL
+__________________________
+--------------------------
+Run 199 elapsed: 0.638008 ms, #iterations = 1
+=======================
+
+
+Loading Matrix-market coordinate-formatted graph ...
+  Reading meta data from ../osdi-ae-graphs-mtx/com-amazon.mtx.meta
+  Reading edge lists from ../osdi-ae-graphs-mtx/com-amazon.mtx.coo_edge_pairs
+Reading from ../osdi-ae-graphs-mtx/com-amazon.mtx.coo_edge_pairs, typeId = 262, targetId = 262, length = 1851744
+  Reading edge values from ../osdi-ae-graphs-mtx/com-amazon.mtx.coo_edge_values
+Reading from ../osdi-ae-graphs-mtx/com-amazon.mtx.coo_edge_values, typeId = 18, targetId = 18, length = 1851744
+  Substracting 1 from node Ids...
+  graph loaded as COO in 0.066990s.
+Converting 548551 vertices, 1851744 directed edges ( ordered tuples) to CSR format...Done (0s).
+Converting 548551 vertices, 1851744 directed edges (unordered tuples) to CSC format...Done (1s).
+Degree Histogram (548551 vertices, 1851744 edges):
+    Degree 0: 213688 (38.954992 %)
+    Degree 2^0: 25709 (4.686711 %)
+    Degree 2^1: 88368 (16.109350 %)
+    Degree 2^2: 163175 (29.746550 %)
+    Degree 2^3: 44852 (8.176450 %)
+    Degree 2^4: 10487 (1.911764 %)
+    Degree 2^5: 1946 (0.354753 %)
+    Degree 2^6: 285 (0.051955 %)
+    Degree 2^7: 38 (0.006927 %)
+    Degree 2^8: 2 (0.000365 %)
+    Degree 2^9: 1 (0.000182 %)
+
+==============================================
+64bit-VertexT=false 64bit-SizeT=false 64bit-ValueT=false undirected=false advance-mode=LB
+feature len 16Using advance mode LB
+Using filter mode CULL
+__________________________
+--------------------------
+Run 199 elapsed: 4.019976 ms, #iterations = 1
+=======================
+
+
+Loading Matrix-market coordinate-formatted graph ...
+  Reading meta data from ../osdi-ae-graphs-mtx/soc-BlogCatalog.mtx.meta
+  Reading edge lists from ../osdi-ae-graphs-mtx/soc-BlogCatalog.mtx.coo_edge_pairs
+Reading from ../osdi-ae-graphs-mtx/soc-BlogCatalog.mtx.coo_edge_pairs, typeId = 262, targetId = 262, length = 2093195
+  Reading edge values from ../osdi-ae-graphs-mtx/soc-BlogCatalog.mtx.coo_edge_values
+Reading from ../osdi-ae-graphs-mtx/soc-BlogCatalog.mtx.coo_edge_values, typeId = 18, targetId = 18, length = 2093195
+  Substracting 1 from node Ids...
+  graph loaded as COO in 0.075185s.
+Converting 88784 vertices, 2093195 directed edges ( ordered tuples) to CSR format...Done (0s).
+Converting 88784 vertices, 2093195 directed edges (unordered tuples) to CSC format...Done (0s).
+Degree Histogram (88784 vertices, 2093195 edges):
+    Degree 0: 113 (0.127275 %)
+    Degree 2^0: 20491 (23.079609 %)
+    Degree 2^1: 17586 (19.807623 %)
+    Degree 2^2: 14092 (15.872229 %)
+    Degree 2^3: 11275 (12.699360 %)
+    Degree 2^4: 9198 (10.359975 %)
+    Degree 2^5: 7376 (8.307803 %)
+    Degree 2^6: 5162 (5.814111 %)
+    Degree 2^7: 2553 (2.875518 %)
+    Degree 2^8: 750 (0.844747 %)
+    Degree 2^9: 172 (0.193729 %)
+    Degree 2^10: 14 (0.015769 %)
+    Degree 2^11: 2 (0.002253 %)
+
+==============================================
+64bit-VertexT=false 64bit-SizeT=false 64bit-ValueT=false undirected=false advance-mode=LB
+feature len 16Using advance mode LB
+Using filter mode CULL
+__________________________
+--------------------------
+Run 199 elapsed: 1.050949 ms, #iterations = 1
+=======================
+
+
+Loading Matrix-market coordinate-formatted graph ...
+  Reading meta data from ../osdi-ae-graphs-mtx/amazon0601.mtx.meta
+  Reading edge lists from ../osdi-ae-graphs-mtx/amazon0601.mtx.coo_edge_pairs
+Reading from ../osdi-ae-graphs-mtx/amazon0601.mtx.coo_edge_pairs, typeId = 262, targetId = 262, length = 3387388
+  Reading edge values from ../osdi-ae-graphs-mtx/amazon0601.mtx.coo_edge_values
+Reading from ../osdi-ae-graphs-mtx/amazon0601.mtx.coo_edge_values, typeId = 18, targetId = 18, length = 3387388
+  Substracting 1 from node Ids...
+  graph loaded as COO in 0.124502s.
+Converting 403394 vertices, 3387388 directed edges ( ordered tuples) to CSR format...Done (1s).
+Converting 403394 vertices, 3387388 directed edges (unordered tuples) to CSC format...Done (0s).
+Degree Histogram (403394 vertices, 3387388 edges):
+    Degree 0: 955 (0.236741 %)
+    Degree 2^0: 12121 (3.004755 %)
+    Degree 2^1: 32200 (7.982270 %)
+    Degree 2^2: 54343 (13.471445 %)
+    Degree 2^3: 303775 (75.304789 %)
+
+==============================================
+64bit-VertexT=false 64bit-SizeT=false 64bit-ValueT=false undirected=false advance-mode=LB
+feature len 16Using advance mode LB
+Using filter mode CULL
+__________________________
+--------------------------
+Run 199 elapsed: 3.027916 ms, #iterations = 1
+=======================
+
+

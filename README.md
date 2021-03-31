@@ -143,11 +143,11 @@ pip install torch-geometric
 > + `./s7-4_3_node_renumbering.py` for node renumbering study in Section 7.4.
 > + `./s7-5_1_hidden_dimension.py` for hidden dimension study in Section 7.5.
 > + (**Recommended**) You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis. You expected to get several `.csv` files looks like these (open with the [Edit CSV](https://marketplace.visualstudio.com/items?itemName=janisdd.vscode-edit-csv) plugin for vscode)
->> + For `neighbor_partitioning`
+>> + For `neighbor_partitioning`.
 ![Neighbor Partitioning](images/neighborPartition.png "Title")
->> + For `dimension_partitiong`
+>> + For `dimension_partitiong`.
 ![Dimension Partitioning](images/dimensionWorker.png "Title")
->> + For `node_renumbering` <br/>
+>> + For `node_renumbering`. <br/>
  <img src="images/nodeReordering.png" width="200" height="50">
->> + For `hidden_dimension`
+>> + For `hidden_dimension`.
 ![Dimension Partitioning](images/hiddemDimension.png "Title")

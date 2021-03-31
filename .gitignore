@@ -12,3 +12,5 @@ osdi-ae-graphs/*
 *.egg-info
 *.vscode
 *.tar.gz
+osdi-ae-graphs-mtx/*
+osdi-ae-graphs-mtx.tar.gz

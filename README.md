@@ -115,6 +115,7 @@ pip install torch-geometric
 > +  Go to **`GNNAdvisor/`** directory 
 > + `./0_bench.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. Note that there are also several options (such as run_GCN, enable_rabbit) for configuring a profiling.
 > + `./1_log2csv.py` to convert the `run_GNNA.log` to `run_GNNA.csv` for ease of analysis.
+> + `./3_single_spmm_bench.py` to profile a single SpMM kernel to compare with Gunrock SpMM kernel discussed above.
 > +  Stand alone running with specified parameters.
 >> + `--dataset`: the name of the dataset.
 >> + `--dim`: the size of input embedding dimension, default: 96.
@@ -131,6 +132,7 @@ pip install torch-geometric
 >> + `--manual_mode`: If this flag is `True`, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. **Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.** In manual mode the value of `partSize`, `dimWorker` and `dimWorker` will be applied to both input and hidden layer.
 >> + `--verbose_mode`: If this flag is `True`, it will print out all the details of configuration for running the experiments.
 >> + `--single_spmm`: If this flag is `True`, it will only profile a single spmm for 200 rounds. with the provided `--dim` as the `D` in `NxNxD`, where `N` is the number of nodes in a graph. 
+>> + `--verify_spmm`: If this flag is `True`, it will check the correctness of our SpMM kernel against the CPU reference result. Run `./4_verifying.py` for verifying several citation network for neighbor aggregation correctness against CPU reference result.
 
 **Note**
 > + Accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`
@@ -138,6 +140,7 @@ pip install torch-geometric
 > + Since the paper draft submission and the creation of this artifact, DGL has update several of its kernel library (from v0.52 to v0.60). In this comparion we focus on the latest DGL version (v0.60). Based on our profiling on RTX3090, our design would show minor speedup on the simple GCN model (2-layer and 16 hidden dimension), but show more evident speedup on more complicated GIN model (5-layer and 64 hidden dimension), which can still demonstrate the effectiveness of our optimizations. Our observation is that on small Type I graphs, our frameworks achieve for both GCN and GIN. On larger Type II and Type III datasets, our GIN model implementation would show more evident speedups.  
 
 + **Running GNNAdvisor-related Studies**
+
 > + `./s7-4_1_neighbor_partitioning.py` for neighbor partitioning study in Section 7.4.
 > + `./s7-4_2_dimension_partitiong.py` for dimension partitioning study in Section 7.4.
 > + `./s7-4_3_node_renumbering.py` for node renumbering study in Section 7.4.

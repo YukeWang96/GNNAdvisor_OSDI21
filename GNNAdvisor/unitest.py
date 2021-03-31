@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from typing import Sized
 import torch
 import GNNAdvisor as GNNA
 import sys
@@ -31,39 +30,40 @@ class Verification(object):
         self.result_ref = None
         
     def reference(self):
+        '''
+        Compute reference SpMM (neighbor aggregation)
+        result on CPU.
+        '''
         print("# Compute reference on CPU")
-        tmp = torch.mm(self.X, self.W)
-        self.result_ref = torch.zeros_like(tmp)
+        self.result_ref = torch.zeros_like(self.X)
 
         for i in range(len(self.row_pointers) - 1):
             for eidx in range(self.row_pointers[i], self.row_pointers[i+1]):
-                for d in range(len(tmp[0])):
-                    eid = self.column_index[eidx]
-                    self.result_ref[i][d] += tmp[eid][d]
-        # print(self.result_ref)
+                eid = self.column_index[eidx]
+                for d in range(len(self.result_ref[0])):
+                    self.result_ref[i][d] +=  self.X[eid][d]
+        print(self.result_ref)
 
     def compute(self):
-        print("# Compute on GPU")
+        '''
+        Compute SpMM (neighbor aggregation)
+        result on GPU.
+        '''
+        print("# Compute result on GPU")
         X = self.X.cuda()
-        # W = self.W.cuda()
-        # print(X.size())
-        # print(self.row_pointers)
-        # print(self.column_index)
-        # print(self.partPtr)
-        # print(self.part2Node)
-        # self.result = GNNA.forward(X, W, self.row_pointers, self.column_index, self.degrees,\
-                                    # self.partPtr, self.part2Node, self.partSize, self.dimWorker, self.warpPerBlock)[0]
         self.result = GNNA.SAG(X, self.row_pointers, self.column_index, self.degrees,\
                                     self.partPtr, self.part2Node, self.partSize, self.dimWorker, self.warpPerBlock)
         # print(self.result)
-        print("Verfication Compute Finished")
 
 
     def compare(self):
         if self.result_ref is None or self.result is None:
-            raise ValueError("MUST compute result and result reference first!!")
-        assert torch.all(torch.eq(self.result_ref, self.result.cpu()))
-        print("PASS")
+            raise ValueError("MUST compute result and result reference (CPU) first!!")
+
+        if torch.all(torch.eq(self.result_ref, self.result.cpu())):
+            print("Verification PASSED")
+        else:
+            print("Verification FAILED")
 
     def profile_spmm(self, round=200):
         X = self.X.cuda()

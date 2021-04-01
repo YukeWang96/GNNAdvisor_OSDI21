@@ -95,13 +95,13 @@ pip install torch-geometric
 + **Running **DGL** baseline on GNN training**.
 > +  Go to **`dgl_baseline/`** directory
 > +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
-> + `./0_bench.py| tee run_dgl.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench_dgl.py| tee run_dgl.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization.
 
 + **Running **PyG** baseline on GNN training**.
 > +  Go to **`pyg_baseline/`** directory;
 > + Pass the `--model` parameter in `pyg_main.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
-> + `./0_bench.py| tee run_pyg.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+> + `./0_bench_pyg.py| tee run_pyg.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis.
 
 + **Running **Gunrock** for single SpMM (neighbor aggregation) kernel**.
@@ -109,11 +109,11 @@ pip install torch-geometric
 > + Go to `Gunrock/` directory then call `git submodule init && git submodule update` to pull `Gunrock` repo.
 > + Download the `.mtx` dataset of Type III graphs for Gunrock from [here](https://drive.google.com/file/d/174tuObwEqm-rcV3Y7uL1JkJNrHFblLj9/view?usp=sharing), then uncompress the `.tar.gz` file using `tar -zxvf osdi-ae-graphs-mtx.tar.gz`.
 > + Under `Gunrock/` call `./build_spmm.sh` to build the Gunrock spmm kernel. (it may take for a while for complete).
-> + Then call `./0_bench.py` for profile `spmm`. The instruction to run single neighbor aggregation kernel for GNNAdvisor can be found below by specifying an command line option.
+> + Then call `./0_bench_Gunrock.py` for profile `spmm`. The instruction to run single neighbor aggregation kernel for GNNAdvisor can be found below by specifying an command line option.
 
 + **Running GNNAdvisor**
 > +  Go to **`GNNAdvisor/`** directory 
-> + `./0_bench.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. Note that there are also several options (such as run_GCN, enable_rabbit) for configuring a profiling.
+> + `./0_bench_GNNA.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. Note that there are also several options (such as run_GCN, enable_rabbit) for configuring a profiling.
 > + `./1_log2csv.py` to convert the `run_GNNA.log` to `run_GNNA.csv` for ease of analysis.
 > + `./3_single_spmm_bench.py` to profile a single SpMM kernel to compare with Gunrock SpMM kernel discussed above.
 > +  Stand alone running with specified parameters.
@@ -154,4 +154,3 @@ pip install torch-geometric
 ![Dimension Partitioning](images/hiddemDimension.png)
 >> + For `node_renumbering`.<br/>
 ![Dimension Partitioning](images/nodeRenumbering.png)
-<!-- >> <img src="images/nodeReordering.png" width="200" height="60" style="vertical-align:middle;margin:0px 10px"> -->

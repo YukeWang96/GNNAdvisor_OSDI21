@@ -15,6 +15,8 @@
 > + `pyg_baseline/`: contains latest PyG implementation and python benchmark and result analysis scripts. 
 > + `Gunrock/`: contains latest Gunrock implementation of SpMM kernel for neighbor aggregation and python benchmark script. 
 > + `Docker/`: contains docker file for setting up the compilation and running environment.
+>> + `cu102/`: dockerfile for sm < 80, such as Quadro P6000 and Tesla V100.
+>> + `cu110/`: dockerfile for sm >= 80, such as RTX 3090.
 > + `rabbit_module/`: contains the source of rabbit reordering and python binding.
 > + `GNNAdvisor/`: the directory for GNNAdvisor and Python benchmark and result analysis scripts. 
 >> + `GNNConv/`: the C++/CUDA source code (`GNNAdvisor_kernel.cu`) for GNN sparse computation kernel, python binding of kernels (`GNNAdvisor.cpp`) and python `setup.py` installation script.

@@ -36,17 +36,8 @@ class Verification(object):
         result on CPU.
         '''
         print("# Compute reference on CPU")
-        # self.result_ref = torch.zeros_like(self.X)
-        # sparse_A = torch.sparse_coo_tensor(column_index, val, [num_nodes, num_nodes])
-        self.result_ref = spmm(torch.tensor(column_index,  dtype=torch.int64), torch.FloatTensor(val), num_nodes, num_nodes, self.X)
-        # self.result_ref = torch.sspaddmm(sparse_A, self.X)
-        # for i in range(len(self.row_pointers) - 1):
-        #     for eidx in range(self.row_pointers[i], self.row_pointers[i+1]):
-        #         eid = self.column_index[eidx]
-        #         for d in range(len(self.result_ref[0])):
-        #             self.result_ref[i][d] +=  self.X[eid][d]
-        # print(self.result_ref)
-        # exit(0)
+        self.result_ref = spmm(torch.tensor(column_index,  dtype=torch.int64), \
+                                torch.FloatTensor(val), num_nodes, num_nodes, self.X)
 
     def compute(self):
         '''

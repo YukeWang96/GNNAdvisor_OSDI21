@@ -12,8 +12,9 @@ git clone --recursive git@github.com:YukeWang96/OSDI21_AE.git
 
 + **OS & Compiler**: 
 > + `Ubuntu 16.04+`
-> + `gcc > 7.5`
-> + `CUDA > 11.0` and `nvcc > 11.0`
+> + `gcc >= 7.5`
+> + `cmake >= 3.14`
+> + `CUDA >= 11.0` and `nvcc >= 11.0`
 
 + **Important Files/Directories**
 > + `dgl_baseline/`: contains latest DGL implementation and python benchmark and result analysis scripts. 
@@ -44,7 +45,6 @@ There are two ways to setup the environment of GNNAdvisor and baselines.
 > + `install_pkg_sm86.py` for RTX3090 and RTX 3070.
 > + `install_pkg_sm70.py` for Tesla V100.
 > + `install_pkg_sm61.py` for Quadro P6000.
-<!-- e.g. for RTX3090/RTX3070 we will modify `install_pkg.sh` as** -->
 
 + To clean the building packages when exit docker, run `./clean_build.sh`, root access premission may required.  
 
@@ -106,17 +106,17 @@ pip install torch-geometric
 > + **Type III**:
 >`amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
 
-+ **Running **DGL** baseline on GNN training**.
++ **Running **DGL** baseline on GNN training (Figure 9)**.
 > +  Go to **`dgl_baseline/`** directory
-> +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
-> + `./0_bench_dgl.py| tee run_dgl.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization.
+> + `/0_run_gcn.sh` and `./0_run_gin.sh` to run DGL and generate `.csv` result for GCN and GIN, respectively. Or you can run seperate commands,
+>> + `./0_bench_dgl_gcn.py| tee run_dgl_gcn.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+>> + `./1_log2csv.py` to convert the `run_dgl_gcn.log` to `run_dgl_gcn.csv` for ease of visualization.
 
-+ **Running **PyG** baseline on GNN training**.
++ **Running **PyG** baseline on GNN training (Figure 10)**.
 > +  Go to **`pyg_baseline/`** directory;
-> + Pass the `--model` parameter in `pyg_main.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
-> + `./0_bench_pyg.py| tee run_pyg.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis.
+> + `/0_run_gcn.sh` and `./0_run_gin.sh` to run PyG and generate `.csv` result for GCN and GIN, respectively. Or you can run seperate commands,
+>> + `./0_bench_pyg_gcn.py| tee run_pyg_gcn.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
+>> + `./1_log2csv.py run_pyg_gcn.log` to convert log result to  `run_pyg_gcn.csv` for ease of analysis.
 
 + **Running **Gunrock** for single SpMM (neighbor aggregation) kernel**.
 > + We measure the single SpMM kernel performance with Gunrock (Note that based on most reviewers' feedback directly end-to-end inference comparison with Gunrock on sampled GraphSAGE model is not fair, therfore, we decide to compare our single SpMM kernel with Gunrock SpMM kernel).
@@ -125,10 +125,11 @@ pip install torch-geometric
 > + Under `Gunrock/` call `./build_spmm.sh` to build the Gunrock spmm kernel. (it may take for a while for complete).
 > + Then call `./0_bench_Gunrock.py` for profile `spmm`. The instruction to run single neighbor aggregation kernel for GNNAdvisor can be found below by specifying an command line option.
 
-+ **Running GNNAdvisor**
-> +  Go to **`GNNAdvisor/`** directory 
-> + `./0_bench_GNNA.py| tee run_GNNA.log` to run the script and the report 200 epoch runtime for all evaluated datasets. Note that there are also several options (such as run_GCN, enable_rabbit) for configuring a profiling.
-> + `./1_log2csv.py` to convert the `run_GNNA.log` to `run_GNNA.csv` for ease of analysis.
++ **Running GNNAdvisor (Figure 9 and Figure 10)**
+> +  Go to **`GNNAdvisor/`** directory. 
+> + `./0_run_gcn.sh` and `./0_run_gin.sh` to run GNNAdvisor and generate `.csv` result for GCN and GIN, respectively. Or you can run seperate command with different configurations as 
+>>  + `./0_bench_GNNA_GCN.py| tee run_GNNA_GCN.log` to run the script and the report 200 epoch runtime for all evaluated datasets. Note that there are also several options (such as enable_rabbit) for configuring a profiling.
+>>  + `./1_log2csv.py` to convert the `run_GNNA_GCN.log` to `run_GNNA_GCN.csv` for ease of result analysis.
 > + `./3_single_spmm_bench.py` to profile a single SpMM kernel to compare with Gunrock SpMM kernel discussed above.
 > +  Stand alone running with specified parameters.
 >> + `--dataset`: the name of the dataset.
@@ -153,12 +154,12 @@ pip install torch-geometric
 > + We focus on the training evaluation of the GNNs, and the reported time per epoch only includes the GNN model forward and backward computation, excluding the data loading and some preprocessing. 
 > + Since the paper draft submission and the creation of this artifact, DGL has update several of its kernel library (from v0.52 to v0.60). In this comparion we focus on the latest DGL version (v0.60). Based on our profiling on RTX3090, our design would show minor speedup on the simple GCN model (2-layer and 16 hidden dimension), but show more evident speedup on more complicated GIN model (5-layer and 64 hidden dimension), which can still demonstrate the effectiveness of our optimizations. Our observation is that on small Type I graphs, our frameworks achieve for both GCN and GIN. On larger Type II and Type III datasets, our GIN model implementation would show more evident speedups.  
 
-+ **Running GNNAdvisor-related Studies**
++ **Running GNNAdvisor-related Studies (Figure 11(a,b,c) and Figure 12(a))**
 
-> + `./s7-4_1_neighbor_partitioning.py` for neighbor partitioning study in Section 7.4.
-> + `./s7-4_2_dimension_partitiong.py` for dimension partitioning study in Section 7.4.
-> + `./s7-4_3_node_renumbering.py` for node renumbering study in Section 7.4.
-> + `./s7-5_1_hidden_dimension.py` for hidden dimension study in Section 7.5.
+> + `./s7-4_1_neighbor_partitioning.py`(**Figure 11a**) for neighbor partitioning study in Section 7.4.
+> + `./s7-4_2_dimension_partitiong.py` (**Figure 11b**) for dimension partitioning study in Section 7.4.
+> + `./s7-4_3_node_renumbering.py` (**Figure 11c**) for node renumbering study in Section 7.4.
+> + `./s7-5_1_hidden_dimension.py` (**Figure 12a**) for hidden dimension study in Section 7.5.
 > + (**Recommended**) You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis. You expected to get several `.csv` files looks like these (open with the [Edit CSV](https://marketplace.visualstudio.com/items?itemName=janisdd.vscode-edit-csv) plugin for vscode)
 >> + For `neighbor_partitioning`.
 ![Neighbor Partitioning](images/neighborPartition.png)

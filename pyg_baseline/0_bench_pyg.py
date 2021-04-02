@@ -2,7 +2,11 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-hidden = [16]
+# model = 'gcn'
+# hidden = [16]
+
+model = 'gin'
+hidden = [64]
 
 dataset = [
         ('citeseer'	        , 3703	    , 6   ),  
@@ -27,5 +31,7 @@ dataset = [
 
 for hid in hidden:
     for data, d, c in dataset:
-        command = "python pyg_main.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
+        command = "python pyg_main.py --dataset {} \
+                    --dim {} --hidden {} --classes {}\
+                    --model {}".format(data, d, hid, c, model)		
         os.system(command)

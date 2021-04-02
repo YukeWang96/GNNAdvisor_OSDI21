@@ -77,3 +77,4 @@ class Verification(object):
         torch.cuda.synchronize()
         dur = time.perf_counter() - start
         print("=> SpMM profiling avg (ms): {:.3f}".format(dur*1e3/round))
+        print()

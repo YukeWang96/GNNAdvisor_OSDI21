@@ -128,7 +128,7 @@ if verify_spmm:
 ####################################
 # Profiling a single SpMM kernel
 ####################################
-if args.single_spmm:
+if single_spmm:
     from unitest import *
     valid = Verification(args.hidden, \
                         inputInfo.row_pointers, inputInfo.column_index, degrees, \

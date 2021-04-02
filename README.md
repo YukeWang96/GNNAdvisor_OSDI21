@@ -38,10 +38,27 @@ git clone --recursive git@github.com:YukeWang96/OSDI21_AE.git
 ### **Step-1: Environment Setup** 
 There are two ways to setup the environment of GNNAdvisor and baselines.
 ### + **Method 1**:  Setup the environment via Docker (**Recommended**).
-+ Install Docker Engine with NVIDIA GPU Support **[Toturial](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)**.
++ Install Docker Engine with NVIDIA GPU Support **[Toturial](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)**. We use the following commands
+```
+curl https://get.docker.com | sh \
+  && sudo systemctl --now enable docker
+
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+   && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \
+   && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+sudo apt-get update
+sudo apt-get install -y nvidia-docker2
+sudo systemctl restart docker
+```
 + `cd Docker` then either goto `cu102/` (for Quadro P6000 and Tesla V100) or `cu110/` (for RTX3090/RTX3070).
 + Run `./build.sh`, it may takes a while (around 10 minutes) for building the container.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
+> + if your enounter problem below, most likely, you may not install the GPU docker engine correctly, you may go back to the Toturial at the first setp.
+
+```
+docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].
+```
 > + The defualt GPU is device:0. If you want to run on different deivce. Consider using this command in `./launch.sh`, e.g., using device:1
 >  
 ```

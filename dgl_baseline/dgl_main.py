@@ -45,9 +45,7 @@ def main(args):
     # normalization
     degs = g.in_degrees().float()
     norm = torch.pow(degs, -0.5)
-    norm[torch.isinf(norm)] = 0
-    if cuda:
-        norm = norm.cuda()
+    norm = norm.cuda()
     g.ndata['norm'] = norm.unsqueeze(1)
 
     if args.model == 'gcn':    

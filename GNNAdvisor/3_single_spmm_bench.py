@@ -8,10 +8,10 @@ hidden = 16
 
 dataset = [
 		( 'amazon0505'               , 96	, 22),
-		# ( 'artist'                   , 100  , 12),
-		# ( 'com-amazon'               , 96	, 22),
-		# ( 'soc-BlogCatalog'	       	 , 128  , 39), 
-		# ( 'amazon0601'  	         , 96	, 22), 
+		( 'artist'                   , 100  , 12),
+		( 'com-amazon'               , 96	, 22),
+		( 'soc-BlogCatalog'	       	 , 128  , 39), 
+		( 'amazon0601'  	         , 96	, 22), 
 ]
 
 print("******************************")

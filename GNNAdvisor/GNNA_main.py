@@ -100,7 +100,7 @@ if verbose_mode:
 # Building neighbor partitioning.
 ####################################
 start = time.perf_counter()
-partPtr, part2Node = GNNA.build_part(partSize, inputInfo.row_pointers)
+partPtr, part2Node = GNNA.build_part(inputInfo.partSize, inputInfo.row_pointers)
 build_neighbor_parts = time.perf_counter() - start
 if verbose_mode:
     print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
@@ -128,7 +128,7 @@ if verify_spmm:
 ####################################
 # Profiling a single SpMM kernel
 ####################################
-if args.single_spmm:
+if single_spmm:
     from unitest import *
     valid = Verification(args.hidden, \
                         inputInfo.row_pointers, inputInfo.column_index, degrees, \
@@ -149,7 +149,16 @@ if args.model == 'gcn':
 
         def forward(self):
             x = dataset.x
+
+            # print("[Foward]-1: {}\n{}\n{}\n{}\n{}".format(inputInfo.row_pointers, inputInfo.column_index, 
+            #                     inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node))    
+            # print("[Foward]-1: partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, \
+            #                                                     inputInfo.dimWorker, inputInfo.warpPerBlock))
             x = F.relu(self.conv1(x, inputInfo.set_input()))
+            # print("[Foward]-2: {}\n{}\n{}\n{}\n{}".format(inputInfo.row_pointers, inputInfo.column_index, 
+            #                     inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node))    
+            # print("[Foward]-2: partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, \
+            #                                                     inputInfo.dimWorker, inputInfo.warpPerBlock))
             x = self.conv2(x, inputInfo.set_hidden())
             return F.log_softmax(x, dim=1)
 else:
@@ -191,6 +200,7 @@ if __name__ == '__main__':
     # dry run
     for _ in range(10):
         train()
+    # exit(0)
 
     torch.cuda.synchronize()
     start_train = time.perf_counter()

@@ -3,7 +3,6 @@ import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
 hidden = [16]
-path = ''
 dataset = [
         ( 'amazon0505'               , 96	  , 22),
         ( 'artist'                   , 100  , 12),

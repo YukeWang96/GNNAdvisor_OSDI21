@@ -35,10 +35,17 @@ class GNNAFunction(torch.autograd.Function):
         ctx.inputInfo = inputInfo
         ctx.partSize, ctx.dimWorker, ctx.warpPerBlock = \
             inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock
-        # print("partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock))
+
+        # print("[Foward]: {}\n{}\n{}\n{}\n{}".format(inputInfo.row_pointers, inputInfo.column_index, 
+        #                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node))    
+        # print("[Foward]: partSize: {}, dimWorker: {}, warpPerBlock: {}".format(ctx.partSize, \
+        #                                                     ctx.dimWorker, ctx.warpPerBlock))
+
         X_prime = GNNA.forward(X, weight, inputInfo.row_pointers, inputInfo.column_index, 
                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node, \
                                 inputInfo.partSize, inputInfo.dimWorker, inputInfo.warpPerBlock)[0]
+        
+
         # print(X.size())
         # print(weight.size())
         # X_prime = torch.mm(X, weight)
@@ -51,6 +58,12 @@ class GNNAFunction(torch.autograd.Function):
     def backward(ctx, d_output):
         X, weight = ctx.saved_tensors
         inputInfo = ctx.inputInfo
+
+        # print("[Backward]: {}\n{}\n{}\n{}\n{}".format(inputInfo.row_pointers, inputInfo.column_index,         #                                 inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node))
+
+        # print("[Backward]: partSize: {}, dimWorker: {}, warpPerBlock: {}".format(ctx.partSize, \
+        #                                                     ctx.dimWorker, ctx.warpPerBlock))
+    
         d_input, d_weight = GNNA.backward(d_output, X, weight, inputInfo.row_pointers, inputInfo.column_index, 
                                         inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node,
                                         ctx.partSize, ctx.dimWorker, ctx.warpPerBlock)

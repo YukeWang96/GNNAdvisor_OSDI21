@@ -2,8 +2,8 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-model = 'gcn'
-hidden = [128] 	# for GCN
+model = 'gcn'	# or 'gin'
+hidden = [64] 	# for GCN
 # hidden = [64] 	# for GIN
 
 dataset = [

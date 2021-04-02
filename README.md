@@ -47,8 +47,10 @@ There are two ways to setup the environment of GNNAdvisor and baselines.
 
 ### + **Method 2**: Setup via conda and pip
 #### 1) Install system packages for compiling rabbit reordering (root user required). 
-+ **`libboost`**: `sudo apt-get install libboost-all-dev`
-+ **`tcmalloc`**: `sudo apt-get install libgoogle-perftools-dev`
++ **`libboost`**: `sudo apt-get install libboost-all-dev`.
++ **`tcmalloc`**: `sudo apt-get install libgoogle-perftools-dev`.
++ **`cmake`**: `sudo apt-get update && apt-get -y install cmake protobuf-compiler`.
+
 
 #### 2) Install Pytorch environment.
 + Install **`conda`** on system **[Toturial](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart)**.

@@ -100,7 +100,7 @@ if verbose_mode:
 # Building neighbor partitioning.
 ####################################
 start = time.perf_counter()
-partPtr, part2Node = GNNA.build_part(partSize, inputInfo.row_pointers)
+partPtr, part2Node = GNNA.build_part(inputInfo.partSize, inputInfo.row_pointers)
 build_neighbor_parts = time.perf_counter() - start
 if verbose_mode:
     print("# Build nb_part (s): {:.3f}".format(build_neighbor_parts))
@@ -128,7 +128,7 @@ if verify_spmm:
 ####################################
 # Profiling a single SpMM kernel
 ####################################
-if args.single_spmm:
+if single_spmm:
     from unitest import *
     valid = Verification(args.hidden, \
                         inputInfo.row_pointers, inputInfo.column_index, degrees, \

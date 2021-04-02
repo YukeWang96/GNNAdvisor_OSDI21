@@ -2,7 +2,7 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-run_GCN = False
+run_GCN = True
 enable_rabbit = True
 manual_mode = False
 verbose_mode = True
@@ -17,7 +17,7 @@ else:
     warpPerBlock = 6
     hidden = [64] 		
 
-partsize_li = [32]
+partsize_li = [2]
 
 dataset = [
         # ('toy'	        , 3	    , 2   ),  

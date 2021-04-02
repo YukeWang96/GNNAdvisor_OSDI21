@@ -175,7 +175,7 @@ pip install torch-geometric
 >> + `--enable_rabbit`: If this flag is `True`, it will be possible to use the rabbit-reordering routine. Otherwise, it will skip rabbit reordering for both **auto** and **manual** mode.
 >> + `--manual_mode`: If this flag is `True`, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. **Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.** In manual mode the value of `partSize`, `dimWorker` and `dimWorker` will be applied to both input and hidden layer.
 >> + `--verbose_mode`: If this flag is `True`, it will print out all the details of configuration for running the experiments.
->> + `--single_spmm`: If this flag is `True`, it will only profile a single spmm for 200 rounds. with the provided `--dim` as the `D` in `NxNxD`, where `N` is the number of nodes in a graph. 
+>> + `--single_spmm`: If this flag is `True`, it will only profile a single spmm for 200 rounds. with the provided `--dim` as the `D` in `NxNxD`, where `N` is the number of nodes in a graph.  Run **`./3_single_spmm_bench.py` for profiling single neighbor aggregation (SpMM) kernel in comparison with Gunrock SpMM**.
 >> + `--verify_spmm`: If this flag is `True`, it will check the correctness of our SpMM kernel against the CPU reference result. Run `./4_verifying.py` for verifying our major kernel (neighbor aggregation) correctness against CPU reference result from `torch_sparse.spmm`.
 
 **Note**
@@ -186,8 +186,6 @@ pip install torch-geometric
 >> + **Our observation is that on small Type I graphs, our frameworks achieve significant speedup for both GCN and GIN model on RTX3090 and Quadro P6000. On larger Type II and Type III datasets, our GIN model implementation would show more evident speedups**.  
 
 + **Running GNNAdvisor-related Studies (Figure 11(a,b,c) and Figure 12(a))**
-> + **`./3_single_spmm_bench.py` for profiling single neighbor aggregation (SpMM) kernel in comparison with Gunrock SpMM**.
-> + **`./4_verifying.py` for verifying the correctness of our neighbor aggregation kernel against CPU reference result from `torch_sparse.spmm`.**.
 > + **`./s7-4_1_neighbor_partitioning.py`(**Figure 11a**) for neighbor partitioning study in Section 7.4**.
 > + **`./s7-4_2_dimension_partitiong.py` (**Figure 11b**) for dimension partitioning study in Section 7.4**.
 > + **`./s7-4_3_node_renumbering.py` (**Figure 11c**) for node renumbering study in Section 7.4**.

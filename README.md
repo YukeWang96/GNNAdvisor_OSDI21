@@ -117,7 +117,7 @@ pip install torch-geometric
 > + Go to `rabbit_module/src`, then `python setup.py install` to install the rabbit reordering modules.
 
 ### **Step-2: Download the graph datasets.**
-+ Our preprocessed graph datasets in `.npy` format can be downloaded via this **[link](https://drive.google.com/file/d/12lPJi9eV9hbiy5Q3Fs1luEhkkvA0Yyk5/view?usp=sharing)** (filename: `osdi-ae-graphs.tar.gz`).
++ Our preprocessed graph datasets in `.npy` format can be downloaded via this **[[LINK](https://drive.google.com/file/d/12lPJi9eV9hbiy5Q3Fs1luEhkkvA0Yyk5/view?usp=sharing)]** (filename: `osdi-ae-graphs.tar.gz`).
 + Unzip the graph datasets `tar -zxvf osdi-ae-graphs.tar.gz` at the project root directory.
 + Note that node inital embeeding is not included, and we generate an all 1s embeeding matrix according to users `input dimension` parameter at the runtime for just performance evaluation.
 
@@ -149,7 +149,7 @@ pip install torch-geometric
 + **Running **Gunrock** for single SpMM (neighbor aggregation) kernel**.
 > + We measure the single SpMM kernel performance with Gunrock (Note that based on most reviewers' feedback directly end-to-end inference comparison with Gunrock on sampled GraphSAGE model is not fair, therfore, we decide to compare our single SpMM kernel with Gunrock SpMM kernel).
 > + Go to `Gunrock/` directory. In case you forget to use `--recursive` when call `git clone` at the beginning, you need to call `git submodule init && git submodule update` to pull `Gunrock` repo.
-> + Download the `.mtx` dataset of Type III graphs for Gunrock from [here](https://drive.google.com/file/d/174tuObwEqm-rcV3Y7uL1JkJNrHFblLj9/view?usp=sharing), then uncompress the `.tar.gz` file using `tar -zxvf osdi-ae-graphs-mtx.tar.gz`.
+> + Download the `.mtx` dataset of Type III graphs for Gunrock from this **[[LINK](https://drive.google.com/file/d/174tuObwEqm-rcV3Y7uL1JkJNrHFblLj9/view?usp=sharing)]**, then uncompress the `.tar.gz` file using `tar -zxvf osdi-ae-graphs-mtx.tar.gz`.
 > + Under `Gunrock/` call `./build_spmm.sh` to build the Gunrock spmm kernel. (it may take for a while for complete).
 > + **`./0_bench_Gunrock.py` for profile `spmm`**. The instruction to run single neighbor aggregation kernel for GNNAdvisor can be found below by specifying an command line option.
 > + **Note that Running Gunrock experiments does not require the Docker environment, and it require the system has CMake >= 3.14, and CMake==3.20.0 is recommended.**

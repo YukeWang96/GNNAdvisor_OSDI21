@@ -2,23 +2,23 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-run_GCN = False
-manual_mode = False
 
-enable_rabbit = False
+run_GCN = True
+enable_rabbit = True
+manual_mode = False
 verbose_mode = True
 loadFromTxt = False
 
 if run_GCN:
     model = 'gcn'
-    warpPerBlock = 2
+    warpPerBlock = 8        # only effective in manual model
     hidden = [16] 
 else:
     model = 'gin'
-    warpPerBlock = 6
+    warpPerBlock = 2        # only effective in manual model
     hidden = [64] 		
 
-partsize_li = [2]
+partsize_li = [32]          # only effective in manual model
 
 dataset = [
         ('citeseer'	        , 3703	    , 6   ),  

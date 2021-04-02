@@ -1,20 +1,20 @@
-Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit='False', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='False', warpPerBlock=8)
-Time (ms): 37.216
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit='False', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
+Time (ms): 37.318
 
-Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit='False', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='False', warpPerBlock=8)
-Time (ms): 6.253
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit='False', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
+Time (ms): 6.250
 
-Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit='False', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='False', warpPerBlock=8)
-Time (ms): 27.201
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit='False', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
+Time (ms): 27.172
 
-Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit='True', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='False', warpPerBlock=8)
-Time (ms): 31.608
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0505', dim=96, dimWorker=32, enable_rabbit='True', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
+Time (ms): 31.589
 
-Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit='True', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='False', warpPerBlock=8)
-Time (ms): 5.657
+Namespace(classes=12, dataDir='../osdi-ae-graphs', dataset='artist', dim=100, dimWorker=32, enable_rabbit='True', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
+Time (ms): 5.722
 
-Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit='True', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, verbose_mode='False', warpPerBlock=8)
-Time (ms): 23.286
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='com-amazon', dim=96, dimWorker=32, enable_rabbit='True', hidden=64, loadFromTxt='False', manual_mode='True', model='gin', num_epoches=200, partSize=32, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
+Time (ms): 23.293
 
 ******************************
 ++ NodeRenumber: False

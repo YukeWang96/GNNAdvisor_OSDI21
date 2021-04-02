@@ -130,3 +130,123 @@ Time (ms): 16.159
 Namespace(classes=39, dataDir='../osdi-ae-graphs', dataset='soc-BlogCatalog', dim=128, dimWorker=32, enable_rabbit='False', hidden=16, loadFromTxt='False', manual_mode='True', model='gcn', num_epoches=200, partSize=512, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
 Time (ms): 6.202
 
+Namespace(classes=22, dataDir='../osdi-ae-graphs', dataset='amazon0601', dim=96, dimWorker=32, enable_rabbit='False', hidden=16, loadFromTxt='False', manual_mode='True', model='gcn', num_epoches=200, partSize=512, sharedMem=100, single_spmm='False', verbose_mode='False', verify_spmm='False', warpPerBlock=8)
+Time (ms): 19.282
+
+******************************
+++ Part-size: 2
+******************************
+amazon0505---partsize: 2
+=================
+artist---partsize: 2
+=================
+com-amazon---partsize: 2
+=================
+soc-BlogCatalog---partsize: 2
+=================
+amazon0601---partsize: 2
+=================
+******************************
+++ Part-size: 4
+******************************
+amazon0505---partsize: 4
+=================
+artist---partsize: 4
+=================
+com-amazon---partsize: 4
+=================
+soc-BlogCatalog---partsize: 4
+=================
+amazon0601---partsize: 4
+=================
+******************************
+++ Part-size: 8
+******************************
+amazon0505---partsize: 8
+=================
+artist---partsize: 8
+=================
+com-amazon---partsize: 8
+=================
+soc-BlogCatalog---partsize: 8
+=================
+amazon0601---partsize: 8
+=================
+******************************
+++ Part-size: 16
+******************************
+amazon0505---partsize: 16
+=================
+artist---partsize: 16
+=================
+com-amazon---partsize: 16
+=================
+soc-BlogCatalog---partsize: 16
+=================
+amazon0601---partsize: 16
+=================
+******************************
+++ Part-size: 32
+******************************
+amazon0505---partsize: 32
+=================
+artist---partsize: 32
+=================
+com-amazon---partsize: 32
+=================
+soc-BlogCatalog---partsize: 32
+=================
+amazon0601---partsize: 32
+=================
+******************************
+++ Part-size: 64
+******************************
+amazon0505---partsize: 64
+=================
+artist---partsize: 64
+=================
+com-amazon---partsize: 64
+=================
+soc-BlogCatalog---partsize: 64
+=================
+amazon0601---partsize: 64
+=================
+******************************
+++ Part-size: 128
+******************************
+amazon0505---partsize: 128
+=================
+artist---partsize: 128
+=================
+com-amazon---partsize: 128
+=================
+soc-BlogCatalog---partsize: 128
+=================
+amazon0601---partsize: 128
+=================
+******************************
+++ Part-size: 256
+******************************
+amazon0505---partsize: 256
+=================
+artist---partsize: 256
+=================
+com-amazon---partsize: 256
+=================
+soc-BlogCatalog---partsize: 256
+=================
+amazon0601---partsize: 256
+=================
+******************************
+++ Part-size: 512
+******************************
+amazon0505---partsize: 512
+=================
+artist---partsize: 512
+=================
+com-amazon---partsize: 512
+=================
+soc-BlogCatalog---partsize: 512
+=================
+amazon0601---partsize: 512
+=================

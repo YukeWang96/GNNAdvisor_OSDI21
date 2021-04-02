@@ -54,11 +54,16 @@ sudo systemctl restart docker
 + `cd Docker` then either goto `cu102/` (for Quadro P6000 and Tesla V100) or `cu110/` (for RTX3090/RTX3070).
 + Run `./build.sh`, it may takes a while (around 10 minutes) for building the container.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
-> + if your enounter problem below, most likely, you may not install the GPU docker engine correctly, you may go back to the Toturial at the first setp.
-
+> + if your enounter problem below,
 ```
 docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].
 ```
+then you need to 
+```
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+```
+
 > + The defualt GPU is device:0. If you want to run on different deivce. Consider using this command in `./launch.sh`, e.g., using device:1
 >  
 ```

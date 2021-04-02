@@ -2,9 +2,10 @@
 
 ## 1. Getting Started Instructions.
 > **Clone this project**
-> ```
+```
 git clone --recursive git@github.com:YukeWang96/OSDI21_AE.git
-``
+```
+
 + **Hardware**: 
 > + `CPU x86_64` with host memory > 32GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
 > + `NVIDIA GPU (arch>sm_60)` with devcie memory > 12GB. (Support NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`), [**RTX3070**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3070.c3674) (`sm_86`), and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`). Note that upon creating this artifact, we mainly evaluate our design on **RTX3090**.
@@ -39,10 +40,8 @@ There are two ways to setup the environment of GNNAdvisor and baselines.
 + Install Docker Engine with NVIDIA GPU Support **[Toturial](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)**.
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
-+ Run `./install_pkg_sm*.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version 
-> + `./install_pkg_sm86.sh` for RTX3090/RTX3070.
-> + `./install_pkg_sm70.sh` for Tesla V100.
-> + `./install_pkg_sm61.sh` for Quadro P6000.
++ Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version before install the package. e.g. for RTX3090/RTX3070 we will modify `install_pkg.sh` as**
+![Dimension Partitioning](images/install_pkg.png)
 
 + To clean the building packages when exit docker, run `./clean_build.sh`, root access premission may required.  
 

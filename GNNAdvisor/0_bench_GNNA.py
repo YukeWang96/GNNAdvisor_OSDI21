@@ -4,7 +4,7 @@ os.environ["PYTHONWARNINGS"] = "ignore"
 
 run_GCN = False
 enable_rabbit = True
-manual_mode = True
+manual_mode = False
 verbose_mode = True
 loadFromTxt = False
 

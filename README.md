@@ -7,8 +7,8 @@ git clone --recursive git@github.com:YukeWang96/OSDI21_AE.git
 ```
 
 + **Hardware**: 
-> + `CPU x86_64` with host memory > 32GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
-> + `NVIDIA GPU (arch>sm_60)` with devcie memory > 8GB. (Support NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`), [**RTX3070**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3070.c3674) (`sm_86`), and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`). Note that upon creating this artifact, we mainly evaluate our design on **RTX3090**.
+> + `CPU x86_64` with host memory >= 32GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
+> + `NVIDIA GPU (arch>=sm_60)` with devcie memory >= 8GB. (Support NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`), [**RTX3070**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3070.c3674) (`sm_86`), and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`). Note that upon creating this artifact, we mainly evaluate our design on **RTX3090**.
 
 + **OS & Compiler**: 
 > + `Ubuntu 16.04+`
@@ -154,7 +154,7 @@ pip install torch-geometric
 >> + `--manual_mode`: If this flag is `True`, it will use the value from the parameter `partSize`, `dimWorker` and `dimWorker`. Otherwise, it will determine these three performance-related parameters automatically by `Decider`. **Note that `Decider` will generate two different sets of parameters for input and hidden layers based on a GNN model and the dataset input characters.** In manual mode the value of `partSize`, `dimWorker` and `dimWorker` will be applied to both input and hidden layer.
 >> + `--verbose_mode`: If this flag is `True`, it will print out all the details of configuration for running the experiments.
 >> + `--single_spmm`: If this flag is `True`, it will only profile a single spmm for 200 rounds. with the provided `--dim` as the `D` in `NxNxD`, where `N` is the number of nodes in a graph. 
->> + `--verify_spmm`: If this flag is `True`, it will check the correctness of our SpMM kernel against the CPU reference result. Run `./4_verifying.py` for verifying several citation network for neighbor aggregation correctness against CPU reference result.
+>> + `--verify_spmm`: If this flag is `True`, it will check the correctness of our SpMM kernel against the CPU reference result. Run `./4_verifying.py` for verifying our major kernel (neighbor aggregation) correctness against CPU reference result from `torch_sparse.spmm`.
 
 **Note**
 > + Accuracy evaluation are omitted for all implementations and each sparse kernels are tested via the `unitest.py`
@@ -164,7 +164,8 @@ pip install torch-geometric
 >> + **Our observation is that on small Type I graphs, our frameworks achieve significant speedup for both GCN and GIN model on RTX3090 and Quadro P6000. On larger Type II and Type III datasets, our GIN model implementation would show more evident speedups**.  
 
 + **Running GNNAdvisor-related Studies (Figure 11(a,b,c) and Figure 12(a))**
-
+> + **`./3_single_spmm_bench.py` for profiling single neighbor aggregation (SpMM) kernel in comparison with Gunrock SpMM**.
+> + **`./4_verifying.py` for verifying the correctness of our neighbor aggregation kernel against CPU reference result from `torch_sparse.spmm`.**.
 > + **`./s7-4_1_neighbor_partitioning.py`(**Figure 11a**) for neighbor partitioning study in Section 7.4**.
 > + **`./s7-4_2_dimension_partitiong.py` (**Figure 11b**) for dimension partitioning study in Section 7.4**.
 > + **`./s7-4_3_node_renumbering.py` (**Figure 11c**) for node renumbering study in Section 7.4**.

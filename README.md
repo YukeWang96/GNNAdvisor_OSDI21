@@ -1,7 +1,7 @@
 # GNNAdvisor
 
 ## 1. Getting Started Instructions.
-> + **Clone this project**
++ **Clone this project**
 ```
 git clone --recursive git@github.com:YukeWang96/OSDI21_AE.git
 ```

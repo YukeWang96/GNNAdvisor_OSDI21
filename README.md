@@ -41,6 +41,11 @@ There are two ways to setup the environment of GNNAdvisor and baselines.
 + Install Docker Engine with NVIDIA GPU Support **[Toturial](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)**.
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
+> + The defualt GPU is device:0. If you want to run on different deivce. Consider using this command in `./launch.sh`, e.g., using device:1
+>  
+```
+docker run -it --rm --gpus device=1 -v $PWD/../../:/GNNA osdi-ae:latest /bin/bash
+```
 + Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version before install the package.
 > + `install_pkg_sm86.py` for RTX3090 and RTX 3070.
 > + `install_pkg_sm70.py` for Tesla V100.

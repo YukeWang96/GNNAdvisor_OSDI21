@@ -8,7 +8,7 @@ git clone --recursive git@github.com:YukeWang96/OSDI21_AE.git
 
 + **Hardware**: 
 > + `CPU x86_64` with host memory >= 32GB. (Tested on Intel Xeon Silver 4110 (8-core 16-thread)  CPU  with 64GB host memory).
-> + `NVIDIA GPU (arch>=sm_60)` with devcie memory >= 8GB. (Support NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`), [**RTX3070**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3070.c3674) (`sm_86`), and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`). Note that upon creating this artifact, we mainly evaluate our design on **RTX3090**.
+> + `NVIDIA GPU (arch>=sm_60)` with devcie memory >= 8GB. (Support NVIDIA [**Quadro P6000**](https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/productspage/quadro/quadro-desktop/quadro-pascal-p6000-data-sheet-a4-nv-704590-r1.pdf) (`sm_61`), [**Tesla V100**](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf) (`sm_70`), and [**RTX3090**](https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622) (`sm_86`). Note that upon creating this artifact, we mainly evaluate our design on **RTX3090**.
 
 + **OS & Compiler**: 
 > + `Ubuntu 16.04+`
@@ -51,7 +51,7 @@ sudo apt-get update
 sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
-+ `cd Docker` then either goto `cu102/` (for Quadro P6000 and Tesla V100) or `cu110/` (for RTX3090/RTX3070).
++ `cd Docker` then either goto `cu102/` (for Quadro P6000 and Tesla V100) or `cu110/` (for RTX3090).
 + Run `./build.sh`, it may takes a while (around 10 minutes) for building the container.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
 > + if your enounter problem below,
@@ -70,7 +70,7 @@ sudo systemctl restart docker
 docker run -it --rm --gpus device=1 -v $PWD/../../:/GNNA osdi-ae:latest /bin/bash
 ```
 + Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version before install the package.
-> + `install_pkg_sm86.py` for RTX3090 and RTX 3070.
+> + `install_pkg_sm86.py` for RTX3090.
 > + `install_pkg_sm70.py` for Tesla V100.
 > + `install_pkg_sm61.py` for Quadro P6000.
 

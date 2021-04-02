@@ -2,15 +2,16 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-run_GCN = True
-enable_rabbit = True
+run_GCN = False
 manual_mode = False
+
+enable_rabbit = False
 verbose_mode = True
 loadFromTxt = False
 
 if run_GCN:
     model = 'gcn'
-    warpPerBlock = 8
+    warpPerBlock = 2
     hidden = [16] 
 else:
     model = 'gin'
@@ -20,10 +21,6 @@ else:
 partsize_li = [2]
 
 dataset = [
-        # ('toy'	        , 3	    , 2   ),  
-        # ('tc_gnn_verify'	, 16	, 2),
-        # ('tc_gnn_verify_2x'	, 16	, 2),
-
         ('citeseer'	        , 3703	    , 6   ),  
         ('cora' 	        , 1433	    , 7   ),  
         ('pubmed'	        , 500	    , 3   ),      

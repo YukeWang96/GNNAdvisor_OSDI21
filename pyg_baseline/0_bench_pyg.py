@@ -2,11 +2,11 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-# model = 'gcn'
-# hidden = [16]
+model = 'gcn'
+hidden = [16]
 
-model = 'gin'
-hidden = [64]
+# model = 'gin'
+# hidden = [64]
 
 dataset = [
         ('citeseer'	        , 3703	    , 6   ),  

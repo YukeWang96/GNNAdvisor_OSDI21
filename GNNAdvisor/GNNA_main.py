@@ -57,7 +57,6 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # loading data from files
 ####################################
 if loadFromTxt:
-    # path = osp.join("/home/yuke/.graphs/orig", args.dataset)
     path = osp.join(args.dataDir, args.dataset)
     dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=True, verbose=verbose_mode)
 else:
@@ -149,16 +148,7 @@ if args.model == 'gcn':
 
         def forward(self):
             x = dataset.x
-
-            # print("[Foward]-1: {}\n{}\n{}\n{}\n{}".format(inputInfo.row_pointers, inputInfo.column_index, 
-            #                     inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node))    
-            # print("[Foward]-1: partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, \
-            #                                                     inputInfo.dimWorker, inputInfo.warpPerBlock))
             x = F.relu(self.conv1(x, inputInfo.set_input()))
-            # print("[Foward]-2: {}\n{}\n{}\n{}\n{}".format(inputInfo.row_pointers, inputInfo.column_index, 
-            #                     inputInfo.degrees, inputInfo.partPtr, inputInfo.part2Node))    
-            # print("[Foward]-2: partSize: {}, dimWorker: {}, warpPerBlock: {}".format(inputInfo.partSize, \
-            #                                                     inputInfo.dimWorker, inputInfo.warpPerBlock))
             x = self.conv2(x, inputInfo.set_hidden())
             return F.log_softmax(x, dim=1)
 else:

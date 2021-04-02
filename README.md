@@ -35,8 +35,10 @@ There are two ways to setup the environment of GNNAdvisor and baselines.
 + Install Docker Engine with NVIDIA GPU Support **[Toturial](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)**.
 + `cd Docker` then run `./build.sh`, it may takes a while for installation.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
-+ Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version before install the package. e.g. for RTX3090/RTX3070 we will modify `install_pkg.sh` as**
-![Dimension Partitioning](images/install_pkg.png)
++ Run `./install_pkg_sm*.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version 
+> + `./install_pkg_sm86.sh` for RTX3090/RTX3070.
+> + `./install_pkg_sm70.sh` for Tesla V100.
+> + `./install_pkg_sm61.sh` for Quadro P6000.
 
 + To clean the building packages when exit docker, run `./clean_build.sh`, root access premission may required.  
 

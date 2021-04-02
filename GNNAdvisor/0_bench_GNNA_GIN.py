@@ -6,7 +6,7 @@ os.environ["PYTHONWARNINGS"] = "ignore"
 run_GCN = False              # whether to run GCN model. 
 enable_rabbit = True        # whether to enable rabbit reordering in auto and manual mode.
 manual_mode = False         # whether to use the manually configure the setting.
-verbose_mode = True         # whether to printout more information such as the layerwise parameter.
+verbose_mode = False         # whether to printout more information such as the layerwise parameter.
 loadFromTxt = False         # whether to load data from a plain txt file.
 
 if run_GCN:

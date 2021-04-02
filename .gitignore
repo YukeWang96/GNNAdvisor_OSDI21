@@ -14,3 +14,4 @@ osdi-ae-graphs/*
 *.tar.gz
 osdi-ae-graphs-mtx/*
 osdi-ae-graphs-mtx.tar.gz
+*.log

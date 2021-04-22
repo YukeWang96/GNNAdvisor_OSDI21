@@ -199,3 +199,22 @@ pip install torch-geometric
 ![Dimension Partitioning](images/hiddemDimension.png)
 >> + For `node_renumbering`.<br/>
 ![Dimension Partitioning](images/nodeRenumbering.png)
+
+
+# Reference
++ [**Deep Graph Library**](https://github.com/dmlc/dgl) <br>
+Wang, Minjie, et al. 
+**Deep graph library: A graph-centric, highly-performant package for graph neural networks.**. *The International Conference on Learning Representations (ICLR), 2019.*
++ [**Pytorch Geometric**](https://github.com/rusty1s/pytorch_geometric) <br>
+Fey, Matthias, and Jan Eric Lenssen. 
+**Fast graph representation learning with PyTorch Geometric.** 
+*The International Conference on Learning Representations (ICLR), 2019.*
++ [**Gunrock**](https://github.com/gunrock/gunrock) <br>
+Wang, Yangzihao, et al. **Gunrock: A high-performance graph processing library on the GPU.** 
+*Proceedings of the 21st ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP), 2016.*
++ [**Rabbit Order**](https://github.com/araij/rabbit_order) J. Arai, H. Shiokawa, T. Yamamuro, M. Onizuka, and S. Iwamura. 
+**Rabbit Order: Just-in-time Parallel Reordering for Fast Graph Analysis.** 
+*IEEE International Parallel and Distributed Processing Symposium (IPDPS), 2016.*
++ [**GE-SpMM**](https://github.com/hgyhungry/ge-spmm). Guyue Huang, Guohao Dai, Yu Wang and Huazhong Yang. 
+**GE-SpMM: General-purposed Sparse Matrix-Matrix Multiplication on GPUs for Graph Neural Networks**
+*The International Conference for High Performance Computing, Networking, Storage and Analysis, 2020*.

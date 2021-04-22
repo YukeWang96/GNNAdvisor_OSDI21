@@ -212,9 +212,10 @@ Fey, Matthias, and Jan Eric Lenssen.
 + [**Gunrock**](https://github.com/gunrock/gunrock) <br>
 Wang, Yangzihao, et al. **Gunrock: A high-performance graph processing library on the GPU.** 
 *Proceedings of the 21st ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP), 2016.*
-+ [**Rabbit Order**](https://github.com/araij/rabbit_order) J. Arai, H. Shiokawa, T. Yamamuro, M. Onizuka, and S. Iwamura. 
++ [**Rabbit Order**](https://github.com/araij/rabbit_order) <br>
+J. Arai, H. Shiokawa, T. Yamamuro, M. Onizuka, and S. Iwamura. 
 **Rabbit Order: Just-in-time Parallel Reordering for Fast Graph Analysis.** 
 *IEEE International Parallel and Distributed Processing Symposium (IPDPS), 2016.*
-+ [**GE-SpMM**](https://github.com/hgyhungry/ge-spmm). Guyue Huang, Guohao Dai, Yu Wang and Huazhong Yang. 
++ [**GE-SpMM**](https://github.com/hgyhungry/ge-spmm). Guyue Huang, Guohao Dai, Yu Wang and Huazhong Yang. <br>
 **GE-SpMM: General-purposed Sparse Matrix-Matrix Multiplication on GPUs for Graph Neural Networks**
 *The International Conference for High Performance Computing, Networking, Storage and Analysis, 2020*.

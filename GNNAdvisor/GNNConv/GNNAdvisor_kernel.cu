@@ -7,6 +7,8 @@
 
 #define WARP_SIZE 32
 
+__global__ void warmup(){}
+
 __device__ inline 
 void atomicAdd_F(float* address, float value)
 {
@@ -129,7 +131,20 @@ torch::Tensor SAG_cuda(
     // printf("grid: %d, block: %d, shared_memory: %d\n", grid, block, shared_memory);
     // printf("dim: %d, num_nodes: %d, num_parts: %d\n", dim, num_nodes, num_parts);
     // printf("dimWorker: %d\n", dimWorker);
+	// #define PROFILE 200
 
+	#ifdef PROFILE
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    for (int i=0; i<PROFILE; i++) {
+        warmup<<<1,1>>>();
+    }
+	cudaEventRecord(start, 0);
+    
+    for (int i=0; i<PROFILE; i++) 
+	#endif 
     AT_DISPATCH_FLOATING_TYPES(input.type(), "Scatter_and_Gather", ([&] {
                                 SAG_cuda_kernel<scalar_t><<<grid, block, shared_memory>>>(
                                     output.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
@@ -147,7 +162,18 @@ torch::Tensor SAG_cuda(
                                     warpPerBlock
                                 );
                             }));
-                                 
+    
+                            
+    #ifdef PROFILE
+    cudaEventRecord(stop, 0);
+    cudaEventSynchronize(stop);
+    float gflop = 2*column_index.size(0)/1e6*dim;
+    float milliseconds;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+    printf("TC-GNN -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+    printf("\n================================\n");
+    #endif
+
     cudaError_t error = cudaGetLastError();
     if(error != cudaSuccess){
         printf("CUDA error: %s\n", cudaGetErrorString(error));

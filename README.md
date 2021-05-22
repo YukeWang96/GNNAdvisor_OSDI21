@@ -80,7 +80,7 @@ docker run -it --rm --gpus device=1 -v $PWD/../../:/GNNA osdi-ae:latest /bin/bas
 #### 1) Install system packages for compiling rabbit reordering (root user required). 
 + **`libboost`**: `sudo apt-get install libboost-all-dev`.
 + **`tcmalloc`**: `sudo apt-get install libgoogle-perftools-dev`.
-+ **`cmake`**: `sudo apt-get update && apt-get -y install cmake protobuf-compiler`.
++ **`cmake`**: `sudo apt-get update && sudo apt-get -y install cmake protobuf-compiler`.
 
 
 #### 2) Install Pytorch environment.
@@ -96,6 +96,8 @@ conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c cond
 or using `pip` [**Note that make sure the `pip` you use is the `pip` from current conda environment. You can check this by `which pip`**]
 ```
 pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html
+pip install tqdm
+pip install scipy
 ```
 + Install [**`Deep Graph Library (DGL)`**](https://github.com/dmlc/dgl).
 ```

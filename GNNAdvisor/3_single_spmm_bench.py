@@ -18,7 +18,6 @@ print("******************************")
 print("++ Single SpMM Kernel -- Dim: {}".format(hidden))
 print("******************************")
 for data, _, _ in dataset:
-    print("=================")
     command = "python GNNA_main.py  \
             --dataset {} \
             --hidden {} \
@@ -30,3 +29,4 @@ for data, _, _ in dataset:
                                     manual_mode, \
                                     True)		
     os.system(command)
+    print("=================")

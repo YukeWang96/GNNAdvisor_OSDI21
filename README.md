@@ -1,5 +1,13 @@
-# GNNAdvisor
-
+# GNNAdvisor: An Efficient Runtime System for GNN Acceleration <br/> on GPUs
++ [**[Paper, Slides, Video Talk] at USENIX OSDI'21**](https://www.usenix.org/conference/osdi21/presentation/wang-yuke)
+```
+@inproceedings{GNNAdvisor,
+  title={GNNAdvisor: An Efficient Runtime System for GNN Acceleration on GPUs},
+  author={Yuke Wang, Boyuan Feng, Gushu Li, Shuangchen Li, Lei Deng, Yuan Xie, and Yufei Ding},
+  booktitle={USENIX Symposium on Operating Systems Design and Implementation (OSDI'21)},
+  year={2021}
+}
+```
 ## 1. Getting Started Instructions.
 + **Clone this project**
 ```

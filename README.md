@@ -3,7 +3,7 @@
 ```
 @inproceedings{GNNAdvisor,
   title={GNNAdvisor: An Efficient Runtime System for GNN Acceleration on GPUs},
-  author={Yuke Wang, Boyuan Feng, Gushu Li, Shuangchen Li, Lei Deng, Yuan Xie, and Yufei Ding},
+  author={Yuke Wang and Boyuan Feng and Gushu Li and Shuangchen Li and Lei Deng and Yuan Xie and Yufei Ding},
   booktitle={USENIX Symposium on Operating Systems Design and Implementation (OSDI'21)},
   year={2021}
 }

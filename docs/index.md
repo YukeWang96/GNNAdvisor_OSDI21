@@ -150,19 +150,19 @@ pip install torch-geometric
 > + **Type III**:
 >`amazon0505, artist, com-amazon, soc-BlogCatalog, amazon0601`
 
-+ **Running **DGL** baseline on GNN training (Figure 9)**.
++ **Running DG baseline on GNN training (Figure 9)**.
 > +  Go to **`dgl_baseline/`** directory
 > + **`/0_run_gcn.sh` and `./0_run_gin.sh` to run DGL and generate `.csv` result for GCN and GIN, respectively**. Or you can run seperate commands,
 >> + `./0_bench_dgl_gcn.py| tee run_dgl_gcn.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 >> + `./1_log2csv.py` to convert the `run_dgl_gcn.log` to `run_dgl_gcn.csv` for ease of visualization.
 
-+ **Running **PyG** baseline on GNN training (Figure 10)**.
++ **Running PyG baseline on GNN training (Figure 10)**.
 > +  Go to **`pyg_baseline/`** directory;
 > + **`/0_run_gcn.sh` and `./0_run_gin.sh` to run PyG and generate `.csv` result for GCN and GIN, respectively**. Or you can run seperate commands,
 >> + `./0_bench_pyg_gcn.py| tee run_pyg_gcn.log` to run the script and the report 200 epoch runtime for all evaluated datasets. 
 >> + `./1_log2csv.py run_pyg_gcn.log` to convert log result to  `run_pyg_gcn.csv` for ease of analysis.
 
-+ **Running **Gunrock** for single SpMM (neighbor aggregation) kernel**.
++ **Running Gunrock for single SpMM (neighbor aggregation) kernel**.
 > + We measure the single SpMM kernel performance with Gunrock (Note that based on most reviewers' feedback directly end-to-end inference comparison with Gunrock on sampled GraphSAGE model is not fair, therfore, we decide to compare our single SpMM kernel with Gunrock SpMM kernel).
 > + Go to `Gunrock/` directory. In case you forget to use `--recursive` when call `git clone` at the beginning, you need to call `git submodule init && git submodule update` to pull `Gunrock` repo.
 > + Download the `.mtx` dataset of Type III graphs for Gunrock from this **[[LINK](https://drive.google.com/file/d/174tuObwEqm-rcV3Y7uL1JkJNrHFblLj9/view?usp=sharing)]**, then uncompress the `.tar.gz` file using `tar -zxvf osdi-ae-graphs-mtx.tar.gz`.
@@ -207,14 +207,6 @@ pip install torch-geometric
 > + **`./s7-4_3_node_renumbering.py` (**Figure 11c**) for node renumbering study in Section 7.4**.
 > + **`./s7-5_1_hidden_dimension.py` (**Figure 12a**) for hidden dimension study in Section 7.5**.
 > + (**Recommended**) You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis. You expected to get several `.csv` files looks like these (open with the [Edit CSV](https://marketplace.visualstudio.com/items?itemName=janisdd.vscode-edit-csv) plugin for vscode)
->> + For `neighbor_partitioning`.
-![Neighbor Partitioning](https://github.com/YukeWang96/OSDI21_AE/tree/master/images/neighborPartition.png)
->> + For `dimension_partitiong`.
-![Dimension Partitioning](https://github.com/YukeWang96/OSDI21_AE/tree/master/images/dimensionWorker.png)
->> + For `hidden_dimension`.
-![Dimension Partitioning](https://github.com/YukeWang96/OSDI21_AE/tree/master/images/hiddemDimension.png)
->> + For `node_renumbering`.<br/>
-![Dimension Partitioning](https://github.com/YukeWang96/OSDI21_AE/tree/master/images/nodeRenumbering.png)
 
 
 # Reference

@@ -66,7 +66,9 @@ sudo systemctl restart docker
 ```
 docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].
 ```
+
 then you need to 
+
 ```
 sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 sudo systemctl restart docker
@@ -202,13 +204,13 @@ pip install torch-geometric
 > + **`./s7-5_1_hidden_dimension.py` (**Figure 12a**) for hidden dimension study in Section 7.5**.
 > + (**Recommended**) You can run all studies by simply running `./2_run_study.sh`, it will first output all runtime collected information (e.g., average training epoch time) as a `*.log` file, then it will automically call `./2_study2csv.py` to generate the corresponding `*.csv` for ease of analysis. You expected to get several `.csv` files looks like these (open with the [Edit CSV](https://marketplace.visualstudio.com/items?itemName=janisdd.vscode-edit-csv) plugin for vscode)
 >> + For `neighbor_partitioning`.
-![Neighbor Partitioning](images/neighborPartition.png)
+![Neighbor Partitioning](../images/neighborPartition.png)
 >> + For `dimension_partitiong`.
-![Dimension Partitioning](images/dimensionWorker.png)
+![Dimension Partitioning](../images/dimensionWorker.png)
 >> + For `hidden_dimension`.
-![Dimension Partitioning](images/hiddemDimension.png)
+![Dimension Partitioning](../images/hiddemDimension.png)
 >> + For `node_renumbering`.<br/>
-![Dimension Partitioning](images/nodeRenumbering.png)
+![Dimension Partitioning](../images/nodeRenumbering.png)
 
 
 # Reference

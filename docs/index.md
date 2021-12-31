@@ -1,4 +1,3 @@
-# GNNAdvisor: An Efficient Runtime System for GNN Acceleration <br/> on GPUs
 + [**[Paper, Slides, Video Talk] at USENIX OSDI'21**](https://www.usenix.org/conference/osdi21/presentation/wang-yuke)
 ```
 @inproceedings{GNNAdvisor,

@@ -47,6 +47,7 @@ git clone --recursive git@github.com:YukeWang96/OSDI21_AE.git
 There are two ways to setup the environment of GNNAdvisor and baselines.
 ### + **Method 1**:  Setup the environment via Docker (**Recommended**).
 + Install Docker Engine with NVIDIA GPU Support **[Toturial](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)**. We use the following commands
+
 ```
 curl https://get.docker.com | sh \
   && sudo systemctl --now enable docker
@@ -59,10 +60,12 @@ sudo apt-get update
 sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
+
 + `cd Docker` then either goto `cu102/` (for Quadro P6000 and Tesla V100) or `cu110/` (for RTX3090).
 + Run `./build.sh`, it may takes a while (around 10 minutes) for building the container.
 + Run `./launch.sh` then it will bring up an new interactive command line interface.
 > + if your enounter problem below,
+
 ```
 docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].
 ```
@@ -75,10 +78,11 @@ sudo systemctl restart docker
 ```
 
 > + The defualt GPU is device:0. If you want to run on different deivce. Consider using this command in `./launch.sh`, e.g., using device:1
->  
+
 ```
 docker run -it --rm --gpus device=1 -v $PWD/../../:/GNNA osdi-ae:latest /bin/bash
 ```
+
 + Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version before install the package.
 > + `install_pkg_sm86.py` for RTX3090.
 > + `install_pkg_sm70.py` for Tesla V100.

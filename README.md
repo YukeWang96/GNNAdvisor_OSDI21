@@ -127,7 +127,10 @@ pip install torch-geometric
 > + Go to `rabbit_module/src`, then `python setup.py install` to install the rabbit reordering modules.
 
 ### **Step-2: Download the graph datasets.**
-+ Our preprocessed graph datasets in `.npy` format can be downloaded via this **[[LINK](https://drive.google.com/file/d/12lPJi9eV9hbiy5Q3Fs1luEhkkvA0Yyk5/view?usp=sharing)]** (filename: `osdi-ae-graphs.tar.gz`).
++ Our preprocessed graph datasets in `.npy` format can be downloaded via this **[[LINK](https://drive.google.com/file/d/12lPJi9eV9hbiy5Q3Fs1luEhkkvA0Yyk5/view?usp=sharing)]** or you can use the following command (filename: `osdi-ae-graphs.tar.gz`).
+```
+wget https://project-datasets.s3.us-west-2.amazonaws.com/osdi-ae-graphs.tar.gz
+```
 + Unzip the graph datasets `tar -zxvf osdi-ae-graphs.tar.gz` at the project root directory.
 + Note that node inital embeeding is not included, and we generate an all 1s embeeding matrix according to users `input dimension` parameter at the runtime for just performance evaluation.
 

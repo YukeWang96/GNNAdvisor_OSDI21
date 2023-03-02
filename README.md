@@ -78,9 +78,9 @@ sudo systemctl restart docker
 docker run -it --rm --gpus device=1 -v $PWD/../../:/GNNA osdi-ae:latest /bin/bash
 ```
 + Run `./install_pkg.sh` to install the GNNAdvisor and rabbit_module. **Note: Select the correct sm version before install the package.
-> + `install_pkg_sm86.py` for RTX3090.
-> + `install_pkg_sm70.py` for Tesla V100.
-> + `install_pkg_sm61.py` for Quadro P6000.
+> + `install_pkg_sm86.sh` for RTX3090.
+> + `install_pkg_sm70.sh` for Tesla V100.
+> + `install_pkg_sm61.sh` for Quadro P6000.
 
 + To clean the building packages when exit docker, run `./clean_build.sh`, root access premission may required.  
 
